@@ -14,13 +14,13 @@ Pin these before any adapter run. The same pins feed retrieval (M3) and verified
 
 | Source | What to pin |
 | --- | --- |
-| Embabel Guide | [jmjava/guide](https://github.com/jmjava/guide). Read it for training. Never open a pull request against `embabel/guide`. |
-| Embabel DICE | [jmjava/dice](https://github.com/jmjava/dice) (Domain-Integrated Context Engineering). |
+| Embabel Guide | Official [embabel/guide](https://github.com/embabel/guide). Read it for training. Do not open a pull request against it. |
+| Embabel DICE | Official [embabel/dice](https://github.com/embabel/dice) (Domain-Integrated Context Engineering). |
 | Embabel documentation | Official user guide at [docs.embabel.com](https://docs.embabel.com) (agent guide). |
 | Learning sites | [jmjava/embabel-v1-learning](https://github.com/jmjava/embabel-v1-learning) (cheat sheet, walkthrough, lessons). |
 | Embabel cookbook | Official cookbook at [docs.embabel.com](https://docs.embabel.com) (`embabel-cookbook`). |
-| Spring patterns | Pattern cards mined from Spring usage in Guide, DICE, and `embabel-v1-learning` (`java-demo`, `kotlin-demo`, `templates`). Each card cites the source file it came from. |
-| Kotlin patterns | Pattern cards mined the same way from Kotlin in DICE and `embabel-v1-learning` (`kotlin-demo`, `templates`). Each card cites the source file it came from. |
+| Spring patterns | Pattern cards mined from Spring usage in official `embabel/guide`, official `embabel/dice`, and `embabel-v1-learning` (`java-demo`, `kotlin-demo`, `templates`). Each card cites the source file it came from. |
+| Kotlin patterns | Pattern cards mined the same way from Kotlin in official `embabel/dice` and `embabel-v1-learning` (`kotlin-demo`, `templates`). Each card cites the source file it came from. |
 
 Skip `.env` files, tokens, and local secrets when ingesting. Docs are retrieved at answer time and also turned into compiler-checked training examples. An example that only restates a doc page, with no code a compiler can accept or reject, does not count toward the 500.
 

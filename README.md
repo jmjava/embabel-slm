@@ -15,13 +15,13 @@ Pin these before any adapter run. The same pins feed retrieval and verified trai
 
 | Source | What to pin |
 | --- | --- |
-| Embabel Guide | [jmjava/guide](https://github.com/jmjava/guide). Never open a pull request against `embabel/guide`. |
-| Embabel DICE | [jmjava/dice](https://github.com/jmjava/dice) |
+| Embabel Guide | Official [embabel/guide](https://github.com/embabel/guide). Read it for training. Do not open a pull request against it. |
+| Embabel DICE | Official [embabel/dice](https://github.com/embabel/dice) |
 | Embabel documentation | Official agent guide on [docs.embabel.com](https://docs.embabel.com) |
 | Learning sites | [jmjava/embabel-v1-learning](https://github.com/jmjava/embabel-v1-learning) (cheat sheet, walkthrough, lessons) |
 | Embabel cookbook | Official cookbook on [docs.embabel.com](https://docs.embabel.com) |
-| Spring patterns | Pattern cards mined from Spring usage in Guide, DICE, and the learning demos. Each card cites the source file it came from. |
-| Kotlin patterns | Pattern cards mined from Kotlin in DICE and the learning demos. Each card cites the source file it came from. |
+| Spring patterns | Pattern cards mined from Spring usage in official `embabel/guide`, official `embabel/dice`, and the learning demos. Each card cites the source file it came from. |
+| Kotlin patterns | Pattern cards mined from Kotlin in official `embabel/dice` and the learning demos. Each card cites the source file it came from. |
 
 Skip `.env` files, tokens, and local secrets when ingesting. A training example that only restates a doc page, with no code a compiler can accept or reject, does not count. A Spring or Kotlin pattern card with no source path stays out.
 
