@@ -1,0 +1,11 @@
+.env
+.env.*
+!.env.example
+*.gguf
+*.bin
+__pycache__/
+.venv/
+.pytest_cache/
+*.pt
+*.safetensors
+adapter_model.*
