@@ -17,7 +17,7 @@ Pin these before any adapter run. The same pins feed retrieval (M3) and verified
 | Embabel Guide | [jmjava/guide](https://github.com/jmjava/guide). Read it for training. Never open a pull request against `embabel/guide`. |
 | Embabel DICE | [jmjava/dice](https://github.com/jmjava/dice) (Domain-Integrated Context Engineering). |
 | Embabel documentation | Official user guide at [docs.embabel.com](https://docs.embabel.com) (agent guide). |
-| Learning sites | [jmjava/embabel-v1-learning](https://github.com/jmjava/embabel-v1-learning) and the Pages player at [jmjava.github.io/embabel-v1-learning](https://jmjava.github.io/embabel-v1-learning/) (cheat sheet, walkthrough, lessons). |
+| Learning sites | [jmjava/embabel-v1-learning](https://github.com/jmjava/embabel-v1-learning) (cheat sheet, walkthrough, lessons). |
 | Embabel cookbook | Official cookbook at [docs.embabel.com](https://docs.embabel.com) (`embabel-cookbook`). |
 | Spring patterns | Pattern cards mined from Spring usage in Guide, DICE, and `embabel-v1-learning` (`java-demo`, `kotlin-demo`, `templates`). Each card cites the source file it came from. |
 | Kotlin patterns | Pattern cards mined the same way from Kotlin in DICE and `embabel-v1-learning` (`kotlin-demo`, `templates`). Each card cites the source file it came from. |
