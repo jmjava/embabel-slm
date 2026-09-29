@@ -112,4 +112,4 @@ Exit: the strength claims cite the holdout. The general-coding floor still holds
 - Do not start at M5.
 - Do not overwrite an experiment directory.
 - Do not choose the permanent base model from a single chat session.
-- Halo is the target host when that machine is in use. M1 may run on the workstation Ollama that already works.
+- Halo / Ryzen AI Max+ 395 is the **target** paper host once it arrives (~Black Friday Nov 2026) and A13-class checks pass. Until then M1 and live MCP rates run on the workstation Ollama that already works. Never mix hosts in one results table without a host column.

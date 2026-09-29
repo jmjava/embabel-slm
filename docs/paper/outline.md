@@ -79,13 +79,14 @@ Clusters (fill citations in W2/W6):
 - Apply gate: accept / rewrite / reject (scripted premium in CI)  
 - What stub measures vs what live measures  
 
-### IV. Experimental Setup (~0.75 p)
+### IV. Experimental Setup (~0.75–1 p)
 
-- Hardware class (no hostname/LAN)  
+- Hardware class: workstation vs Ryzen AI Max+ 395-class (128 GB unified) — **host column on every live table**; no hostname/LAN  
 - Model tags + digests + context  
 - Corpus / repo SHAs  
 - Commands to reproduce fixture path; live path marked operator-only  
 - Safety: official library tags; secrets never delegated  
+- Note if Part A was re-run after Halo bring-up (~post–Black Friday)
 
 ### V. Results (~1–1.5 p)
 

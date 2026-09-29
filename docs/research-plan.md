@@ -447,13 +447,15 @@ Compiler/test feedback can generate a high-quality synthetic training dataset wi
 
 # Hardware Target
 
-Initial development target:
+Initial development target (paper host after bring-up):
 
-- AMD Ryzen AI Max+ 395
+- AMD Ryzen AI Max+ 395 (Halo-class)
 - 128 GB unified LPDDR5X memory
 - Linux
-- ROCm-supported environment
+- ROCm-supported environment (or the AMD backend Ollama actually uses — record it)
 - Fast NVMe storage
+
+**Procurement:** plan to acquire around **Black Friday week, Nov 2026**. Until the box passes accelerated-placement checks, use the existing workstation private Ollama host for M1 and early live rates. Calendar: [paper-calendar-2026.md](paper-calendar-2026.md).
 
 The system should be treated as an experimentation workstation rather than a platform for training foundation models from scratch.
 
