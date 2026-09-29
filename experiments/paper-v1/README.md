@@ -12,8 +12,8 @@ Committed summaries only. Raw `eval-runs/` stay in `slm-setup` (gitignored). No 
 | Fast model tag + digest | _TBD_ |
 | Strong model tag + digest | _TBD_ |
 | Live sessions completed | 0 |
-| Paper host | downstairs-nvidia-wsl until Halo A13; then halo-395 preferred |
-| Downstairs clear | target Fri 14 Nov 2026 (T12 Part A) |
+| Paper host | **downstairs-nvidia-wsl first** (T12 Part A); halo-395 only after A13 |
+| Downstairs clear (first work) | target Fri 14 Nov 2026 |
 | Halo / 395 ETA | ~Black Friday week Nov 2026 |
 | Part A (MCP) freeze | target Fri 9 Jan 2027 |
 | All-numbers freeze | target Fri 27 Feb 2027 |
