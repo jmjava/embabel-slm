@@ -12,7 +12,9 @@ Committed summaries only. Raw `eval-runs/` stay in `slm-setup` (gitignored). No 
 | Fast model tag + digest | _TBD_ |
 | Strong model tag + digest | _TBD_ |
 | Live sessions completed | 0 |
-| Numbers freeze date | target Fri 5 Dec 2026 |
+| Part A (MCP) freeze | target Fri 9 Jan 2027 |
+| All-numbers freeze | target Fri 27 Feb 2027 |
+| DOI deadline | 31 Mar 2027 |
 
 ## Result tables
 

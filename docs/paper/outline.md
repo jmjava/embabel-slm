@@ -2,11 +2,11 @@
 
 Working title: **Layered Evaluation of Local Coding SLMs Exposed as MCP Tools**
 
-Venue target: **Zenodo preprint** (IEEE `IEEEtran` conference formatting). TechRxiv only if submissions reopen. Calendar: [paper-calendar-2026.md](../paper-calendar-2026.md).
+Venue target: **Zenodo preprint** (IEEE `IEEEtran` conference formatting). TechRxiv only if submissions reopen. Ship by **31 Mar 2027**. Calendar: [paper-calendar-2026.md](../paper-calendar-2026.md).
 
 ---
 
-## Claim freeze (fill by Fri 7 Nov 2026)
+## Claim freeze (fill by Fri 7 Nov 2026; revise after numbers freeze Fri 27 Feb 2027 if needed)
 
 ```text
 Claim: On corpus <id> @ sha <sha>, with models <tags>, under harness <policy>,
@@ -30,7 +30,7 @@ Status: **UNFILLED** — W1 exit criterion.
 
 ## Section skeleton
 
-Target length: **6–8 pages** + references.
+Target length: **6–10 pages** + references (MCP Part A + Embabel A-vs-B).
 
 ### Title + authors
 
@@ -67,7 +67,7 @@ Clusters (fill citations in W2/W6):
 | Code gen / repair benchmarks (HumanEval, SWE-bench, …) | We score MCP tool outputs with layer-conditional fail |
 | Tool-using / MCP agents | We fix the tool and measure edit layers, not tool selection |
 | Local / small coding models | We report usefulness under delegation + apply gate, not chat quality |
-| RAG / fine-tuning for code | Out of scope for v1 body; pointer to embabel-slm program |
+| RAG / fine-tuning for code | Embabel base-vs-retrieval (and optional LoRA) is in-scope for v1 if frozen by late Feb |
 
 ### III. Method (~1.5–2 p)
 
@@ -120,12 +120,14 @@ IEEE numeric; only `must-cite` + method necessities.
 
 | ID | Content | Owner week |
 | --- | --- | --- |
-| Fig 1 | MCP + layer pipeline | W5 |
-| Fig 2 | Layer fail rates (bar) | W5 |
-| Table I | Models / config | W4 |
-| Table II | Corpus case summary | W3 |
-| Table III | pass@1 / pass@end | W4 |
-| Table IV | Vague vs precise | W4 |
+| Fig 1 | MCP + layer pipeline | draft phase (early Mar) |
+| Fig 2 | Layer fail rates (bar) | after Part A freeze (early Jan) |
+| Fig 3 | Embabel base vs retrieval | after M3 (late Jan) |
+| Table I | Models / config | Dec–Jan |
+| Table II | Corpus case summary | Dec |
+| Table III | pass@1 / pass@end | early Jan |
+| Table IV | Vague vs precise | early Jan |
+| Table V | Embabel A-vs-B metrics | late Jan |
 
 ---
 

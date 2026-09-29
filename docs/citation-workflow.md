@@ -1,6 +1,6 @@
 # Citation acquisition workflow
 
-Formal process for Paper v1 (Nov–Dec 2026). Goal: every citation in the PDF is **acquired once**, **stored with provenance**, **triaged**, and **used for a named purpose** — not scraped into a pile.
+Formal process for Paper v1 (Nov 2026 – Mar 2027). Goal: every citation in the PDF is **acquired once**, **stored with provenance**, **triaged**, and **used for a named purpose** — not scraped into a pile.
 
 Calendar: [paper-calendar-2026.md](paper-calendar-2026.md). Outline: [paper/outline.md](paper/outline.md). Bib seed: [paper/references/seed.bib](paper/references/seed.bib).
 
@@ -142,15 +142,15 @@ Add BibTeX `@software` / `@misc` entries for your own repos at camera-ready so o
 
 ---
 
-## Weekly citation checkpoints
+## Citation checkpoints (aligned to paper calendar)
 
-| Week | Checkpoint |
+| When | Checkpoint |
 | --- | --- |
-| W1 | Library empty but tooling live; `seed.bib` imported |
-| W2 | ≥25 entries; search-log filled; Related Work map |
-| W5 | Every draft citation key resolves |
-| W6 | Only `must-cite` (+ necessary method refs) remain; `unread` = 0 |
-| W8 | DOIs verified; Zenodo related works linked |
+| Early Nov (W1) | Library empty but tooling live; `seed.bib` imported |
+| Mid–late Nov (W2–W3) | ≥25 entries; search-log filled; Related Work map |
+| Early Dec (W5) | `unread` must-cites cleared; caps respected |
+| Draft phase (W18–W19) | Every draft citation key resolves; only `must-cite` (+ method refs) in PDF |
+| Camera-ready (W21) | DOIs verified; Zenodo related works linked |
 
 ---
 

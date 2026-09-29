@@ -8,7 +8,7 @@
 
 Source brief: [research-plan.md](research-plan.md) (baseline, RAG, holdout, verified synthetic data, LoRA, A/B/C/D).
 
-Preprint track (does not reorder milestones): [paper-calendar-2026.md](paper-calendar-2026.md). Paper v1 uses the `slm-setup` layered MCP eval; Embabel M1–M3 A-vs-B is stretch only for the NYE DOI.
+Preprint track (does not reorder milestones): [paper-calendar-2026.md](paper-calendar-2026.md). Paper v1 (DOI by **31 Mar 2027**) uses the `slm-setup` layered MCP eval plus Embabel M1–M3 A-vs-B; M4/M5 are optional inside that window only if frozen by late February.
 
 ## Training corpus
 
