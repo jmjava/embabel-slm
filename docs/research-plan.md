@@ -770,6 +770,16 @@ Test whether the specialized model can understand a real multi-module Embabel/Sp
 
 ---
 
+# Preprint track (Nov–Dec 2026)
+
+Ship a citable Zenodo preprint by New Year that proves or disproves usefulness of the local coding SLM under the layered MCP evaluation contract. Full Embabel A/B/C/D remains the longer research program; LoRA stays after retrieval is measured.
+
+- Calendar and venue: [paper-calendar-2026.md](paper-calendar-2026.md)
+- Citations: [citation-workflow.md](citation-workflow.md)
+- Outline / claim freeze: [paper/outline.md](paper/outline.md)
+
+---
+
 # Near-Term Implementation Plan
 
 ## Step 1

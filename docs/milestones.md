@@ -8,6 +8,8 @@
 
 Source brief: [research-plan.md](research-plan.md) (baseline, RAG, holdout, verified synthetic data, LoRA, A/B/C/D).
 
+Preprint track (does not reorder milestones): [paper-calendar-2026.md](paper-calendar-2026.md). Paper v1 uses the `slm-setup` layered MCP eval; Embabel M1–M3 A-vs-B is stretch only for the NYE DOI.
+
 ## Training corpus
 
 Pin these before any adapter run. The same pins feed retrieval (M3) and verified training examples (M5). Holdout tasks stay out of the training split.
