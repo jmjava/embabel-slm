@@ -17,14 +17,15 @@ Non-claims:
 - General model quality / SOTA coding
 - Halo-only performance claims
 - Live IDE agent actually routed or reviewed (scripted verdicts only)
-- Embabel expert-level behavior
-- LoRA / RAG gains (unless appendix exists)
+- Embabel expert-level behavior without locked holdout
+- LoRA gains without a frozen A/B/C/D table
 
 Pre-registered success definition:
-- <e.g. behavior pass@end ≥ … on executable cases; pass@1 reported separately>
+- <e.g. behavior pass@end ≥ … on executable cases; Embabel retrieval lift ≥ …;
+  pass@1 reported separately>
 ```
 
-Status: **UNFILLED** — W1 exit criterion.
+Status: **UNFILLED** — W1 exit criterion. Numbers may force an explicit claim revision at the **27 Feb 2027** freeze.
 
 ---
 
