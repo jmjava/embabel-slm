@@ -81,12 +81,12 @@ Clusters (fill citations in W2/W6):
 
 ### IV. Experimental Setup (~0.75–1 p)
 
-- Hardware class: `workstation` | `downstairs-nvidia-wsl` | `halo-395` — **host column on every live table**; no hostname/LAN  
+- Hardware class: `downstairs-3060` | `downstairs-4080` | `halo-395` — **host column on every live table**; IDE workstation is MCP-only (no inference rows); no hostname/LAN  
 - Model tags + digests + context  
 - Corpus / repo SHAs  
 - Commands to reproduce fixture path; live path marked operator-only  
 - Safety: official library tags; secrets never delegated  
-- Note if Part A moved from downstairs → Halo after ~Black Friday bring-up
+- Note if Part A moved from downstairs 4080-class → Halo after ~Black Friday bring-up
 
 ### V. Results (~1–1.5 p)
 

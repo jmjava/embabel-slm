@@ -72,7 +72,7 @@ Evidence gates (freeze target: **Fri 30 Jan 2027** for Part A numbers):
 
 **Allowed verdicts:** works under contract / works only with repair-escalation / fails a named layer / retrieval closes most of the Embabel gap / weights still needed / inconclusive. All publishable if measured.
 
-**Forbidden claims:** Embabel “expert” without holdout; Halo-only speedups without a paired workstation baseline; general coding SOTA; that a live Cursor session routed correctly; LoRA gains without the A/B/C/D table.
+**Forbidden claims:** Embabel “expert” without holdout; Halo-only speedups without a paired downstairs baseline when claiming a host upgrade; general coding SOTA; that a live Cursor session routed correctly; LoRA gains without the A/B/C/D table; any live rate implied to run on the IDE workstation.
 
 ---
 
@@ -84,9 +84,9 @@ Home-lab split (public-safe names only — no hostnames/LAN in commits):
 
 | Role | Machine | Role in the paper |
 | --- | --- | --- |
-| **Workstation** | IDE + `local-coding-slm` MCP | Always the agent/MCP side. Same-machine Ollama is fallback only. |
-| **Downstairs** | Second PC — Windows + Ubuntu WSL2 + NVIDIA GPU + Ollama | **First hardware work.** Clear T12 Part A (power, `ssh -L`, A4). **Default live host** for Phase 3 / Paper Part A until Halo A13. |
-| **Halo / 395** | Ryzen AI Max+ 395 (acquire ~Black Friday) | **Third.** Preferred paper host only after downstairs is cleared and A13 is green. |
+| **Workstation** | IDE + `local-coding-slm` MCP | Agent/MCP only. **No paper inference** — local Ollama on this machine is a non-starter. |
+| **Downstairs** | Second PC — Windows + Ubuntu WSL2 + NVIDIA (**RTX 3060** and **RTX 4080-class**) + Ollama | **First hardware work** and **only pre-Halo inference**. Clear T12 Part A. Prefer **4080-class** for paper live rates; 3060 OK for smoke / light tags. |
+| **Halo / 395** | Ryzen AI Max+ 395 (acquire ~Black Friday) | **After** downstairs is measuring. Preferred paper host once A13 is green. |
 
 Only **one** inference host is active at a time (`OLLAMA_BASE_URL` via localhost or SSH forward). MCP tool names never change. See [downstairs-wsl-gpu.md](https://github.com/jmjava/slm-setup/blob/main/examples/downstairs-wsl-gpu.md) and [halo-ryzen-ai.md](https://github.com/jmjava/slm-setup/blob/main/examples/halo-ryzen-ai.md).
 
@@ -99,17 +99,17 @@ Only **one** inference host is active at a time (`OLLAMA_BASE_URL` via localhost
 | ~22–28 Nov (BF) | Downstairs stays the live path; **395 arrives** | Unbox only — do not abandon downstairs mid-campaign |
 | 29 Nov – 12 Dec | Downstairs for rates; Halo bring-up in parallel | A13 on 395; switch paper host only when green |
 | Mid-Dec → Mar | Halo if A13 green; else **keep downstairs** | Part A freeze, Embabel M1–M3, optional M5 |
-| Through March | Log host class every row | Never mix workstation / downstairs / Halo timings in one average |
+| Through March | Log host class every row | Never mix 3060 / 4080 / Halo timings in one average |
 
 ### Rules
 
-- **Downstairs first.** Halo is not the November kickoff. Workstation-local Ollama is last resort for paper live rows.
+- **Downstairs first.** Halo is not the November kickoff. **Never** plan paper live rows on the IDE workstation — it has no usable inference GPU.
 - Do **not** delay claim freeze or literature waiting on Halo; **do** clear downstairs before calling Phase 3 “measured.”
-- Do **not** claim Halo latency/memory from workstation or downstairs runs.
-- Downstairs was previously **blocked on host power** — first exit is power-on + SSH + one live row.
+- Do **not** claim Halo latency/memory from downstairs runs.
+- Downstairs was previously **blocked on host power** — first exit is power-on + SSH + one live row (prefer 4080-class for that row).
 - If the 395 slips past mid-December, **Part A + M1–M3 stay on downstairs**; Halo becomes a systems appendix — DOI still 31 Mar.
-- Paper Setup: hardware **class** only; no hostname, LAN, or purchase detail.
-- Results tables: column `host_class` ∈ `{workstation, downstairs-nvidia-wsl, halo-395}`.
+- Paper Setup: GPU **class** only (3060 / 4080-class / 395-class); no hostname, LAN, or purchase detail.
+- Results tables: `host_class` ∈ `{downstairs-3060, downstairs-4080, halo-395}` (no `workstation` inference class).
 
 ### Downstairs clear checklist (first work — target exit: Fri 14 Nov)
 
@@ -117,7 +117,7 @@ Only **one** inference host is active at a time (`OLLAMA_BASE_URL` via localhost
 2. Ollama on WSL localhost; official starter tags; `ollama ps` after one chat.
 3. Workstation SSH local forward; `.env` → forwarded loopback URL.
 4. A4-style check: workstation reaches model through SSH; unauthorized LAN client does not.
-5. One scrubbed live harness or `run_eval.py --live` row with `host_class=downstairs-nvidia-wsl`.
+5. One scrubbed live harness or `run_eval.py --live` row with `host_class=downstairs-4080` (or `downstairs-3060` if that is all that is up).
 
 ### Halo bring-up checklist (after downstairs is clear — target exit: Fri 12 Dec)
 
@@ -155,7 +155,7 @@ Dates assume week starts Monday.
 
 **Goals**
 
-- **First engineering work:** downstairs power, WSL Ollama, workstation `ssh -L`, A4-style check (T12 Part A). Same-machine workstation Ollama is not the target path.
+- **First engineering work:** downstairs power, WSL Ollama on **4080-class** (3060 secondary), workstation `ssh -L`, A4-style check (T12 Part A). IDE-machine Ollama is out of scope.
 - Freeze Paper v1 claim sentence and non-claims (paste into [paper/outline.md](paper/outline.md)).
 - Confirm Zenodo account + ORCID; reserve nothing yet (reserve DOI in mid-Mar).
 - Recheck TechRxiv submission status; record date of check in this file’s changelog.
@@ -168,7 +168,7 @@ Dates assume week starts Monday.
 
 **Goals**
 
-- Complete **downstairs clear checklist**; land first scrubbed live harness / `run_eval.py --live` row (`host_class=downstairs-nvidia-wsl`).
+- Complete **downstairs clear checklist**; land first scrubbed live harness / `run_eval.py --live` row on **4080-class** when possible (`host_class=downstairs-4080`).
 - Run structured literature sweep (MCP agents, SLM-as-tool, code repair eval, RAG-for-code, PEFT coding models).
 - Target **25–40** working bibliography entries; mark `must-cite` / `background` / `drop`.
 - Prefer DOI → BibTeX from Crossref/DataCite; verify URLs; prefer versioned arXiv IDs.
@@ -195,7 +195,7 @@ Dates assume week starts Monday.
 - Draft Methods: layers table, harness policy, stub vs live.
 - Prefer reading + hardware logistics over heavy writing this week.
 
-**Exit:** Methods outline ready; box **in hand or slip date written** (if slip → Part A stays on downstairs/workstation).
+**Exit:** Methods outline ready; box **in hand or slip date written** (if slip → Part A stays on downstairs).
 
 ### W5 — 29 Nov – 5 Dec · Literature gate + Halo bring-up
 
@@ -260,7 +260,7 @@ Dates assume week starts Monday.
 
 **Goals**
 
-- Install/validate one 7B–14B official tag on the **paper host** (Halo if A13 green; else downstairs; workstation last — say which).
+- Install/validate one 7B–14B official tag on the **paper host** (Halo if A13 green; else downstairs 4080-class — say which GPU).
 - Pin Embabel commit; score first 20 tasks; isolated compile/test runner.
 - Keep known-bad fixture; show it fails.
 
@@ -440,15 +440,15 @@ Paste into [paper/outline.md](paper/outline.md).
 | Risk | Mitigation |
 | --- | --- |
 | TechRxiv still closed | Zenodo primary; check in Nov/Jan/Mar; never block |
-| 395 box late / DOA / ROCm painful | Part A + M1–M3 on downstairs (or workstation); Halo as appendix; DOI still 31 Mar |
-| Downstairs still powered off | Clear in W1–W2; else fall back to workstation-only live rates |
+| 395 box late / DOA / ROCm painful | Part A + M1–M3 on downstairs 4080-class; Halo as appendix; DOI still 31 Mar |
+| Downstairs still powered off | Clear in W1–W2; **blocks** paper live rates (no workstation fallback) |
 | Not enough live GPU sessions | Use Dec–early Jan makeup weeks; narrow Part A claims |
 | Embabel M3 slips past early Feb | Ship Part A + partial baseline; do not invent RAG numbers |
 | Scope creep into unfinished LoRA | Hard cut Fri 27 Feb; M5 only with written M3 gap |
 | Citation pile without reading | `must-cite` caps; every cite has `used_for` in Zotero |
 | Numbers drift after draft | Freeze Fri 27 Feb; later changes = new Zenodo version |
 | Overclaim from one accepted retry | Report `pass@1` separate from `pass@end` |
-| Mixing host timings | `host_class` on every results row; never average across workstation / downstairs / Halo |
+| Mixing host timings | `host_class` on every results row; never average across 3060 / 4080 / Halo |
 
 ---
 
@@ -461,3 +461,4 @@ Paste into [paper/outline.md](paper/outline.md).
 | 2026-09-29 | Plan Ryzen AI Max+ 395 acquisition ~Black Friday; workstation until Halo A13; host column on all live rows |
 | 2026-09-29 | Three-host lab: workstation + downstairs NVIDIA/WSL (pre-395) + Halo; clear downstairs T12 Part A in early Nov |
 | 2026-09-29 | Align with slm-setup: downstairs is **first work**; Halo only after T12 Part A is a known path |
+| 2026-09-29 | IDE workstation = MCP only (inference non-starter); downstairs GPUs are RTX 3060 + RTX 4080-class |

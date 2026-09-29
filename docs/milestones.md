@@ -112,4 +112,4 @@ Exit: the strength claims cite the holdout. The general-coding floor still holds
 - Do not start at M5.
 - Do not overwrite an experiment directory.
 - Do not choose the permanent base model from a single chat session.
-- Three-host lab, **slm-setup order:** (1) Phase 3 measure via **downstairs** T12 Part A first, (2) Halo / 395 after Black Friday only once downstairs is a known path. Workstation MCP always; workstation-local Ollama last resort. Require `host_class` on every results row.
+- Three-host lab, **slm-setup order:** (1) Phase 3 measure on **downstairs** first (RTX 3060 + RTX 4080-class; prefer 4080 for paper rows), (2) Halo / 395 after Black Friday once downstairs is measuring. IDE workstation = MCP only — **no paper inference** there. Require `host_class` on every results row.
