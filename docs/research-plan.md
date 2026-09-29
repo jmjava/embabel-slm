@@ -447,13 +447,15 @@ Compiler/test feedback can generate a high-quality synthetic training dataset wi
 
 # Hardware Target
 
-Initial development target:
+Initial development target (paper host after bring-up):
 
-- AMD Ryzen AI Max+ 395
+- AMD Ryzen AI Max+ 395 (Halo-class)
 - 128 GB unified LPDDR5X memory
 - Linux
-- ROCm-supported environment
+- ROCm-supported environment (or the AMD backend Ollama actually uses — record it)
 - Fast NVMe storage
+
+**Procurement:** plan to acquire around **Black Friday week, Nov 2026**. Until the box passes accelerated-placement checks, use the existing workstation private Ollama host for M1 and early live rates. Calendar: [paper-calendar-2026.md](paper-calendar-2026.md).
 
 The system should be treated as an experimentation workstation rather than a platform for training foundation models from scratch.
 
@@ -767,6 +769,16 @@ Allow the local model to modify an actual repository rather than answering isola
 ## Repository-Level Reasoning
 
 Test whether the specialized model can understand a real multi-module Embabel/Spring application.
+
+---
+
+# Preprint track (Nov 2026 – Mar 2027)
+
+Ship a citable Zenodo preprint by **31 March 2027** that proves or disproves usefulness of the local coding SLM under the layered MCP evaluation contract, plus Embabel base-vs-retrieval (M1–M3). Optional M4/M5 inside the window only if numbers freeze by late February. Full production (M6–M7) stays after the DOI.
+
+- Calendar and venue: [paper-calendar-2026.md](paper-calendar-2026.md)
+- Citations: [citation-workflow.md](citation-workflow.md)
+- Outline / claim freeze: [paper/outline.md](paper/outline.md)
 
 ---
 

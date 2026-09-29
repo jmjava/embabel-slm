@@ -8,6 +8,9 @@ This repository is the model program. The MCP bridge that serves a local model t
 
 - [docs/research-plan.md](docs/research-plan.md) — research question, phases, evaluation, and the controlled base / retrieval / LoRA experiment.
 - [docs/milestones.md](docs/milestones.md) — the production bar and the milestone order. LoRA waits until retrieval has been measured on the same tasks.
+- [docs/paper-calendar-2026.md](docs/paper-calendar-2026.md) — Nov 2026–Mar 2027 preprint plan (Zenodo primary; TechRxiv contingency).
+- [docs/citation-workflow.md](docs/citation-workflow.md) — formal citation acquisition, triage, and BibTeX rules.
+- [docs/paper/outline.md](docs/paper/outline.md) — Paper v1 claim freeze and section skeleton.
 
 ## Training corpus
 

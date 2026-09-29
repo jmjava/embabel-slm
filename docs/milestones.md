@@ -8,6 +8,8 @@
 
 Source brief: [research-plan.md](research-plan.md) (baseline, RAG, holdout, verified synthetic data, LoRA, A/B/C/D).
 
+Preprint track (does not reorder milestones): [paper-calendar-2026.md](paper-calendar-2026.md). Paper v1 (DOI by **31 Mar 2027**) uses the `slm-setup` layered MCP eval plus Embabel M1–M3 A-vs-B; M4/M5 are optional inside that window only if frozen by late February.
+
 ## Training corpus
 
 Pin these before any adapter run. The same pins feed retrieval (M3) and verified training examples (M5). Holdout tasks stay out of the training split.
@@ -110,4 +112,4 @@ Exit: the strength claims cite the holdout. The general-coding floor still holds
 - Do not start at M5.
 - Do not overwrite an experiment directory.
 - Do not choose the permanent base model from a single chat session.
-- Halo is the target host when that machine is in use. M1 may run on the workstation Ollama that already works.
+- Halo / Ryzen AI Max+ 395 is the **target** paper host once it arrives (~Black Friday Nov 2026) and A13-class checks pass. Until then M1 and live MCP rates run on the workstation Ollama that already works. Never mix hosts in one results table without a host column.
