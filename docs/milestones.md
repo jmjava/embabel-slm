@@ -112,4 +112,4 @@ Exit: the strength claims cite the holdout. The general-coding floor still holds
 - Do not start at M5.
 - Do not overwrite an experiment directory.
 - Do not choose the permanent base model from a single chat session.
-- Halo / Ryzen AI Max+ 395 is the **target** paper host once it arrives (~Black Friday Nov 2026) and A13-class checks pass. Until then M1 and live MCP rates run on the workstation Ollama that already works. Never mix hosts in one results table without a host column.
+- Three-host lab: **workstation** (MCP), **downstairs** NVIDIA/WSL (pre-395 live host — clear T12 Part A power/SSH in early Nov), **Halo / Ryzen AI Max+ 395** (preferred paper host after ~Black Friday A13). Never mix hosts in one results table without a `host_class` column.
