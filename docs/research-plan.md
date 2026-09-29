@@ -455,7 +455,7 @@ Initial development target (paper host after bring-up):
 - ROCm-supported environment (or the AMD backend Ollama actually uses — record it)
 - Fast NVMe storage
 
-**Procurement:** plan to acquire around **Black Friday week, Nov 2026**. Until the box passes accelerated-placement checks, use the existing workstation private Ollama host for M1 and early live rates. Calendar: [paper-calendar-2026.md](paper-calendar-2026.md).
+**Procurement:** plan to acquire around **Black Friday week, Nov 2026**. Until the box passes accelerated-placement checks, prefer the **downstairs** private NVIDIA/WSL Ollama host (SSH forward) for live rates; workstation Ollama is the last resort. Calendar: [paper-calendar-2026.md](paper-calendar-2026.md).
 
 The system should be treated as an experimentation workstation rather than a platform for training foundation models from scratch.
 
