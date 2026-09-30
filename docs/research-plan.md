@@ -455,7 +455,7 @@ Initial development target (paper host after bring-up):
 - ROCm-supported environment (or the AMD backend Ollama actually uses — record it)
 - Fast NVMe storage
 
-**Procurement / host order:** clear **downstairs** NVIDIA/WSL (T12 Part A) first for live rates — that is the next `slm-setup` hardware work. Acquire Ryzen AI Max+ 395 around **Black Friday week, Nov 2026**; switch the paper host only after A13. Workstation-local Ollama is last resort. Calendar: [paper-calendar-2026.md](paper-calendar-2026.md).
+**Procurement / host order:** clear **downstairs** NVIDIA/WSL (T12 Part A) first — that machine has the usable GPUs (**RTX 3060** and **RTX 4080-class**); prefer 4080-class for paper live rates. The IDE workstation runs MCP only; inference there is a **non-starter**. Acquire Ryzen AI Max+ 395 around **Black Friday week, Nov 2026**; switch the paper host only after A13. Calendar: [paper-calendar-2026.md](paper-calendar-2026.md).
 
 The system should be treated as an experimentation workstation rather than a platform for training foundation models from scratch.
 
