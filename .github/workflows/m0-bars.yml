@@ -1,0 +1,26 @@
+name: m0-bars
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  freeze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Frozen bars reject a quiet edit
+        run: python3 scripts/check_m0_bars.py --self-test
+      - name: Require an amendment once the page is on main
+        if: github.event_name == 'pull_request'
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          git fetch origin "${{ github.base_ref }}"
+          python3 scripts/check_m0_bars.py --against "origin/${{ github.base_ref }}" --pr-title "$PR_TITLE"
