@@ -45,11 +45,11 @@ Out of this program: pretraining from scratch, public Ollama, tunnels, and a sec
 
 ### M0 — Write the bar before any run
 
-- [ ] M0: Freeze the general-coding floor (task list and the drop that fails a release)
-- [ ] M0: Freeze the Embabel gain (the specialist metrics and the lift that counts)
-- [ ] M0: Freeze host budget (7B–14B first; 32B only after the runner is stable)
+- [x] M0: Freeze the general-coding floor (task list and the drop that fails a release)
+- [x] M0: Freeze the Embabel gain (the specialist metrics and the lift that counts)
+- [x] M0: Freeze host budget (7B–14B first; 32B only after the runner is stable)
 
-Exit: one page a later run cannot quietly edit after the numbers look bad.
+Exit: [m0-bars.md](m0-bars.md) is the page. The checker rejects a later edit that is not an amendment.
 
 ### M1 — One reproducible baseline
 
