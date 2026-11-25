@@ -2,7 +2,9 @@
 
 A local coding model for ordinary programmer work. Embabel is the first domain that can be scored with a compiler and a planner. Spring and Kotlin patterns, taken from real example source, are part of the same training set.
 
-This repository is the model program. The MCP bridge that serves a local model to Cursor, Copilot, and Claude stays in [slm-setup](https://github.com/jmjava/slm-setup). Training does not go into that bridge.
+This repository is the Embabel model program. The MCP bridge that serves a local model to Cursor, Copilot, and Claude stays in [slm-setup](https://github.com/jmjava/slm-setup). Training does not go into that bridge.
+
+The Drivine graph-client track (corpus + Halo AMD LoRA recipes) lives in [drivine-slm](https://github.com/jmjava/drivine-slm). Embabel depends on Drivine for graph RAG; keep the experiment directories separate and follow the same order: clean baseline and retrieval before weights.
 
 ## Read this first
 
