@@ -51,9 +51,17 @@ Out of this program: pretraining from scratch, public Ollama, tunnels, and a sec
 
 Exit: [m0-bars.md](m0-bars.md) is the page. The checker rejects a later edit that is not an amendment.
 
+### M0.5 — Example ledger (no GPU)
+
+- [x] M0.5: One row per public Embabel source + learning repo, with pins ([example-ledger.md](example-ledger.md))
+- [ ] M0.5: Freeze the first 20 tasks from the gap list (paths + checks only)
+- [ ] M0.5: Author one known-bad fixture specification
+
+Exit: a gap list that can become `benchmark/tasks/` without a live model. Continues while Halo is on Windows pureplay.
+
 ### M1 — One reproducible baseline
 
-- [ ] M1: Install one official 7B–14B coding tag and validate inference on the current private Ollama host
+- [ ] M1: Install one official 7B–14B coding tag and validate inference on the Halo Ollama host (`host_class=halo-395`)
 - [ ] M1: Pin one Embabel commit
 - [ ] M1: Score the first 20 Embabel tasks and save the raw run
 
@@ -64,7 +72,7 @@ Exit: a run id with model, quant, prompt, commit, and scores. The permanent base
 - [ ] M2: Run extract, isolated project, compile, and tests unattended on those 20 tasks
 - [ ] M2: Keep a known-bad fixture in the suite and show that it fails
 
-Exit: the same command can score a model and can fail a broken one.
+Exit: the same command can score a model and can fail a broken one. Can be stubbed with fixtures before Halo Ubuntu is free.
 
 ### M3 — Retrieval before weights
 

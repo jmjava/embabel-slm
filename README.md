@@ -8,12 +8,14 @@ The Drivine graph-client track (corpus + Halo AMD LoRA recipes) lives in [drivin
 
 ## Read this first
 
+- [docs/example-ledger.md](docs/example-ledger.md) — **start here when GPUs are busy**: pinned Embabel sources and the first gap list (no source copied).
 - [docs/research-plan.md](docs/research-plan.md) — research question, phases, evaluation, and the controlled base / retrieval / LoRA experiment.
 - [docs/milestones.md](docs/milestones.md) — the production bar and the milestone order. LoRA waits until retrieval has been measured on the same tasks.
 - [docs/m0-bars.md](docs/m0-bars.md) — the frozen general-coding floor, Embabel gain, and host budget. A later run does not edit this page after the numbers look bad.
 - [docs/paper-calendar-2026.md](docs/paper-calendar-2026.md) — Nov 2026–Mar 2027 preprint plan (Zenodo primary; TechRxiv contingency).
 - [docs/citation-workflow.md](docs/citation-workflow.md) — formal citation acquisition, triage, and BibTeX rules.
 - [docs/paper/outline.md](docs/paper/outline.md) — Paper v1 claim freeze and section skeleton.
+- [experiments/paper-v1/README.md](experiments/paper-v1/README.md) — raw-data / freeze contract for the preprint.
 
 ## Training corpus
 

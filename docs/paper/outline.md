@@ -6,26 +6,32 @@ Venue target: **Zenodo preprint** (IEEE `IEEEtran` conference formatting). TechR
 
 ---
 
-## Claim freeze (fill by Fri 7 Nov 2026; revise after numbers freeze Fri 27 Feb 2027 if needed)
+## Claim freeze (provisional 25 Nov 2026; revise after numbers freeze Fri 27 Feb 2027)
 
 ```text
-Claim: On corpus <id> @ sha <sha>, with models <tags>, under harness <policy>,
-the local SLM achieves <metrics>, which <supports / does not support>
-usefulness for <bounded task class>.
+Claim: On the pinned slm-setup corpus @ sha <TBD>, with official Ollama tags
+<fast=TBD, strong=TBD>, under the layered harness policy (fast → one repair → strong),
+the local coding SLM on host_class=halo-395 achieves <pass@end / layer rates TBD>,
+which <supports / does not support> usefulness for bounded MCP-delegated coding edits.
+Embabel (Part B): on pinned embabel-agent @ sha <TBD>, base vs retrieval on the first
+20 tasks yields <Δ TBD>, so the remaining gap is <prompt | retrieval | weights>.
 
 Non-claims:
 - General model quality / SOTA coding
-- Halo-only performance claims
+- Host-upgrade speedups without paired rows (do not average halo-395 with downstairs-*)
 - Live IDE agent actually routed or reviewed (scripted verdicts only)
 - Embabel expert-level behavior without locked holdout
 - LoRA gains without a frozen A/B/C/D table
+- Any live rate collected on the IDE workstation
 
 Pre-registered success definition:
-- <e.g. behavior pass@end ≥ … on executable cases; Embabel retrieval lift ≥ …;
-  pass@1 reported separately>
+- Report pass@1 separately from pass@end on executable MCP cases
+- Part A: ≥3 independent live sessions, same corpus SHA, host_class=halo-395
+- Embabel: known-bad fixture fails; A-vs-B table required before any weights claim
+- Numbers freeze Fri 27 Feb 2027; DOI by 31 Mar 2027
 ```
 
-Status: **UNFILLED** — W1 exit criterion. Numbers may force an explicit claim revision at the **27 Feb 2027** freeze.
+Status: **PROVISIONAL** — metrics and SHAs still TBD until Halo Ubuntu live rows exist. Structure frozen so literature / Methods can proceed without GPU.
 
 ---
 
@@ -81,12 +87,12 @@ Clusters (fill citations in W2/W6):
 
 ### IV. Experimental Setup (~0.75–1 p)
 
-- Hardware class: `downstairs-3060` | `downstairs-4080` | `halo-395` — **host column on every live table**; IDE workstation is MCP-only (no inference rows); no hostname/LAN  
+- Hardware class: primary `halo-395` (GEEKOM); fallback `downstairs-4080` / `downstairs-3060` — **host column on every live table**; IDE workstation is MCP-only (no inference rows); no hostname/LAN  
 - Model tags + digests + context  
 - Corpus / repo SHAs  
 - Commands to reproduce fixture path; live path marked operator-only  
 - Safety: official library tags; secrets never delegated  
-- Note if Part A moved from downstairs 4080-class → Halo after ~Black Friday bring-up
+- Host switch 25 Nov 2026: paper live rates target Halo; downstairs only if AMD placement fails
 
 ### V. Results (~1–1.5 p)
 
