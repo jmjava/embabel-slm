@@ -6,6 +6,8 @@ This repository is the Embabel model program. The MCP bridge that serves a local
 
 The Drivine graph-client track (corpus + Halo AMD LoRA recipes) lives in [drivine-slm](https://github.com/jmjava/drivine-slm). Embabel depends on Drivine for graph RAG; keep the experiment directories separate and follow the same order: clean baseline and retrieval before weights.
 
+Exported GGUFs from this program (and from drivine-slm) run in-process on Halo via [slm-kiln](https://github.com/jmjava/slm-kiln) → [Kiln](https://github.com/liberation-data/kiln). Training stays here; Kiln is the JVM runtime for those weights.
+
 ## Read this first
 
 - [docs/example-ledger.md](docs/example-ledger.md) — **start here when GPUs are busy**: pinned Embabel sources and the first gap list (no source copied).
