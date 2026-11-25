@@ -67,14 +67,14 @@ Target length: **6–10 pages** + references (MCP Part A + Embabel A-vs-B).
 
 ### II. Related Work (~0.75–1 p)
 
-Clusters (fill citations in W2/W6):
+Clusters (W2 seed pass 2026-11-25; promote must-cite after read gate in W6). Notes: [references/related-work.md](references/related-work.md).
 
-| Cluster | Distinction from us |
-| --- | --- |
-| Code gen / repair benchmarks (HumanEval, SWE-bench, …) | We score MCP tool outputs with layer-conditional fail |
-| Tool-using / MCP agents | We fix the tool and measure edit layers, not tool selection |
-| Local / small coding models | We report usefulness under delegation + apply gate, not chat quality |
-| RAG / fine-tuning for code | Embabel base-vs-retrieval (and optional LoRA) is in-scope for v1 if frozen by late Feb |
+| Cluster | Distinction from us | Seed keys |
+| --- | --- | --- |
+| Code gen / repair benchmarks | We score MCP tool outputs with layer-conditional fail | `chen2021evaluating`, `jimenez2024swebench`, `xu2025swecompass` |
+| Tool-using / MCP agents | We fix the tool and measure edit layers, not tool selection | `anthropic2024mcp`, `gao2025mcpradar`, `fan2025mcptoolbenchpp`, `wang2025mcpbench`, `wu2025mcpmark` |
+| Local / small coding models | We report usefulness under delegation + apply gate, not chat quality | _(pin live tags later)_ |
+| RAG / fine-tuning for code | Embabel base-vs-retrieval (and optional LoRA) is in-scope for v1 if frozen by late Feb | `lewis2020rag`, `hu2022lora` |
 
 ### III. Method (~1.5–2 p)
 

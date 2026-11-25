@@ -9,6 +9,7 @@ The Drivine graph-client track (corpus + Halo AMD LoRA recipes) lives in [drivin
 ## Read this first
 
 - [docs/example-ledger.md](docs/example-ledger.md) — **start here when GPUs are busy**: pinned Embabel sources and the first gap list (no source copied).
+- [benchmark/README.md](benchmark/README.md) — **M0.5 freeze**: first 20 Embabel tasks (E01–E20) + known-bad KB01 (paths and checks only).
 - [docs/research-plan.md](docs/research-plan.md) — research question, phases, evaluation, and the controlled base / retrieval / LoRA experiment.
 - [docs/milestones.md](docs/milestones.md) — the production bar and the milestone order. LoRA waits until retrieval has been measured on the same tasks.
 - [docs/m0-bars.md](docs/m0-bars.md) — the frozen general-coding floor, Embabel gain, and host budget. A later run does not edit this page after the numbers look bad.

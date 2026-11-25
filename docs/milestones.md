@@ -54,10 +54,10 @@ Exit: [m0-bars.md](m0-bars.md) is the page. The checker rejects a later edit tha
 ### M0.5 — Example ledger (no GPU)
 
 - [x] M0.5: One row per public Embabel source + learning repo, with pins ([example-ledger.md](example-ledger.md))
-- [ ] M0.5: Freeze the first 20 tasks from the gap list (paths + checks only)
-- [ ] M0.5: Author one known-bad fixture specification
+- [x] M0.5: Freeze the first 20 tasks from the gap list (paths + checks only) — [benchmark/tasks/](../benchmark/tasks/) E01–E20
+- [x] M0.5: Author one known-bad fixture specification — [KB01](../benchmark/fixtures/known-bad/KB01-missing-action-dependency.md)
 
-Exit: a gap list that can become `benchmark/tasks/` without a live model. Continues while Halo is on Windows pureplay.
+Exit: a gap list that can become `benchmark/tasks/` without a live model. Continues while Halo is on Windows pureplay. **Met 2026-11-25** (specs only; runner is M2).
 
 ### M1 — One reproducible baseline
 

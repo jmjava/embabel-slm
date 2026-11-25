@@ -93,12 +93,13 @@ Derived from priority rows vs a personal learning compilation:
 9. Integration: REST trigger of an agent (templates / air / urbot).
 10. Kotlin idioms from `dice` + kotlin template (separate from Java cards).
 
-**Next no-GPU step:** freeze the first **20 tasks** from this gap list into
-`benchmark/tasks/` (paths + expected checks only; no live model). One known-bad
-fixture must be in that set before any Halo run.
+**Frozen 2026-11-25:** first **20 tasks** live under [`benchmark/tasks/`](../benchmark/tasks/)
+(E01–E20) plus known-bad [`KB01`](../benchmark/fixtures/known-bad/KB01-missing-action-dependency.md).
+Next no-GPU step is the M2 extract→compile runner stub (still no Halo required).
 
 ## Ledger hygiene
 
 | Date | Change |
 | --- | --- |
 | 2026-11-25 | Initial ledger; pinned priority repos; Halo Ubuntu blocked by Windows pureplay — no live rates yet |
+| 2026-11-25 | Frozen E01–E20 + KB01 under `benchmark/`; Related Work / seed.bib W2 pass |
