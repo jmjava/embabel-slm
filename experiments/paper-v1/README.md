@@ -4,7 +4,7 @@ Committed summaries only. Raw `eval-runs/` stay in `slm-setup` (gitignored). No 
 
 ## Publication gate
 
-**No Zenodo upload (pre-registration, preprint, or artifact) may include Kiln / slm-kiln content without Jasper's written review.**
+No Zenodo upload until the operator's internal publication-review checklist is complete.
 
 ## Freeze status
 

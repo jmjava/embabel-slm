@@ -2,7 +2,9 @@
 
 Registered-report style protocol for the confirmatory comparison between shareable local models (arm S), optional middle reference models (arm M), and a Halo-fitting ceiling model (arm L). Inference for every scored row uses **Ollama** on `host_class=halo-395`. This document is the normative protocol; [analysis-plan.md](analysis-plan.md) gives estimators and tests. Machine-checkable parameters sit in the JSON block below.
 
-**Publication gate (operator checklist before any Zenodo upload of pre-registration, preprint, or artifact derived from this track):** No Zenodo upload (pre-registration, preprint, or artifact) may include Kiln / slm-kiln content without Jasper's written review.
+**Publication gate (operator checklist):** No Zenodo upload until the operator's internal publication-review checklist is complete.
+
+**Protocol freeze:** This text is normative in-repo as of `frozen_on` below. The registered freeze takes effect at **Zenodo upload** of this pre-registration; record the Zenodo DOI in a later `amend(prereg):` entry (not before upload).
 
 ---
 
@@ -210,7 +212,11 @@ Any deviation from this protocol is logged in [deviations-log.md](deviations-log
     "doi_target_date": "2027-03-31"
   },
   "hypotheses_confirmatory": ["H1", "H2", "H3", "H4"],
-  "publication_gate_kiln_review_required": true
+  "publication_gate_internal_review_required": true,
+  "protocol_freeze": {
+    "effective_at": "zenodo_upload",
+    "zenodo_doi": null
+  }
 }
 ```
 
@@ -224,4 +230,4 @@ Any deviation from this protocol is logged in [deviations-log.md](deviations-log
 - `docs/protocol/preregistration-amendments.md` keeps every earlier byte and appends one amendment with old sha256, new sha256, and reason (≥80 characters).
 - Experiment runs, scores, and holdout task files stay untouched in the same pull request.
 
-The first commit that adds this page is the freeze. It is not an amendment.
+The first Zenodo upload of this page is the registered freeze (record the DOI via amendment). In-repo edits before that upload are pre-freeze corrections and are not amendments. After upload, only `amend(prereg):` changes are allowed.

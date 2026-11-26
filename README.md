@@ -19,6 +19,7 @@ Exported GGUFs from this program (and from drivine-slm) run in-process on Halo v
 - [docs/citation-workflow.md](docs/citation-workflow.md) — formal citation acquisition, triage, and BibTeX rules.
 - [docs/paper/outline.md](docs/paper/outline.md) — Paper v1 claim freeze and section skeleton.
 - [experiments/paper-v1/README.md](experiments/paper-v1/README.md) — raw-data / freeze contract for the preprint.
+- Operator-only: [docs/internal/publication-review.md](docs/internal/publication-review.md) — internal checklist (**exclude from all Zenodo uploads**).
 
 ## Training corpus
 

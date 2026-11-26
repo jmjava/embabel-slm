@@ -1,0 +1,1 @@
+# Scripts package (enables importing check_prereg in unit tests).

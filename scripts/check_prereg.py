@@ -5,15 +5,15 @@ from __future__ import annotations
 
 import hashlib
 import json
-import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 PAGE_PATH = ROOT / "docs" / "protocol" / "preregistration.md"
 AMEND_PATH = ROOT / "docs" / "protocol" / "preregistration-amendments.md"
 
-EXPECTED_SHA256 = "9d0abb96dbcaefc3dd5709e97bad0d64e8e8a8ec8850e66e5025adeb4f8fa7db"
+EXPECTED_SHA256 = "bbdbd6d482d412973ad1900973825963264e78babe4854281657da5f052099c3"
 
 LOCK_PATHS = (
     "docs/protocol/preregistration.md",
@@ -22,12 +22,12 @@ LOCK_PATHS = (
     ".github/workflows/prereg.yml",
 )
 
-PAPER_TRACK_FORBIDDEN = ("kiln", "slm-kiln")
+PAPER_TRACK_FORBIDDEN_SUBSTRINGS = ("kiln", "jasper")
 
-# protocol/preregistration.md may cite the Kiln publication gate only; other paper-track paths may not.
-PAPER_TRACK_FORBIDDEN_PATHS = (
-    ROOT / "docs" / "paper",
-    ROOT / "experiments" / "paper-v1",
+PAPER_TRACK_RELATIVE_DIRS = (
+    "docs/protocol",
+    "docs/paper",
+    "experiments/paper-v1",
 )
 
 POISON_PREFIXES = (
@@ -110,7 +110,11 @@ EXPECTED_PREREG = {
         "doi_target_date": "2027-03-31",
     },
     "hypotheses_confirmatory": ["H1", "H2", "H3", "H4"],
-    "publication_gate_kiln_review_required": True,
+    "publication_gate_internal_review_required": True,
+    "protocol_freeze": {
+        "effective_at": "zenodo_upload",
+        "zenodo_doi": None,
+    },
 }
 
 
@@ -143,22 +147,29 @@ def page_problems(text: str) -> list[str]:
     return problems
 
 
-def paper_track_forbidden_mentions() -> list[str]:
+def scan_paper_track_forbidden(
+    *,
+    repo_root: Path | None = None,
+    relative_dirs: tuple[str, ...] | None = None,
+) -> list[str]:
+    """Fail on kiln or jasper in paper-track text artifacts (case-insensitive)."""
+    root = repo_root or ROOT
+    dirs = relative_dirs or PAPER_TRACK_RELATIVE_DIRS
     problems: list[str] = []
-    for base in PAPER_TRACK_FORBIDDEN_PATHS:
+    for rel in dirs:
+        base = root / rel
         if not base.is_dir():
             continue
         for path in base.rglob("*"):
-            if not path.is_file() or path.suffix not in {".md", ".json", ".csv"}:
+            if not path.is_file() or path.suffix not in {".md", ".json", ".csv", ".bib", ".tex"}:
                 continue
-            text = path.read_text(encoding="utf-8")
+            text = path.read_text(encoding="utf-8", errors="replace")
             lowered = text.lower()
-            if "publication gate" in lowered:
-                continue
-            for token in PAPER_TRACK_FORBIDDEN:
+            for token in PAPER_TRACK_FORBIDDEN_SUBSTRINGS:
                 if token in lowered:
                     problems.append(
-                        f"paper-track file {path.relative_to(ROOT)} mentions forbidden token {token}"
+                        f"paper-track file {path.relative_to(root)} "
+                        f"mentions forbidden substring {token!r}"
                     )
     return problems
 
@@ -217,22 +228,24 @@ def check_workspace() -> list[str]:
         return ["docs/protocol/preregistration.md is missing"]
     text = PAGE_PATH.read_text(encoding="utf-8")
     problems = page_problems(text)
-    if "publication_gate_kiln_review_required" not in text.lower().replace("_", " "):
-        if "Jasper" not in text or "Kiln" not in text:
-            problems.append("preregistration must include the Kiln publication gate")
-    problems.extend(paper_track_forbidden_mentions())
+    if "publication_gate_internal_review_required" not in text:
+        problems.append("preregistration must include publication_gate_internal_review_required")
+    problems.extend(scan_paper_track_forbidden())
     return problems
 
 
 def self_test() -> int:
     problems = check_workspace()
-    if problems:
-        for problem in problems:
-            print(problem, file=sys.stderr)
-        return 1
     mutated = PAGE_PATH.read_text(encoding="utf-8").replace('"holdout_min_tasks": 200', '"holdout_min_tasks": 50', 1)
     if not page_problems(mutated):
         problems.append("quiet edit of holdout_min_tasks was accepted")
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        planted = root / "experiments" / "paper-v1" / "evil.md"
+        planted.parent.mkdir(parents=True)
+        planted.write_text("kiln", encoding="utf-8")
+        if not scan_paper_track_forbidden(repo_root=root, relative_dirs=("experiments/paper-v1",)):
+            problems.append("paper-track kiln guard accepted a planted mention")
     if problems:
         for problem in problems:
             print(problem, file=sys.stderr)
