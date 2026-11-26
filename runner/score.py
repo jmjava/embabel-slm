@@ -172,9 +172,6 @@ def score_task(
             continue
         if not required.get(name, False) and layer.status == "skip":
             continue
-        if layer.status == "error" and name == "compile" and "mvn not found" in layer.detail:
-            overall = False
-            continue
         if layer.status in {"fail", "error"}:
             overall = False
             first_failure = first_failure or name

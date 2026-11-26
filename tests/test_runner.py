@@ -4,9 +4,13 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from unittest.mock import patch
+
 from runner.extract import extract_fenced_files
+from runner.maven import CompileResult
 from runner.reachability import check_reachability
 from runner.runs import refuse_existing
+from runner.score import score_task
 
 
 class ExtractTests(unittest.TestCase):
@@ -27,6 +31,27 @@ class RunDirTests(unittest.TestCase):
             path.mkdir()
             with self.assertRaises(FileExistsError):
                 refuse_existing(path)
+
+
+class FirstFailureTests(unittest.TestCase):
+    def test_compile_error_sets_first_failure(self):
+        with patch("runner.score.compile_tree") as mock_compile:
+            mock_compile.return_value = CompileResult(
+                ok=False,
+                output="",
+                first_error="mvn not found on PATH",
+                hallucinated=False,
+            )
+            with patch("runner.score.load_spec") as mock_spec:
+                mock_spec.return_value = {
+                    "checks": {"compile": True, "test": False, "reachability": False},
+                    "input_project": {"src/Main.java": "class Main {}"},
+                    "requires_extraction": False,
+                }
+                with patch("runner.score.load_answer_text", return_value=""):
+                    result = score_task("E01", use_project_only=True)
+        self.assertFalse(result.pass_)
+        self.assertEqual(result.first_failure, "compile")
 
 
 class ReachabilityTests(unittest.TestCase):
