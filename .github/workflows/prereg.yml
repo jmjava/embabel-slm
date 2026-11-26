@@ -1,0 +1,17 @@
+name: prereg
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  freeze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Frozen prereg rejects a quiet edit
+        run: python3 scripts/check_prereg.py --self-test
