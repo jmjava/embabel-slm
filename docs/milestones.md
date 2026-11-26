@@ -84,7 +84,10 @@ Exit: a written A-vs-B result. Expanding toward 100 tasks waits on this.
 
 ### M4 — Lock the holdout
 
-- [ ] M4: Reach at least 100 held-out tasks across generation, repair, planning, transformation, refactor, and integration
+- [ ] M4: Pre-register the two-arm protocol on Zenodo **before any holdout scoring** (see [protocol/preregistration.md](protocol/preregistration.md); operator upload only)
+- [ ] M4: Author ≥200 held-out tasks across generation, repair, planning, transformation, refactor, and integration; commit holdout manifest hash before scoring
+- [ ] M4: Score middle (M) and ceiling (L) reference baselines under configs A and B on DEV (comparison only)
+- [ ] M4 (legacy bar): the earlier 100-task minimum remains a floor until the confirmatory set reaches 200
 - [ ] M4: Add a general-coding holdout large enough to catch a specialist that lost ordinary Java/Kotlin
 - [ ] M4: Keep benchmark tasks out of every training directory
 

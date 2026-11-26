@@ -13,21 +13,24 @@ Claim: On the pinned slm-setup corpus @ sha <TBD>, with official Ollama tags
 <fast=TBD, strong=TBD>, under the layered harness policy (fast → one repair → strong),
 the local coding SLM on host_class=halo-395 achieves <pass@end / layer rates TBD>,
 which <supports / does not support> usefulness for bounded MCP-delegated coding edits.
-Embabel (Part B): on pinned embabel-agent @ sha <TBD>, base vs retrieval on the first
-20 tasks yields <Δ TBD>, so the remaining gap is <prompt | retrieval | weights>.
+Embabel (Part B, pre-registered two-arm): on sealed holdout ≥200 tasks, gap closure G
+between shareable arm S (config D) vs ceiling arm L (config A) is <G TBD> (or undefined
+if L-A CI includes 0); confirmatory inference uses Ollama on halo-395 only.
 
 Non-claims:
 - General model quality / SOTA coding
 - Host-upgrade speedups without paired rows (do not average halo-395 with downstairs-*)
 - Live IDE agent actually routed or reviewed (scripted verdicts only)
-- Embabel expert-level behavior without locked holdout
-- LoRA gains without a frozen A/B/C/D table
+- Embabel expert-level behavior without locked holdout and confirmatory prereg
+- LoRA gains without a frozen A/B/C/D table on holdout
 - Any live rate collected on the IDE workstation
+- Pilot E01–E20 rows as confirmatory evidence
 
-Pre-registered success definition:
-- Report pass@1 separately from pass@end on executable MCP cases
+Pre-registered success definition (see docs/protocol/preregistration.md):
+- H1–H4 and headline estimand G with bootstrap CI; Holm on H1–H3
+- pass@1 (Chen unbiased) and greedy pass reported separately
 - Part A: ≥3 independent live sessions, same corpus SHA, host_class=halo-395
-- Embabel: known-bad fixture fails; A-vs-B table required before any weights claim
+- Embabel holdout: one scored pass per config; manifest hash committed before scoring
 - Numbers freeze Fri 27 Feb 2027; DOI by 31 Mar 2027
 ```
 
