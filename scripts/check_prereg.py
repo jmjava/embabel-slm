@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parent.parent
 PAGE_PATH = ROOT / "docs" / "protocol" / "preregistration.md"
 AMEND_PATH = ROOT / "docs" / "protocol" / "preregistration-amendments.md"
 
-EXPECTED_SHA256 = "53ffc7e6229357c799a496c3a04e0602d4f9286c24e5ebd1b44fd8bd40b8526e"
+EXPECTED_SHA256 = "3aa22226b3ec325c1ee5ebcf3f098a84b340fa68f44004db48c08701ec4ac602"
 
 LOCK_PATHS = (
     "docs/protocol/preregistration.md",
@@ -40,7 +40,7 @@ END = "<!-- prereg:end -->"
 
 EXPECTED_PREREG = {
     "frozen_on": "2026-11-25",
-    "study_id": "two-domain-gap-closure-v1",
+    "study_id": "two-domain-example-dose-v1",
     "inference_backend": "ollama",
     "inference_host_class": "halo-395",
     "quant_default": "Q4_K_M",
@@ -86,7 +86,9 @@ EXPECTED_PREREG = {
         "embabel": {
             "part": "B",
             "pilot_task_ids": "E01-E20,KB01",
-            "holdout_min_tasks": 200,
+            "holdout_min_tasks": 742,
+            "holdout_min_tasks_scope": "per_area",
+            "holdout_area_count": 6,
             "holdout_categories": 6,
         },
         "drivine": {
@@ -96,7 +98,9 @@ EXPECTED_PREREG = {
             "dev_training_pairs_count": 100,
             "dev_excluded_from_holdout": True,
             "pilot_executable_min_tasks": 20,
-            "holdout_min_tasks": 100,
+            "holdout_min_tasks": 742,
+            "holdout_min_tasks_scope": "per_area",
+            "holdout_area_count": 5,
             "holdout_category_labels": [
                 "generation",
                 "repair",
@@ -120,21 +124,90 @@ EXPECTED_PREREG = {
     "statistics": {
         "alpha_confirmatory": 0.05,
         "holm_tests": [
-            "embabel_H1",
-            "embabel_H2",
-            "embabel_H3",
-            "drivine_H1",
-            "drivine_H2",
-            "drivine_H3",
+            "embabel_generation_H1",
+            "embabel_generation_H2",
+            "embabel_repair_H1",
+            "embabel_repair_H2",
+            "embabel_planning_H1",
+            "embabel_planning_H2",
+            "embabel_transformation_H1",
+            "embabel_transformation_H2",
+            "embabel_refactor_H1",
+            "embabel_refactor_H2",
+            "embabel_integration_H1",
+            "embabel_integration_H2",
+            "drivine_generation_H1",
+            "drivine_generation_H2",
+            "drivine_repair_H1",
+            "drivine_repair_H2",
+            "drivine_query_H1",
+            "drivine_query_H2",
+            "drivine_graph_rag_H1",
+            "drivine_graph_rag_H2",
+            "drivine_integration_H1",
+            "drivine_integration_H2",
         ],
-        "h2_margin_percentage_points": {"embabel": 10, "drivine": 15},
-        "h2_sidedness": "one_sided_lower",
+        "areas": {
+            "embabel": ["generation", "repair", "planning", "transformation", "refactor", "integration"],
+            "drivine": ["generation", "repair", "query", "graph_rag", "integration"],
+        },
+        "example_doses": {
+            "unit": "compiler_verified_examples_authored_for_one_area",
+            "assignment": "authored_for_exactly_one_area",
+            "random_pool_rejected": True,
+            "nested_within_area": True,
+            "within_area_order_seed": 20260227,
+            "counts_per_area_locked_before_authoring": True,
+            "counts_per_area": None,
+        },
+        "confirmatory_contrast": "larger_nested_dose_minus_previous_dose_within_area",
+        "confirmatory_comparisons": {
+            "H1": "area_dose_mid_minus_area_dose_0",
+            "H2": "area_dose_full_minus_area_dose_mid",
+        },
+        "confirmatory_unit": "every_pre_registered_area",
+        "increment_decision": "holm_reject_later_dose_beats_previous",
+        "release_floor_percentage_points": 5,
+        "release_floor_role": "general_coding_drop_limit_not_the_increment_test",
+        "slice_holdout_n_for_5_point_step": 742,
+        "confidence_bound_above_5_points": "reported_not_required",
+        "data_quality": {
+            "planned_before_any_model_score": True,
+            "example_admission": [
+                "slice_label_from_pre_registered_set",
+                "compiler_or_executable_oracle",
+                "source_file_and_pin_recorded",
+                "not_near_duplicate_of_holdout",
+                "authored_for_exactly_one_area",
+                "dose_membership_by_pre_fixed_within_area_order",
+            ],
+            "holdout_admission": [
+                "slice_label_before_any_model_output",
+                "executable_oracle_required",
+                "manifest_hash_before_first_score",
+                "no_edit_after_first_model_output",
+            ],
+            "presentation": "every_preregistered_area_and_dose_including_non_improvements",
+        },
+        "retrieval_role": "exploratory",
+        "guide": {
+            "when": "after_the_area_adapter_is_trained",
+            "what_it_does": "retrieves_pages_into_the_prompt",
+            "what_lora_does": "learns_the_admitted_examples",
+            "product_config": "D",
+            "reference_config_before_training": "B",
+            "fills_an_example_dose": False,
+        },
+        "confirmatory_sidedness": "one_sided_greater",
+        "powered_difference_percentage_points": 5,
+        "powered_difference_role": "sample_size_assumption_not_a_second_gate",
         "bootstrap_resamples": 10000,
         "bootstrap_seed": 20260227,
         "mcnemar_discordant_proportion_assumed": 0.3,
         "pass_at_k_estimator": "chen2021_unbiased",
-        "g_estimand_per_domain": True,
-        "cross_domain_g_comparison": "exploratory",
+        "g_estimand_per_domain": "exploratory",
+        "ceiling_contrasts": "exploratory",
+        "cross_domain_comparison": "exploratory",
     },
     "contamination": {
         "near_duplicate_jaccard_threshold": 0.8,
@@ -144,7 +217,7 @@ EXPECTED_PREREG = {
         "numbers_freeze_date": "2027-02-27",
         "doi_target_date": "2027-03-31",
     },
-    "hypotheses_confirmatory": ["H1", "H2", "H3", "H4"],
+    "hypotheses_confirmatory": ["H1", "H2", "H4"],
     "publication_gate_internal_review_required": True,
     "protocol_freeze": {
         "effective_at": "zenodo_upload",
@@ -271,7 +344,7 @@ def check_workspace() -> list[str]:
 
 def self_test() -> int:
     problems = check_workspace()
-    mutated = PAGE_PATH.read_text(encoding="utf-8").replace('"holdout_min_tasks": 200', '"holdout_min_tasks": 50', 1)
+    mutated = PAGE_PATH.read_text(encoding="utf-8").replace('"holdout_min_tasks": 742', '"holdout_min_tasks": 50', 1)
     if not page_problems(mutated):
         problems.append("quiet edit of holdout_min_tasks was accepted")
     with tempfile.TemporaryDirectory() as tmp:

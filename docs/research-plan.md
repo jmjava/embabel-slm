@@ -20,7 +20,7 @@ The core hypothesis is that a relatively small coding model can become highly ef
 
 > How small can a coding model become while retaining expert-level performance on a narrow software framework through retrieval and parameter-efficient fine-tuning?
 
-**Confirmatory extension (pre-registered):** How much of the accuracy gap between a shareable 7–14B local coding model and the best official tag that fits the Halo paper host can domain retrieval plus a small per-domain adapter close on sealed holdouts? **Embabel** (Part B, ≥200 tasks) and **Drivine** (Part C, ≥100 executable tasks) share arms S / M / L and configs A–D on the shareable arm; model selection uses Embabel DEV only; LoRA is trained separately per domain. Hypotheses H1–H4, six Holm tests, and per-domain gap closure \(G\) are in [protocol/preregistration.md](protocol/preregistration.md).
+**Confirmatory extension (pre-registered):** Do examples written for each area incrementally raise that area's holdout score? Embabel areas are generation, repair, planning, transformation, refactor, and integration. Drivine areas are generation, repair, query, graph-RAG, and integration. Each area has at least 742 holdout tasks (4,452 Embabel, 3,710 executable Drivine). The same middle and full example counts apply to every area and are written down before authoring. An area is proved when both dose steps reject. Missed areas stay in the table. LoRA learns the admitted examples. The guide is an add-on after that training, on the already trained model. Retrieval and the host ceiling are references. Details are in [protocol/preregistration.md](protocol/preregistration.md). The remaining work is [protocol/example-dose-plan.md](protocol/example-dose-plan.md).
 
 A more specific Embabel version:
 

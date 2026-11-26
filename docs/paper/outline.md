@@ -13,8 +13,8 @@ Claim: On the pinned slm-setup corpus @ sha <TBD>, with official Ollama tags
 <fast=TBD, strong=TBD>, under the layered harness policy (fast → one repair → strong),
 the local coding SLM on host_class=halo-395 achieves <pass@end / layer rates TBD>,
 which <supports / does not support> usefulness for bounded MCP-delegated coding edits.
-Embabel (Part B): on sealed holdout ≥200 tasks, gap closure G_Embabel between shareable arm S (config D) vs ceiling arm L (config A) is <G TBD> (or undefined if L-A CI includes 0).
-Drivine (Part C): on sealed executable holdout ≥100 tasks, G_Drivine reported separately with H2 margin 15 pp; same arms/tags as Embabel (selection on Embabel DEV only); confirmatory inference uses Ollama on halo-395 only.
+Embabel (Part B): on each of six areas, ≥742 sealed tasks, middle dose minus 0 is <Δ1 TBD> and full dose minus middle is <Δ2 TBD>. An area is proved only if both paired tests reject. Counts are the same in every area and are locked before authoring.
+Drivine (Part C): on each of five areas, ≥742 executable tasks, the same two steps. Same base tag as Embabel (selection on Embabel DEV only). Confirmatory inference uses Ollama on halo-395 only. Missed areas are reported.
 
 Non-claims:
 - General model quality / SOTA coding
@@ -27,7 +27,7 @@ Non-claims:
 - Pilot E01–E20 rows as confirmatory evidence
 
 Pre-registered success definition (see docs/protocol/preregistration.md):
-- H1–H4; headline estimand G per domain; Holm on six tests embabel_H1–drivine_H3
+- H1 and H2 inside every pre-registered area, plus H4; Holm on the 22 area-step tests; each area reported, including misses
 - pass@1 (Chen unbiased) and greedy pass reported separately
 - Part A: ≥3 independent live sessions, same corpus SHA, host_class=halo-395
 - Embabel holdout: one scored pass per config; manifest hash committed before scoring
@@ -138,7 +138,7 @@ IEEE numeric; only `must-cite` + method necessities.
 | Fig 1 | MCP + layer pipeline | draft phase (early Mar) |
 | Fig 2 | Layer fail rates (bar) | after Part A freeze (early Jan) |
 | Fig 3 | Embabel base vs retrieval | after M3 (late Jan) |
-| Fig 4 | Per-domain gap closure G (Embabel + Drivine) | after holdout freeze (late Feb) |
+| Fig 4 | Per-domain example-dose curve, 0 to middle to full (Embabel + Drivine) | after holdout freeze (late Feb) |
 | Table I | Models / config | Dec–Jan |
 | Table II | Corpus case summary | Dec |
 | Table III | pass@1 / pass@end | early Jan |

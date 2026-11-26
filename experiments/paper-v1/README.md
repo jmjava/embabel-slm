@@ -24,10 +24,10 @@ No Zenodo upload until the operator's internal publication-review checklist is c
 | IDE workstation | MCP only — inference non-starter |
 | Halo Ubuntu bring-up | **Blocked temporarily** — machine on Windows pureplay; resume Ubuntu when free |
 | Embabel holdout manifest SHA256 | _TBD — commit before first Embabel holdout score_ |
-| Embabel holdout min tasks | 200 (confirmatory) |
+| Embabel holdout min tasks | 742 in each of 6 areas (4,452 confirmatory) |
 | Drivine corpus repo | `jmjava/drivine-slm` |
 | Drivine holdout manifest SHA256 | _TBD — commit before first Drivine holdout score_ |
-| Drivine holdout min tasks | 100 executable (confirmatory) |
+| Drivine holdout min tasks | 742 executable in each of 5 areas (3,710 confirmatory) |
 | Drivine harness | not built; confirmatory scored rows **0** |
 | Drivine live sessions completed | 0 |
 | Part A (MCP) freeze | target Fri 9 Jan 2027 |
@@ -56,5 +56,5 @@ Add CSV/Markdown here after live runs, e.g.:
 - `prompt-contract.md`
 - `embabel-arms-holdout.md` (S/M/L after Embabel holdout)
 - `drivine-arms-holdout.md` (S/M/L after Drivine holdout; executable tasks only)
-- `gap-closure-G-embabel.md`
-- `gap-closure-G-drivine.md`
+- `example-dose-embabel.md` (100 minus 0, 500 minus 100)
+- `example-dose-drivine.md` (25 minus 0, 100 minus 25; executable tasks only)
