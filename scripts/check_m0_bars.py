@@ -14,7 +14,7 @@ PAGE_PATH = ROOT / "docs" / "m0-bars.md"
 AMEND_PATH = ROOT / "docs" / "m0-bars-amendments.md"
 RUNNER_STABLE_PATH = ROOT / "docs" / "runner-stable.md"
 
-EXPECTED_SHA256 = "90260c785e8ae256d519a0d2f5f964e546f92704af4e318ec666fd31162db7ef"
+EXPECTED_SHA256 = "2433707f9b33ffaea37db092a0292bda8c034f6402ac696584bf36de0b6df6f0"
 
 LOCK_PATHS = (
     "docs/m0-bars.md",
@@ -58,19 +58,27 @@ EXPECTED_BARS = {
         "unlisted_metrics_count": False,
     },
     "host_budget": {
-        "first_min_billion_parameters": 7,
-        "first_max_billion_parameters": 14,
-        "later_class_min_billion_parameters": 30,
-        "later_class_max_billion_parameters": 34,
-        "later_only_after": "docs/runner-stable.md",
+        "release_base_min_billion_parameters": 7,
+        "release_base_max_billion_parameters": 14,
+        "shareable_peak_memory_gb_q4_k_m_8192": 16,
+        "reference_middle_min_billion_parameters": 24,
+        "reference_middle_max_billion_parameters": 34,
+        "reference_ceiling_dense_max_billion_parameters": 70,
+        "reference_ceiling_moe_max_billion_parameters_total": 120,
+        "reference_allowed_configs": ["A", "B"],
+        "reference_never_release_base": True,
+        "reference_never_trained": True,
+        "reference_only_after": "docs/runner-stable.md",
         "runner_stable_requires": [
             "runner_command",
             "known_bad_fixture_failed",
             "scoring_run_id",
         ],
         "known_bad_fixture_failed_must_equal": True,
-        "inference_hosts": ["downstairs-4080", "downstairs-3060"],
-        "inference_hosts_after_downstairs_scores": ["halo-395"],
+        "inference_hosts": ["halo-395"],
+        "inference_hosts_fallback": ["downstairs-4080", "downstairs-3060"],
+        "inference_host_primary": "halo-395",
+        "inference_host_no_row_averaging_across_primary_and_fallback": True,
         "ide_workstation": "mcp_host",
         "quantization_uses_base_parameter_count": True,
     },
@@ -138,25 +146,40 @@ def embabel_lift_counts(base: dict, candidate: dict, bars: dict) -> bool:
     return True
 
 
-def size_allowed(billions: float, runner_stable: bool, bars: dict) -> bool:
+def size_allowed(
+    billions: float,
+    runner_stable: bool,
+    bars: dict,
+    *,
+    architecture: str = "dense",
+) -> bool:
     host = bars["host_budget"]
-    if host["first_min_billion_parameters"] <= billions <= host["first_max_billion_parameters"]:
-        return True
-    later = (
-        host["later_class_min_billion_parameters"]
+    if (
+        host["release_base_min_billion_parameters"]
         <= billions
-        <= host["later_class_max_billion_parameters"]
-    )
-    return bool(runner_stable and later)
-
-
-def host_allowed(host_class: str, downstairs_has_scored_run: bool, bars: dict) -> bool:
-    host = bars["host_budget"]
-    if host_class in host["inference_hosts"]:
+        <= host["release_base_max_billion_parameters"]
+    ):
         return True
-    return bool(
-        downstairs_has_scored_run and host_class in host["inference_hosts_after_downstairs_scores"]
+    middle = (
+        host["reference_middle_min_billion_parameters"]
+        <= billions
+        <= host["reference_middle_max_billion_parameters"]
     )
+    if middle:
+        return bool(runner_stable)
+    if architecture == "moe":
+        cap = host["reference_ceiling_moe_max_billion_parameters_total"]
+    else:
+        cap = host["reference_ceiling_dense_max_billion_parameters"]
+    if billions <= cap and billions > host["reference_middle_max_billion_parameters"]:
+        return bool(runner_stable)
+    return False
+
+
+def host_allowed(host_class: str, _downstairs_has_scored_run: bool, bars: dict) -> bool:
+    host = bars["host_budget"]
+    allowed = set(host["inference_hosts"]) | set(host.get("inference_hosts_fallback", []))
+    return host_class in allowed
 
 
 def runner_record_is_stable(data: dict, bars: dict) -> bool:
@@ -314,15 +337,12 @@ def _scan_result_files(bars: dict, runner_stable: bool) -> list[str]:
                 continue
             for row in parsed:
                 rows.append((str(path.relative_to(ROOT)), row))
-    downstairs = any(
-        row.get("host_class") in bars["host_budget"]["inference_hosts"] for _, row in rows
-    )
     for name, row in rows:
         if "parameter_billions" in row and not size_allowed(
             float(row["parameter_billions"]), runner_stable, bars
         ):
             problems.append(f"{name} parameter_billions is outside the host budget")
-        if "host_class" in row and not host_allowed(str(row["host_class"]), downstairs, bars):
+        if "host_class" in row and not host_allowed(str(row["host_class"]), False, bars):
             problems.append(f"{name} host_class is outside the host budget")
     return problems
 
@@ -419,17 +439,22 @@ def self_test() -> int:
     repair = gain["metrics"][-1]
     if repair["max_percent_of_base"] != 80:
         problems.append("repair-iteration lift is no longer 80 percent of base")
-    if host["first_min_billion_parameters"] != 7 or host["first_max_billion_parameters"] != 14:
-        problems.append("first size band is no longer 7B–14B")
     if (
-        host["later_class_min_billion_parameters"] != 30
-        or host["later_class_max_billion_parameters"] != 34
+        host["release_base_min_billion_parameters"] != 7
+        or host["release_base_max_billion_parameters"] != 14
     ):
-        problems.append("32B class bounds moved")
-    if host["inference_hosts"] != ["downstairs-4080", "downstairs-3060"]:
-        problems.append("downstairs host list moved")
-    if host["inference_hosts_after_downstairs_scores"] != ["halo-395"]:
-        problems.append("halo host gate moved")
+        problems.append("release base band is no longer 7B–14B")
+    if host["shareable_peak_memory_gb_q4_k_m_8192"] != 16:
+        problems.append("shareable memory tier is no longer 16 GB")
+    if (
+        host["reference_middle_min_billion_parameters"] != 24
+        or host["reference_middle_max_billion_parameters"] != 34
+    ):
+        problems.append("reference middle band moved")
+    if host["inference_hosts"] != ["halo-395"]:
+        problems.append("primary inference host list moved")
+    if host["inference_hosts_fallback"] != ["downstairs-4080", "downstairs-3060"]:
+        problems.append("fallback host list moved")
     if host["ide_workstation"] != "mcp_host":
         problems.append("IDE workstation is no longer the MCP host")
 
@@ -487,19 +512,23 @@ def self_test() -> int:
         problems.append("7B and 14B must be allowed before the runner is stable")
     if size_allowed(6.9, False, bars) or size_allowed(14.1, False, bars):
         problems.append("sizes outside 7B–14B must wait")
-    if size_allowed(32, False, bars) or size_allowed(22, True, bars) or size_allowed(70, True, bars):
-        problems.append("32B before stability, 22B, or 70B must stay outside the budget")
+    if size_allowed(32, False, bars) or size_allowed(22, True, bars):
+        problems.append("reference sizes before stability or 22B must stay out")
     if not size_allowed(30, True, bars) or not size_allowed(32, True, bars) or not size_allowed(34, True, bars):
-        problems.append("30B–34B must be allowed only after the runner is stable")
-    if size_allowed(29.9, True, bars) or size_allowed(34.1, True, bars):
-        problems.append("the 32B class must stay inside 30B–34B")
+        problems.append("24B–34B must be allowed only after the runner is stable")
+    if size_allowed(23.9, True, bars):
+        problems.append("sizes below 24B must stay outside the middle reference band")
+    if not size_allowed(40, True, bars):
+        problems.append("ceiling reference between 34B and 70B must be allowed after stable")
+    if not size_allowed(70, True, bars):
+        problems.append("dense ceiling up to 70B must be allowed after runner stable")
+    if size_allowed(70.1, True, bars):
+        problems.append("dense sizes above 70B must stay out")
 
+    if not host_allowed("halo-395", False, bars):
+        problems.append("halo-395 must be allowed immediately")
     if not host_allowed("downstairs-4080", False, bars) or not host_allowed("downstairs-3060", False, bars):
-        problems.append("downstairs hosts must be allowed before halo")
-    if host_allowed("halo-395", False, bars):
-        problems.append("halo-395 must wait for a downstairs scored run")
-    if not host_allowed("halo-395", True, bars):
-        problems.append("halo-395 must be allowed after a downstairs scored run")
+        problems.append("fallback downstairs hosts must be allowed")
     if host_allowed("ide-workstation", True, bars) or host_allowed("mcp_host", True, bars):
         problems.append("the IDE workstation must stay an MCP host")
 

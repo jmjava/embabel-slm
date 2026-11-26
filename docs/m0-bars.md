@@ -33,13 +33,13 @@ A movement on one metric does not count while another misses its lift. A metric 
 
 ## Host budget
 
-The first models are 7B through 14B inclusive, counted as base parameters before quantization. A quantized 14B model is still 14B.
+The release-base band is 7B through 14B inclusive, counted as base parameters before quantization. A quantized 14B model is still 14B.
 
-A 32B-class model is 30B through 34B inclusive. It waits until `docs/runner-stable.md` exists as a JSON object with `runner_command`, `known_bad_fixture_failed` set to true, and `scoring_run_id`. That file is the M2 exit, written by a later milestone. Until it is present and valid, a 32B-class model stays out.
+A shareable release in arm S must also fit the memory tier: peak GPU/unified memory at Q4_K_M with context length 8192 must be at most 16 GB, measured on `host_class=halo-395` and recorded on every scored row. A row above the tier is not a shareable-arm candidate.
 
-A size outside those two bands, including a 22B model and a 70B model, stays outside this budget.
+The **reference** band is for middle and ceiling comparison arms only. Middle models are 24B through 34B inclusive. Ceiling models are up to 70B dense parameters or up to 120B total parameters for MoE architectures. Reference models are scored for comparison only: configs A and B, never a release base, never trained. They wait until `docs/runner-stable.md` exists as a JSON object with `runner_command`, `known_bad_fixture_failed` set to true, and `scoring_run_id`. Until that file is present and valid, reference sizes stay out.
 
-Inference `host_class` values are `downstairs-4080`, `downstairs-3060`, and `halo-395`. Downstairs may carry a scored run immediately. `halo-395` waits until a committed downstairs row has already been scored. The IDE workstation stays the MCP host. Every results row names its `host_class`.
+Inference `host_class` values are `halo-395`, `downstairs-4080`, and `downstairs-3060`. **`halo-395` may carry a scored run immediately** (primary paper host). Downstairs hosts are fallback only. Do not average halo-395 rows with downstairs rows. The IDE workstation stays the MCP host. Every results row names its `host_class`.
 
 <!-- m0-bars:start -->
 
@@ -66,15 +66,23 @@ Inference `host_class` values are `downstairs-4080`, `downstairs-3060`, and `hal
     "unlisted_metrics_count": false
   },
   "host_budget": {
-    "first_min_billion_parameters": 7,
-    "first_max_billion_parameters": 14,
-    "later_class_min_billion_parameters": 30,
-    "later_class_max_billion_parameters": 34,
-    "later_only_after": "docs/runner-stable.md",
+    "release_base_min_billion_parameters": 7,
+    "release_base_max_billion_parameters": 14,
+    "shareable_peak_memory_gb_q4_k_m_8192": 16,
+    "reference_middle_min_billion_parameters": 24,
+    "reference_middle_max_billion_parameters": 34,
+    "reference_ceiling_dense_max_billion_parameters": 70,
+    "reference_ceiling_moe_max_billion_parameters_total": 120,
+    "reference_allowed_configs": ["A", "B"],
+    "reference_never_release_base": true,
+    "reference_never_trained": true,
+    "reference_only_after": "docs/runner-stable.md",
     "runner_stable_requires": ["runner_command", "known_bad_fixture_failed", "scoring_run_id"],
     "known_bad_fixture_failed_must_equal": true,
-    "inference_hosts": ["downstairs-4080", "downstairs-3060"],
-    "inference_hosts_after_downstairs_scores": ["halo-395"],
+    "inference_hosts": ["halo-395"],
+    "inference_hosts_fallback": ["downstairs-4080", "downstairs-3060"],
+    "inference_host_primary": "halo-395",
+    "inference_host_no_row_averaging_across_primary_and_fallback": true,
     "ide_workstation": "mcp_host",
     "quantization_uses_base_parameter_count": true
   }
