@@ -23,8 +23,13 @@ No Zenodo upload until the operator's internal publication-review checklist is c
 | Fallback host | `downstairs-4080` (3060 secondary) only if Halo AMD placement fails |
 | IDE workstation | MCP only — inference non-starter |
 | Halo Ubuntu bring-up | **Blocked temporarily** — machine on Windows pureplay; resume Ubuntu when free |
-| Holdout manifest SHA256 | _TBD — commit before first holdout score_ |
-| Holdout min tasks | 200 (confirmatory) |
+| Embabel holdout manifest SHA256 | _TBD — commit before first Embabel holdout score_ |
+| Embabel holdout min tasks | 200 (confirmatory) |
+| Drivine corpus repo | `jmjava/drivine-slm` |
+| Drivine holdout manifest SHA256 | _TBD — commit before first Drivine holdout score_ |
+| Drivine holdout min tasks | 100 executable (confirmatory) |
+| Drivine harness | not built; confirmatory scored rows **0** |
+| Drivine live sessions completed | 0 |
 | Part A (MCP) freeze | target Fri 9 Jan 2027 |
 | All-numbers freeze | target Fri 27 Feb 2027 |
 | DOI deadline | 31 Mar 2027 |
@@ -49,5 +54,7 @@ Add CSV/Markdown here after live runs, e.g.:
 - `layer-rates.md`
 - `pass-at.md`
 - `prompt-contract.md`
-- `embabel-arms-holdout.md` (S/M/L after holdout)
-- `gap-closure-G.md`
+- `embabel-arms-holdout.md` (S/M/L after Embabel holdout)
+- `drivine-arms-holdout.md` (S/M/L after Drivine holdout; executable tasks only)
+- `gap-closure-G-embabel.md`
+- `gap-closure-G-drivine.md`

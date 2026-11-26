@@ -1,6 +1,6 @@
-# Pre-registration: two-arm gap-closure study (Embabel holdout)
+# Pre-registration: two-domain gap-closure study (Embabel and Drivine holdouts)
 
-Registered-report style protocol for the confirmatory comparison between shareable local models (arm S), optional middle reference models (arm M), and a Halo-fitting ceiling model (arm L). Inference for every scored row uses **Ollama** on `host_class=halo-395`. This document is the normative protocol; [analysis-plan.md](analysis-plan.md) gives estimators and tests. Machine-checkable parameters sit in the JSON block below.
+Registered-report style protocol for the confirmatory comparison between shareable local models (arm S), optional middle reference models (arm M), and a Halo-fitting ceiling model (arm L) on **two domains**: Embabel (Part B) and Drivine (Part C). Arms, configs on S, quantization, `num_ctx`, decoding, and model **selection** are shared; each domain has its own holdout, paired tests, gap-closure estimand \(G\), and domain-specific LoRA adapter. Inference for every scored row uses **Ollama** on `host_class=halo-395`. This document is the normative protocol; [analysis-plan.md](analysis-plan.md) gives estimators and tests. Machine-checkable parameters sit in the JSON block below.
 
 **Publication gate (operator checklist):** No Zenodo upload until the operator's internal publication-review checklist is complete.
 
@@ -10,34 +10,41 @@ Registered-report style protocol for the confirmatory comparison between shareab
 
 ## Title
 
-How much of the accuracy gap between a shareable local coding model and the best model that fits the paper host can Embabel retrieval plus a small adapter close?
+How much of the accuracy gap between a shareable local coding model and the best model that fits the paper host can domain retrieval plus a small per-domain adapter close on Embabel and Drivine holdouts?
 
 ---
 
 ## Research question
 
-On a sealed Embabel holdout (≥200 tasks, six categories), how much of the full-task-success gap between (a) the selected shareable 7–14B base under config A and (b) the selected ceiling model under config A is closed by the shareable stack at config D (retrieval + LoRA), relative to the ceiling at config A?
+On sealed domain holdouts (Embabel ≥200 tasks across six categories; Drivine ≥100 executable tasks across generation, repair, query, graph-RAG, and integration), how much of the full-task-success gap between (a) the selected shareable 7–14B base under config A and (b) the selected ceiling model under config A is closed by the shareable stack at config D (retrieval + domain LoRA), relative to the ceiling at config A—**reported separately per domain**?
+
+Model tags for S, M, and L are chosen **only** on the Embabel DEV split. Drivine uses those same tags; Drivine outcomes do not re-pick the base, middle, or ceiling.
 
 ---
 
 ## Hypotheses (confirmatory)
 
-| ID | Statement | Test |
-| --- | --- | --- |
-| H1 | A ceiling exists: L-A full-task-success > S-A | Two-sided McNemar on greedy paired outcomes; Holm-adjusted |
-| H2 | Gap closure / non-inferiority: S-D is non-inferior to L-A with margin 10 percentage points | One-sided 95% lower bound: (S-D − L-A) > −10 |
-| H3 | Fair comparison: S-D vs L-B | Two-sided paired comparison; CI on difference |
-| H4 | General floor: S-D holds the M0 general-coding floor vs S-A | Per m0-bars rules; confirmatory gate for release claims |
+| ID | Domain | Statement | Test |
+| --- | --- | --- | --- |
+| H1 | Embabel | Ceiling exists: L-A > S-A | Two-sided McNemar on greedy paired outcomes |
+| H2 | Embabel | Gap closure / NI: S-D non-inferior to L-A, margin **10** pp | One-sided 95% lower bound: (S-D − L-A) > −10 |
+| H3 | Embabel | Fair comparison: S-D vs L-B | Two-sided paired comparison; CI on difference |
+| H1 | Drivine | Ceiling exists: L-A > S-A | Two-sided McNemar on Drivine paired outcomes |
+| H2 | Drivine | Gap closure / NI: S-D non-inferior to L-A, margin **15** pp | One-sided 95% lower bound: (S-D − L-A) > −15 |
+| H3 | Drivine | Fair comparison: S-D vs L-B | Two-sided paired comparison; CI on difference |
+| H4 | Both | General floor: S-D holds the M0 general-coding floor vs S-A | Per m0-bars rules; **one** confirmatory gate, not per-domain |
 
-**Headline estimand:** gap closure \(G = (S\text{-}D - S\text{-}A) / (L\text{-}A - S\text{-}A)\) with cluster-bootstrap 95% CI. If the bootstrap CI for \((L\text{-}A - S\text{-}A)\) includes 0, \(G\) is **undefined** and reported as such.
+**Headline estimand (per domain):** gap closure \(G = (S\text{-}D - S\text{-}A) / (L\text{-}A - S\text{-}A)\) with cluster-bootstrap 95% CI. If the bootstrap CI for \((L\text{-}A - S\text{-}A)\) includes 0, \(G\) is **undefined** and reported as such. Comparing Embabel \(G\) vs Drivine \(G\) is **exploratory** only.
 
-Exploratory: size curve across S/M/L; RAG effect (A vs B) per arm; quantization effect (Q4_K_M vs one Q8_0 row on shareable base).
+**Multiplicity:** Holm–Bonferroni on McNemar-related confirmatory tests for `embabel_H1`–`embabel_H3` and `drivine_H1`–`drivine_H3` (six tests). H4 is outside that family.
+
+Exploratory: size curve across S/M/L; RAG effect (A vs B) per arm and domain; quantization effect (Q4_K_M vs one Q8_0 row on shareable base); cross-domain \(G\) comparison.
 
 ---
 
 ## Design
 
-### Arms and configs
+### Arms and configs (shared across domains)
 
 | Arm | Size band | Configs | Release / train |
 | --- | --- | --- | --- |
@@ -47,47 +54,65 @@ Exploratory: size curve across S/M/L; RAG effect (A vs B) per arm; quantization 
 
 **Quantization:** Q4_K_M for every arm and config. One additional **Q8_0** row for the selected shareable base (config A only) to measure quantization effect.
 
-**A/B/C/D** (arm S) matches [research-plan.md](../research-plan.md): A = base; B = +retrieval; C = +LoRA; D = +retrieval+LoRA.
+**A/B/C/D** (arm S): A = base; B = +retrieval; C = +LoRA; D = +retrieval+LoRA. **LoRA is per domain:** the Embabel adapter trains only on Embabel material disjoint from the Embabel holdout; the Drivine adapter trains only on Drivine material disjoint from the Drivine holdout. Configs C and D **never** share one adapter across domains.
 
-### Model selection (pre-declared, DEV split only)
+### Model selection (pre-declared, Embabel DEV split only)
 
-- **Shareable base (S):** Among official 7–14B shortlist tags that pass the memory tier on DEV, pick the tag with highest `full_task_success` under config A; ties → smaller measured peak memory.
-- **Ceiling (L):** Among pre-listed ceiling shortlist tags that load on Halo under Q4_K_M, pick highest `full_task_success` under config A on DEV; ties → smaller peak memory.
-- **Middle (M):** Operator picks one or two official 24–34B tags from a pre-listed shortlist before DEV scoring (documented in run meta; not data-driven after holdout).
+- **Shareable base (S):** Among official 7–14B shortlist tags that pass the memory tier on Embabel DEV, pick the tag with highest `full_task_success` under config A; ties → smaller measured peak memory.
+- **Ceiling (L):** Among pre-listed ceiling shortlist tags that load on Halo under Q4_K_M, pick highest `full_task_success` under config A on Embabel DEV; ties → smaller peak memory.
+- **Middle (M):** Operator picks one or two official 24–34B tags from a pre-listed shortlist before Embabel DEV scoring (documented in run meta; not data-driven after holdout).
 
-Pilot results (E01–E20 + KB01) and any DEV tuning **never** support confirmatory claims.
+Drivine confirmatory rows use the same S/M/L tags. Drivine scores do not alter selection.
 
-### Splits
+Pilot results (Embabel E01–E20 + KB01; Drivine pilot executable tasks) **never** support confirmatory claims.
+
+### Part B — Embabel splits
 
 | Split | Use | Confirmatory |
 | --- | --- | --- |
 | Pilot | E01–E20 + KB01; may become DEV | No |
-| DEV | Prompt, retrieval pack, adapter tuning; model shortlist selection | No |
+| DEV | Prompt, retrieval pack, **Embabel** adapter tuning; model shortlist selection | No |
 | Holdout | ≥200 tasks, six categories; sealed manifest | Yes — exactly one scored pass per config |
 
-Before any holdout scoring: commit **only** the sha256 of the canonical holdout task files (manifest hash). Each config on holdout is scored once with the frozen [analysis](../../analysis/) scripts. Near-duplicates between training/retrieval data and holdout are filtered (MinHash/Jaccard on normalized code+prompt; threshold in JSON). Each model's stated training cutoff vs Embabel release dates is recorded; a post-cutoff task subset flag supports contamination sensitivity analysis.
+Before Embabel holdout scoring: commit **only** the sha256 of the canonical Embabel holdout task files. Each config is scored once with the frozen [analysis](../../analysis/) scripts. Near-duplicates between training/retrieval data and Embabel holdout are filtered (MinHash/Jaccard on normalized code+prompt; threshold in JSON). Each model's stated training cutoff vs Embabel release dates is recorded; a post-cutoff task subset flag supports contamination sensitivity analysis.
+
+### Part C — Drivine splits
+
+| Split | Use | Confirmatory |
+| --- | --- | --- |
+| DEV / training | `jmjava/drivine-slm` `data/drivine_instruct.json` (100 pairs); retrieval and **Drivine** adapter tuning | No — not a scored benchmark |
+| Pilot | ~20 newly authored **executable** tasks; may be scored before holdout | No |
+| Holdout | ≥100 newly authored **executable** tasks; generation, repair, query, graph-RAG, integration | Yes — exactly one scored pass per config |
+
+**Primary Drivine outcome:** `full_task_success` on **executable** tasks only. The Drivine runner extracts code; a task passes only when parse, compile or query-execute against a pinned Drivine, and fixture assertions succeed. Tasks with no executable oracle **cannot** enter the confirmatory holdout. Explanation items are secondary (written rubric, two blinded raters, Cohen's κ); they are **not** in the primary denominator.
+
+The 100 instruction pairs in `drivine_instruct.json` are excluded from the Drivine holdout by the same near-duplicate rule as Embabel. **No Drivine scored confirmatory row exists yet**; the Drivine harness does not exist at protocol freeze.
+
+Before Drivine holdout scoring: commit the holdout manifest hash. Record **drivine.org** doc pin and **Drivine package** pin in run meta when the harness is built; training-cutoff vs those dates is recorded like Embabel.
 
 ### Confounds held fixed
 
-Same system prompt and task prompts, `num_ctx=8192`, greedy and sampled decoding parameters, same retrieval pack and top-k for B/D, same runner and Embabel pin, Ollama version recorded per run.
+Same system prompt and task prompts per domain, `num_ctx=8192`, greedy and sampled decoding parameters, same top-k for B/D within each domain's retrieval pack, same runner class per domain, domain pins (Embabel commit; Drivine doc + package), Ollama version recorded per run.
 
 ---
 
 ## Outcomes
 
-**Primary:** `full_task_success` on holdout (greedy and pass@1 via Chen et al. unbiased estimator).
+**Primary (per domain):** `full_task_success` on domain holdout (greedy and pass@1 via Chen et al. unbiased estimator). Drivine primary denominator is executable tasks only.
 
-**Secondary:** other m0-bars Embabel metrics; general-coding floor tasks; accuracy per GB peak memory; tokens/s; latency.
+**Secondary:** domain-specific automated metrics; general-coding floor tasks (H4); accuracy per GB peak memory; tokens/s; latency.
 
-Human-judged explanation items: written rubric, two blinded raters, Cohen's κ reported.
+Human-judged explanation items: written rubric, two blinded raters, Cohen's κ reported; not in Drivine primary denominator.
 
 ---
 
 ## Sample size and power
 
-Holdout size ≥200 tasks. Power justification uses **paired binary outcomes (McNemar)**. Assumption: discordant-pair proportion \(p_d \approx 0.30\). Approximate sample size \(n \approx (z_{\alpha/2} + z_\beta)^2 p_d / \delta^2\) for a two-sided \(\alpha=0.05\), power 0.80 detectable marginal difference \(\delta\):
+**Embabel:** holdout ≥200 tasks. McNemar paired binary assumption \(p_d \approx 0.30\). At \(n \approx 230\), detectable marginal \(\delta \approx 0.10\); H2 margin **10** percentage points.
 
-| \(n\) | Detectable \(\delta\) (approx.) |
+**Drivine:** holdout ≥100 executable tasks. Under the **same** \(p_d \approx 0.30\) and the protocol power function, \(n=100\) supports detectable \(\delta \approx 0.15\), not 0.10. H2 margin for Drivine is therefore **15** percentage points, stated explicitly and not tightened later.
+
+| \(n\) | Detectable \(\delta\) (approx., \(p_d=0.30\)) |
 | --- | --- |
 | 20 | ~0.35 (pilot only) |
 | 100 | ~0.15 |
@@ -95,13 +120,13 @@ Holdout size ≥200 tasks. Power justification uses **paired binary outcomes (Mc
 | 236 | ~0.10 (n required for δ=0.10) |
 | 941 | ~0.05 |
 
-Hence holdout ≥200 supports a 10-point non-inferiority margin (H2); a 5-point detectable difference would require about **940** tasks under the same assumption (not ~600). Reproduce tables with `python3 -m analysis power`.
+Reproduce tables with `python3 -m analysis power`.
 
 ---
 
 ## Analysis plan (summary)
 
-Per-task paired design: one greedy run (\(T=0\)) plus \(k\) sampled runs (\(T=0.2\), fixed seeds). Cluster bootstrap (10,000 resamples, fixed seed) for 95% CIs. Exact McNemar on greedy passes. Holm–Bonferroni across H1–H3. Effect sizes with CIs, not p-values alone. Full detail: [analysis-plan.md](analysis-plan.md). Frozen script hash recorded in run manifest at holdout freeze.
+Per-task paired design per domain: one greedy run (\(T=0\)) plus \(k\) sampled runs (\(T=0.2\), fixed seeds). Cluster bootstrap (10,000 resamples, fixed seed) for 95% CIs. Exact McNemar on greedy passes. Holm–Bonferroni across six domain-labeled tests. \(G\) reported per domain. Effect sizes with CIs, not p-values alone. Full detail: [analysis-plan.md](analysis-plan.md). Frozen script hash recorded in run manifest at holdout freeze.
 
 ---
 
@@ -109,19 +134,19 @@ Per-task paired design: one greedy run (\(T=0\)) plus \(k\) sampled runs (\(T=0.
 
 - Transport or runner errors: **one** rerun; if still failing, count as task fail — never drop tasks post hoc.
 - Missing completion: fail.
-- Config not finished on holdout by numbers freeze: reported as **not run** in Paper v1 (see timeline).
+- Config not finished on a domain holdout by numbers freeze: reported as **not run** in Paper v1 (see timeline).
 
 ---
 
 ## Contamination controls
 
-Near-duplicate filter before training; holdout manifest hash committed pre-scoring; training-cutoff vs task-date flags for sensitivity.
+Near-duplicate filter before training; holdout manifest hash committed pre-scoring per domain; training-cutoff vs task-date flags for sensitivity; `drivine_instruct.json` excluded from Drivine holdout by near-duplicate rule.
 
 ---
 
 ## Timeline contingency
 
-Paper v1 includes all pre-registered arms/configs. **Numbers freeze:** Fri 27 Feb 2027. **DOI target:** 31 Mar 2027. Any config not scored on holdout by freeze → **not run**; no post-freeze holdout additions; freeze date does not slip to fit results.
+Paper v1 includes all pre-registered arms/configs on both domains where run. **Numbers freeze:** Fri 27 Feb 2027. **DOI target:** 31 Mar 2027. Any config not scored on a domain holdout by freeze → **not run**; no post-freeze holdout additions; freeze date does not slip to fit results.
 
 ---
 
@@ -142,7 +167,7 @@ Any deviation from this protocol is logged in [deviations-log.md](deviations-log
 ```json
 {
   "frozen_on": "2026-11-25",
-  "study_id": "embabel-two-arm-gap-closure-v1",
+  "study_id": "two-domain-gap-closure-v1",
   "inference_backend": "ollama",
   "inference_host_class": "halo-395",
   "quant_default": "Q4_K_M",
@@ -173,12 +198,44 @@ Any deviation from this protocol is logged in [deviations-log.md](deviations-log
     "C": {"retrieval": false, "lora": true},
     "D": {"retrieval": true, "lora": true}
   },
+  "lora_per_domain": true,
+  "selection_rules": {
+    "metric": "full_task_success",
+    "tie_break": "smaller_peak_memory_gb",
+    "split_for_selection": "dev",
+    "config_for_selection": "A",
+    "selection_domain": "embabel"
+  },
   "splits": {
-    "pilot_task_ids": "E01-E20,KB01",
+    "confirmatory_split": "holdout",
     "dev_allows_tuning": true,
-    "holdout_min_tasks": 200,
-    "holdout_categories": 6,
-    "confirmatory_split": "holdout"
+    "model_selection_domain": "embabel",
+    "embabel": {
+      "part": "B",
+      "pilot_task_ids": "E01-E20,KB01",
+      "holdout_min_tasks": 200,
+      "holdout_categories": 6
+    },
+    "drivine": {
+      "part": "C",
+      "corpus_repo": "jmjava/drivine-slm",
+      "dev_training_file": "data/drivine_instruct.json",
+      "dev_training_pairs_count": 100,
+      "dev_excluded_from_holdout": true,
+      "pilot_executable_min_tasks": 20,
+      "holdout_min_tasks": 100,
+      "holdout_category_labels": [
+        "generation",
+        "repair",
+        "query",
+        "graph_rag",
+        "integration"
+      ],
+      "primary_executable_only": true,
+      "harness_exists": false,
+      "confirmatory_scored_rows": 0,
+      "holdout_manifest_sha256": null
+    }
   },
   "decoding": {
     "greedy_temperature": 0,
@@ -189,23 +246,29 @@ Any deviation from this protocol is logged in [deviations-log.md](deviations-log
   },
   "statistics": {
     "alpha_confirmatory": 0.05,
-    "holm_tests": ["H1", "H2", "H3"],
-    "h2_margin_percentage_points": 10,
+    "holm_tests": [
+      "embabel_H1",
+      "embabel_H2",
+      "embabel_H3",
+      "drivine_H1",
+      "drivine_H2",
+      "drivine_H3"
+    ],
+    "h2_margin_percentage_points": {
+      "embabel": 10,
+      "drivine": 15
+    },
     "h2_sidedness": "one_sided_lower",
     "bootstrap_resamples": 10000,
     "bootstrap_seed": 20260227,
     "mcnemar_discordant_proportion_assumed": 0.3,
-    "pass_at_k_estimator": "chen2021_unbiased"
+    "pass_at_k_estimator": "chen2021_unbiased",
+    "g_estimand_per_domain": true,
+    "cross_domain_g_comparison": "exploratory"
   },
   "contamination": {
     "near_duplicate_jaccard_threshold": 0.8,
     "near_duplicate_method": "minhash_jaccard_normalized_prompt_and_code"
-  },
-  "selection_rules": {
-    "metric": "full_task_success",
-    "tie_break": "smaller_peak_memory_gb",
-    "split_for_selection": "dev",
-    "config_for_selection": "A"
   },
   "freeze": {
     "numbers_freeze_date": "2027-02-27",

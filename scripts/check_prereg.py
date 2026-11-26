@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parent.parent
 PAGE_PATH = ROOT / "docs" / "protocol" / "preregistration.md"
 AMEND_PATH = ROOT / "docs" / "protocol" / "preregistration-amendments.md"
 
-EXPECTED_SHA256 = "bbdbd6d482d412973ad1900973825963264e78babe4854281657da5f052099c3"
+EXPECTED_SHA256 = "60db23774dc94ccfe77b3cc5fbbf1d2f466c06bf0bac54fbf0bebd60c0a10ef9"
 
 LOCK_PATHS = (
     "docs/protocol/preregistration.md",
@@ -40,7 +40,7 @@ END = "<!-- prereg:end -->"
 
 EXPECTED_PREREG = {
     "frozen_on": "2026-11-25",
-    "study_id": "embabel-two-arm-gap-closure-v1",
+    "study_id": "two-domain-gap-closure-v1",
     "inference_backend": "ollama",
     "inference_host_class": "halo-395",
     "quant_default": "Q4_K_M",
@@ -71,12 +71,44 @@ EXPECTED_PREREG = {
         "C": {"retrieval": False, "lora": True},
         "D": {"retrieval": True, "lora": True},
     },
+    "lora_per_domain": True,
+    "selection_rules": {
+        "metric": "full_task_success",
+        "tie_break": "smaller_peak_memory_gb",
+        "split_for_selection": "dev",
+        "config_for_selection": "A",
+        "selection_domain": "embabel",
+    },
     "splits": {
-        "pilot_task_ids": "E01-E20,KB01",
-        "dev_allows_tuning": True,
-        "holdout_min_tasks": 200,
-        "holdout_categories": 6,
         "confirmatory_split": "holdout",
+        "dev_allows_tuning": True,
+        "model_selection_domain": "embabel",
+        "embabel": {
+            "part": "B",
+            "pilot_task_ids": "E01-E20,KB01",
+            "holdout_min_tasks": 200,
+            "holdout_categories": 6,
+        },
+        "drivine": {
+            "part": "C",
+            "corpus_repo": "jmjava/drivine-slm",
+            "dev_training_file": "data/drivine_instruct.json",
+            "dev_training_pairs_count": 100,
+            "dev_excluded_from_holdout": True,
+            "pilot_executable_min_tasks": 20,
+            "holdout_min_tasks": 100,
+            "holdout_category_labels": [
+                "generation",
+                "repair",
+                "query",
+                "graph_rag",
+                "integration",
+            ],
+            "primary_executable_only": True,
+            "harness_exists": False,
+            "confirmatory_scored_rows": 0,
+            "holdout_manifest_sha256": None,
+        },
     },
     "decoding": {
         "greedy_temperature": 0,
@@ -87,23 +119,26 @@ EXPECTED_PREREG = {
     },
     "statistics": {
         "alpha_confirmatory": 0.05,
-        "holm_tests": ["H1", "H2", "H3"],
-        "h2_margin_percentage_points": 10,
+        "holm_tests": [
+            "embabel_H1",
+            "embabel_H2",
+            "embabel_H3",
+            "drivine_H1",
+            "drivine_H2",
+            "drivine_H3",
+        ],
+        "h2_margin_percentage_points": {"embabel": 10, "drivine": 15},
         "h2_sidedness": "one_sided_lower",
         "bootstrap_resamples": 10000,
         "bootstrap_seed": 20260227,
         "mcnemar_discordant_proportion_assumed": 0.3,
         "pass_at_k_estimator": "chen2021_unbiased",
+        "g_estimand_per_domain": True,
+        "cross_domain_g_comparison": "exploratory",
     },
     "contamination": {
         "near_duplicate_jaccard_threshold": 0.8,
         "near_duplicate_method": "minhash_jaccard_normalized_prompt_and_code",
-    },
-    "selection_rules": {
-        "metric": "full_task_success",
-        "tie_break": "smaller_peak_memory_gb",
-        "split_for_selection": "dev",
-        "config_for_selection": "A",
     },
     "freeze": {
         "numbers_freeze_date": "2027-02-27",

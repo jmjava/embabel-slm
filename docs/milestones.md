@@ -118,6 +118,43 @@ Exit: a failing tree becomes a passing tree. A single demo prompt does not close
 
 Exit: the strength claims cite the holdout. The general-coding floor still holds.
 
+## Drivine milestones (parallel order; paper Part C)
+
+Same arms and selected model tags as Embabel; corpus and holdout live in [jmjava/drivine-slm](https://github.com/jmjava/drivine-slm). Do not mark done until the exit criteria are met.
+
+### D1 — Harness that rejects a bad answer (parallel M2)
+
+- [ ] D1: Build Drivine runner: extract code; parse, compile or query-execute against pinned Drivine; fixture assertions; fail tasks with no executable oracle for confirmatory holdout
+- [ ] D1: Pilot ~20 executable tasks scored once (exploratory only)
+
+Exit: a command can pass a good answer and fail a known-bad one. No confirmatory row yet.
+
+### D2 — Clean baseline on pilot (parallel M1)
+
+- [ ] D2: Score the Embabel-selected shareable tag on Drivine pilot tasks without retrieval or adapter
+
+Exit: run id with pins recorded. Permanent base is still chosen on Embabel DEV only.
+
+### D3 — Retrieval before weights (parallel M3)
+
+- [ ] D3: Re-run the same pilot with Drivine retrieval pack; record full_task_success vs clean baseline
+
+Exit: written A-vs-B on pilot. Adapter waits on the written gap.
+
+### D4 — Lock the Drivine holdout (parallel M4)
+
+- [ ] D4: Author ≥100 executable holdout tasks across generation, repair, query, graph-RAG, integration; commit holdout manifest hash before scoring
+- [ ] D4: Exclude `data/drivine_instruct.json` (100 training/DEV pairs) via near-duplicate rule
+
+Exit: frozen Drivine split disjoint from the 100 instruct pairs.
+
+### D5 — One domain-specific adapter (parallel M5)
+
+- [ ] D5: Train one Drivine LoRA/QLoRA only on Drivine material disjoint from the Drivine holdout
+- [ ] D5: Score configs A–D on the locked holdout using Embabel-selected tags; configs C/D use the Drivine adapter only
+
+Exit: Drivine A/B/C/D table on holdout. No shared adapter with Embabel.
+
 ## Standing rules
 
 - Do not start at M5.

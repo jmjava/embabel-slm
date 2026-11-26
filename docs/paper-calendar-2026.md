@@ -55,20 +55,22 @@ Evidence gates (freeze target: **Fri 30 Jan 2027** for Part A numbers):
 | Prompt-contract effect | `whitespace_extract` vs `whitespace_extract_vague` | Same oracle, report structure Δ |
 | Claim boundaries | Written limitations paragraph | Matches evaluation-protocol “may / may not claim” |
 
-**Part B — Embabel A-vs-B** (milestone order; required for v1 body if Part A is thin, preferred either way)
+**Part B — Embabel** (milestone order; required for v1 body if Part A is thin, preferred either way)
 
 | Evidence | Milestone | Gate |
 | --- | --- | --- |
 | Frozen general + Embabel bars | M0 | One page that later runs cannot quietly edit |
 | Reproducible baseline on 20 tasks | M1–M2 | Run id with model, quant, prompt, commit, scores; known-bad fixture fails |
 | Base vs retrieval on same 20 | M3 | Written A-vs-B table (compile, hallucination, full success) |
+| Holdout ≥200 + confirmatory arms table | M4–M5 | Manifest hash before scoring; one pass per config; cells missing at freeze → **not run** |
 
-**Part C — stretch inside the March deadline (do not block DOI)**
+**Part C — Drivine** (parallel track beside Embabel in P3–P4; same numbers freeze)
 
-| Stretch | Milestone | Rule |
+| Evidence | Milestone | Gate |
 | --- | --- | --- |
-| Holdout ≥100 Embabel tasks | M4 | Include if frozen by **Fri 13 Feb**; else omit |
-| One LoRA/QLoRA + A/B/C/D table | M5 | Only if M3 gap is clearly “weights, not retrieval”; start by mid-Feb or cut |
+| Executable runner + pilot (~20) | D1–D2 | Pilot never confirmatory; harness records Drivine doc + package pins |
+| Retrieval before adapter | D3 | Same 20 pilot tasks; written A-vs-B |
+| Holdout ≥100 executable + one Drivine LoRA | D4–D5 | Same S/M/L tags as Embabel; per-domain adapter only; hash before scoring; missing at **Fri 27 Feb 2027** → **not run** |
 
 **Allowed verdicts:** works under contract / works only with repair-escalation / fails a named layer / retrieval closes most of the Embabel gap / weights still needed / inconclusive. All publishable if measured.
 
@@ -133,8 +135,8 @@ Only **one** inference host is active at a time (`OLLAMA_BASE_URL` via localhost
 | **P0 Setup** | 1–14 Nov 2026 | Claim freeze; **Halo bring-up** (A13 + first live rows) | Halo smoke on corpus; claim page; Zotero |
 | **P1 Literature** | 15 Nov – 5 Dec 2026 | Citations + Related Work; Halo Part A N | ≥25 bib entries; live N growing on Halo |
 | **P2 MCP measure** | 6 Dec 2026 – 9 Jan 2027 | Finish Part A on Halo (`host_class=halo-395`) | Part A tables frozen |
-| **P3 Embabel A–B** | 10 Jan – 6 Feb 2027 | M0→M3 on Halo paper host | Written A-vs-B on 20 tasks |
-| **P4 Optional depth** | 7–27 Feb 2027 | M4 and/or one M5 **or** deepen Part A N | Go/no-go Fri 27 Feb: freeze *all* paper numbers |
+| **P3 Embabel + Drivine setup** | 10 Jan – 6 Feb 2027 | M0→M3; D1 harness + pilot if ready | Written Embabel A-vs-B; Drivine pilot exploratory |
+| **P4 Holdout depth** | 7–27 Feb 2027 | M4–M5 and/or D4–D5 **or** deepen Part A N | Go/no-go Fri 27 Feb: freeze *all* paper numbers; absent cells **not run** |
 | **P5 Draft** | 28 Feb – 13 Mar 2027 | Full prose + figures | Complete draft PDF |
 | **P6 Camera-ready** | 14–27 Mar 2027 | Review, artifacts, reserve DOI | Zenodo draft ready |
 | **P7 Publish** | 28–31 Mar 2027 | Publish DOI | Live DOI |

@@ -13,21 +13,21 @@ Claim: On the pinned slm-setup corpus @ sha <TBD>, with official Ollama tags
 <fast=TBD, strong=TBD>, under the layered harness policy (fast → one repair → strong),
 the local coding SLM on host_class=halo-395 achieves <pass@end / layer rates TBD>,
 which <supports / does not support> usefulness for bounded MCP-delegated coding edits.
-Embabel (Part B, pre-registered two-arm): on sealed holdout ≥200 tasks, gap closure G
-between shareable arm S (config D) vs ceiling arm L (config A) is <G TBD> (or undefined
-if L-A CI includes 0); confirmatory inference uses Ollama on halo-395 only.
+Embabel (Part B): on sealed holdout ≥200 tasks, gap closure G_Embabel between shareable arm S (config D) vs ceiling arm L (config A) is <G TBD> (or undefined if L-A CI includes 0).
+Drivine (Part C): on sealed executable holdout ≥100 tasks, G_Drivine reported separately with H2 margin 15 pp; same arms/tags as Embabel (selection on Embabel DEV only); confirmatory inference uses Ollama on halo-395 only.
 
 Non-claims:
 - General model quality / SOTA coding
 - Host-upgrade speedups without paired rows (do not average halo-395 with downstairs-*)
 - Live IDE agent actually routed or reviewed (scripted verdicts only)
-- Embabel expert-level behavior without locked holdout and confirmatory prereg
+- Embabel or Drivine expert-level behavior without locked domain holdout and confirmatory prereg
+- Drivine expert claim without locked executable holdout (pilot and instruct pairs do not count)
 - LoRA gains without a frozen A/B/C/D table on holdout
 - Any live rate collected on the IDE workstation
 - Pilot E01–E20 rows as confirmatory evidence
 
 Pre-registered success definition (see docs/protocol/preregistration.md):
-- H1–H4 and headline estimand G with bootstrap CI; Holm on H1–H3
+- H1–H4; headline estimand G per domain; Holm on six tests embabel_H1–drivine_H3
 - pass@1 (Chen unbiased) and greedy pass reported separately
 - Part A: ≥3 independent live sessions, same corpus SHA, host_class=halo-395
 - Embabel holdout: one scored pass per config; manifest hash committed before scoring
@@ -103,7 +103,7 @@ Clusters (W2 seed pass 2026-11-25; promote must-cite after read gate in W6). Not
 - Table: `pass@1` vs `pass@end` vs escalation rate  
 - Prompt contract: precise vs vague on same oracle  
 - Short failure exemplars (scrubbed)  
-- Optional appendix pointer: Embabel A-vs-B  
+- Embabel Part B and Drivine Part C (per-domain G, holdout tables)  
 
 ### VI. Discussion (~0.5–0.75 p)
 
@@ -117,7 +117,7 @@ Copy and tighten from evaluation-protocol “may not claim.” Explicit about li
 
 ### VIII. Conclusion (~0.25 p)
 
-Restate verdict + Zenodo artifact pointer + next measurement (Embabel holdout / RAG).
+Restate verdict + Zenodo artifact pointer + next measurement (domain holdouts / RAG).
 
 ### Acknowledgments (optional)
 
@@ -134,11 +134,13 @@ IEEE numeric; only `must-cite` + method necessities.
 | Fig 1 | MCP + layer pipeline | draft phase (early Mar) |
 | Fig 2 | Layer fail rates (bar) | after Part A freeze (early Jan) |
 | Fig 3 | Embabel base vs retrieval | after M3 (late Jan) |
+| Fig 4 | Per-domain gap closure G (Embabel + Drivine) | after holdout freeze (late Feb) |
 | Table I | Models / config | Dec–Jan |
 | Table II | Corpus case summary | Dec |
 | Table III | pass@1 / pass@end | early Jan |
 | Table IV | Vague vs precise | early Jan |
-| Table V | Embabel A-vs-B metrics | late Jan |
+| Table V | Embabel holdout A/B/C/D | late Jan–Feb |
+| Table VI | Drivine holdout A/B/C/D (executable) | late Feb (or not run) |
 
 ---
 

@@ -20,7 +20,7 @@ The core hypothesis is that a relatively small coding model can become highly ef
 
 > How small can a coding model become while retaining expert-level performance on a narrow software framework through retrieval and parameter-efficient fine-tuning?
 
-**Confirmatory extension (pre-registered):** How much of the accuracy gap between a shareable 7–14B local coding model and the best official tag that fits the Halo paper host can Embabel retrieval plus a small adapter close on a sealed holdout (≥200 tasks)? Arms S / M / L, configs A–D on the shareable arm only, and hypotheses H1–H4 are in [protocol/preregistration.md](protocol/preregistration.md).
+**Confirmatory extension (pre-registered):** How much of the accuracy gap between a shareable 7–14B local coding model and the best official tag that fits the Halo paper host can domain retrieval plus a small per-domain adapter close on sealed holdouts? **Embabel** (Part B, ≥200 tasks) and **Drivine** (Part C, ≥100 executable tasks) share arms S / M / L and configs A–D on the shareable arm; model selection uses Embabel DEV only; LoRA is trained separately per domain. Hypotheses H1–H4, six Holm tests, and per-domain gap closure \(G\) are in [protocol/preregistration.md](protocol/preregistration.md).
 
 A more specific Embabel version:
 
