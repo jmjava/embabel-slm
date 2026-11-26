@@ -23,6 +23,14 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     gen.add_argument("--quant", default="unknown")
     gen.add_argument("--run-id", default="")
     gen.add_argument("--tasks", default="all")
+    gen.add_argument("--arm", default="S", choices=["S", "M", "L"])
+    gen.add_argument("--config", default="A", choices=["A", "B", "C", "D"])
+    gen.add_argument("--split", default="pilot", choices=["pilot", "dev", "holdout"])
+    gen.add_argument("--num-ctx", type=int, default=8192)
+    gen.add_argument("--samples", type=int, default=0, help="sampled runs per task (k); 0 = greedy only")
+    gen.add_argument("--temperature", type=float, default=0.2, help="temperature for sampled runs")
+    gen.add_argument("--seed", type=int, action="append", dest="seeds", help="sample seed (repeat for each seed)")
+    gen.add_argument("--top-p", type=float, default=0.95)
 
     sc = sub.add_parser("score", help="score a run dir or fixtures")
     sc.add_argument("--run-dir", type=Path, default=None)
@@ -53,6 +61,7 @@ def main(argv: list[str] | None = None) -> int:
             (run_dir / "raw").mkdir()
         else:
             run_dir = ensure_run_dir(run_id)
+        seeds = args.seeds if args.seeds else list(range(1, args.samples + 1)) if args.samples else []
         generate_run(
             run_dir,
             model=args.model,
@@ -60,6 +69,14 @@ def main(argv: list[str] | None = None) -> int:
             backend=args.backend,
             quant=args.quant,
             task_ids=_task_list(args.tasks),
+            arm=args.arm,
+            config=args.config,
+            split=args.split,
+            num_ctx=args.num_ctx,
+            samples=args.samples,
+            sample_temperature=args.temperature,
+            sample_seeds=seeds,
+            top_p=args.top_p,
         )
         print(run_dir)
         return 0
