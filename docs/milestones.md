@@ -69,8 +69,8 @@ Exit: a run id with model, quant, prompt, commit, and scores. The permanent base
 
 ### M2 — A runner that rejects a bad answer
 
-- [ ] M2: Run extract, isolated project, compile, and tests unattended on those 20 tasks
-- [ ] M2: Keep a known-bad fixture in the suite and show that it fails
+- [x] M2: Run extract, isolated project, compile, and tests unattended on those 20 tasks
+- [x] M2: Keep a known-bad fixture in the suite and show that it fails
 
 Exit: the same command can score a model and can fail a broken one. Can be stubbed with fixtures before Halo Ubuntu is free.
 

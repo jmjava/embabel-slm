@@ -1,0 +1,16 @@
+{
+  "task_id": "E09",
+  "prompt_id": "embabel-e09-unit-test-v1",
+  "prompt": "Add a JUnit 5 test for DoubleAction that asserts the action output.",
+  "checks": {
+    "compile": true,
+    "test": false,
+    "reachability": false
+  },
+  "input_project": {
+    "src/main/java/benchmark/e09/DoubleAction.java": "package benchmark.e09;\n\nimport com.embabel.agent.api.annotation.Action;\nimport com.embabel.agent.api.annotation.EmbabelComponent;\n\npublic record Twice(int value) {}\n\n@EmbabelComponent\npublic class DoubleAction {\n  @Action public Twice twice(int n){ return new Twice(n*2);}\n}\n"
+  },
+  "structure_checks": [],
+  "prose_checks": [],
+  "requires_extraction": true
+}

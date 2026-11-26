@@ -1,0 +1,14 @@
+{
+  "task_id": "E16",
+  "prompt_id": "embabel-e16-persist-v1",
+  "prompt": "Add persistence for SavedOrder produced by SaveOrderAction using the provided repository stub.",
+  "checks": {
+    "compile": true,
+    "test": false,
+    "reachability": false
+  },
+  "input_project": {},
+  "structure_checks": [],
+  "prose_checks": [],
+  "requires_extraction": true
+}

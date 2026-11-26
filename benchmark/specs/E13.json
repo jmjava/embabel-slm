@@ -1,0 +1,14 @@
+{
+  "task_id": "E13",
+  "prompt_id": "embabel-e13-condition-v1",
+  "prompt": "Add an Embabel condition gate so ChargeAction runs only when KycStatus is COMPLETE.",
+  "checks": {
+    "compile": true,
+    "test": false,
+    "reachability": false
+  },
+  "input_project": {},
+  "structure_checks": [],
+  "prose_checks": [],
+  "requires_extraction": true
+}

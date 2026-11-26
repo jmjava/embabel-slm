@@ -1,0 +1,14 @@
+{
+  "task_id": "E02",
+  "prompt_id": "embabel-e02-two-inputs-v1",
+  "prompt": "Create an @EmbabelComponent with an @Action that requires CustomerId and Amount parameters and returns PaymentRequest. Define small domain records for CustomerId, Amount, and PaymentRequest.",
+  "checks": {
+    "compile": true,
+    "test": false,
+    "reachability": false
+  },
+  "input_project": {},
+  "structure_checks": [],
+  "prose_checks": [],
+  "requires_extraction": true
+}

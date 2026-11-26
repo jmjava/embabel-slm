@@ -36,6 +36,20 @@ Pin these before any adapter run. The same pins feed retrieval and verified trai
 
 Skip `.env` files, tokens, and local secrets when ingesting. A training example that only restates a doc page, with no code a compiler can accept or reject, does not count. A Spring or Kotlin pattern card with no source path stays out.
 
+## Runner (M2)
+
+From the repo root (stdlib Python 3):
+
+```bash
+python3 -m runner generate --model <ollama-tag> --host-class halo-395 --backend vulkan
+python3 -m runner score --run-dir experiments/runs/<run_id>
+python3 -m runner selftest
+```
+
+Pinned compile dependency: `com.embabel.agent:embabel-agent-api:1.5.4` from Maven Central
+(commit `3b9b74f494cb` builds as `1.5.5-SNAPSHOT` upstream). Run directories live under
+`experiments/runs/<utc>-<model>/` with `meta.json`, `scores.json`, and gitignored `raw/`.
+
 ## Standing rules
 
 - Do not start with fine-tuning.

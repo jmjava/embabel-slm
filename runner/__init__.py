@@ -1,0 +1,1 @@
+"""Embabel benchmark runner (M2)."""

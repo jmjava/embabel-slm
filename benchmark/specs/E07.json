@@ -1,0 +1,22 @@
+{
+  "task_id": "E07",
+  "prompt_id": "embabel-e07-repair-v1",
+  "prompt": "Patch the broken project by adding an @Action that produces CreditAssessment from Customer.",
+  "checks": {
+    "compile": true,
+    "test": false,
+    "reachability": true
+  },
+  "input_project": {
+    "src/main/java/benchmark/e07/Domain.java": "package benchmark.e07;\n\npublic record Customer(String id) {}\npublic record CreditAssessment(String id, int score) {}\n",
+    "src/main/java/benchmark/e07/BrokenFlow.java": "package benchmark.e07;\n\nimport com.embabel.agent.api.annotation.*;\nimport com.embabel.agent.api.common.PlannerType;\n\n@Agent(description=\"broken\", planner=PlannerType.GOAP)\npublic class BrokenFlow {\n  @Action public Customer load(String id){return new Customer(id);}\n  @AchievesGoal @Action public CreditAssessment assess(Customer c){return new CreditAssessment(c.id(),1);}\n}\n"
+  },
+  "structure_checks": [],
+  "prose_checks": [],
+  "requires_extraction": true,
+  "reachability": {
+    "initial_types": [
+      "String"
+    ]
+  }
+}

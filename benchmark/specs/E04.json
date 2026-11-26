@@ -1,0 +1,17 @@
+{
+  "task_id": "E04",
+  "prompt_id": "embabel-e04-goal-v1",
+  "prompt": "In a fixture that already defines CreditAssessment, add a goal declaration (AchievesGoal) that is satisfied when CreditAssessment is produced.",
+  "checks": {
+    "compile": true,
+    "test": false,
+    "reachability": false
+  },
+  "input_project": {
+    "src/main/java/benchmark/e04/CreditAssessment.java": "package benchmark.e04;\n\npublic record CreditAssessment(String id, int score) {}\n",
+    "src/main/java/benchmark/e04/CreditFlow.java": "package benchmark.e04;\n\nimport com.embabel.agent.api.annotation.EmbabelComponent;\n\n@EmbabelComponent\npublic class CreditFlow {\n    // model adds goal\n}\n"
+  },
+  "structure_checks": [],
+  "prose_checks": [],
+  "requires_extraction": true
+}

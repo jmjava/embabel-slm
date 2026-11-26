@@ -1,0 +1,25 @@
+{
+  "task_id": "KB01",
+  "prompt_id": "embabel-kb01-known-bad-v1",
+  "prompt": "n/a",
+  "mode": "project_only",
+  "checks": {
+    "compile": true,
+    "reachability": true,
+    "test": false
+  },
+  "input_project": {
+    "src/main/java/benchmark/kb01/BrokenAgent.java": "package benchmark.kb01;\n\nimport com.embabel.agent.api.annotation.AchievesGoal;\nimport com.embabel.agent.api.annotation.Action;\nimport com.embabel.agent.api.annotation.Agent;\nimport com.embabel.agent.api.common.PlannerType;\n\n@Agent(description = \"KB01 broken credit flow\", planner = PlannerType.GOAP)\npublic class BrokenAgent {\n\n    @Action(description = \"Collect customer profile\")\n    public Customer collectCustomer(String customerId) {\n        return new Customer(customerId, \"example\");\n    }\n\n    @AchievesGoal(description = \"Produce a loan decision\")\n    @Action(description = \"Decide on a loan\")\n    public LoanDecision decideLoan(CreditAssessment assessment) {\n        return new LoanDecision(assessment.customerId(), assessment.score() >= 700);\n    }\n}",
+    "src/main/java/benchmark/kb01/Customer.java": "package benchmark.kb01;\n\npublic record Customer(String id, String name) {}",
+    "src/main/java/benchmark/kb01/LoanDecision.java": "package benchmark.kb01;\n\npublic record LoanDecision(String customerId, boolean approved) {}",
+    "src/main/java/benchmark/kb01/CreditAssessment.java": "package benchmark.kb01;\n\npublic record CreditAssessment(String customerId, int score) {}"
+  },
+  "structure_checks": [],
+  "prose_checks": [],
+  "requires_extraction": false,
+  "reachability": {
+    "initial_types": [
+      "String"
+    ]
+  }
+}

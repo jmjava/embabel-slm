@@ -1,0 +1,16 @@
+{
+  "task_id": "E08",
+  "prompt_id": "embabel-e08-annotations-v1",
+  "prompt": "Fix misplaced Embabel annotations on ValidAgent so @Action methods are recognized.",
+  "checks": {
+    "compile": true,
+    "test": false,
+    "reachability": false
+  },
+  "input_project": {
+    "src/main/java/benchmark/e08/ValidAgent.java": "package benchmark.e08;\n\nimport com.embabel.agent.api.annotation.Action;\nimport com.embabel.agent.api.annotation.EmbabelComponent;\n\n@EmbabelComponent\npublic class ValidAgent {\n  @com.embabel.agent.api.annotation.Export\n  public String brokenAnnotation() { return \"x\"; }\n}\n"
+  },
+  "structure_checks": [],
+  "prose_checks": [],
+  "requires_extraction": true
+}

@@ -1,0 +1,14 @@
+{
+  "task_id": "E17",
+  "prompt_id": "embabel-e17-rest-v1",
+  "prompt": "Add a Spring @RestController endpoint that triggers the agent for AgentRequest.",
+  "checks": {
+    "compile": true,
+    "test": false,
+    "reachability": false
+  },
+  "input_project": {},
+  "structure_checks": [],
+  "prose_checks": [],
+  "requires_extraction": true
+}

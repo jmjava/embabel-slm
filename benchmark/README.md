@@ -12,5 +12,7 @@ Companion sources: see [docs/example-ledger.md](../docs/example-ledger.md).
 | E01–E20 | generation / repair / planning / transform / refactor / integration | [tasks/](tasks/) |
 | KB01 | known-bad (must fail) | [fixtures/known-bad/KB01-missing-action-dependency.md](fixtures/known-bad/KB01-missing-action-dependency.md) |
 
-Next runner step (still no Halo required for stubbing): implement extract →
-isolated project → compile → fail KB01 on purpose.
+Runner (M2): `python3 -m runner score --fixture-dir benchmark/fixtures/scoring-stubs`
+scores E01–E20 from stubs; `python3 -m runner selftest` asserts KB01 fails reachability
+and `benchmark/fixtures/known-good/E01-good.md` passes when `mvn` is on PATH.
+Machine-readable prompts live in [specs/](specs/); frozen task `.md` files stay unchanged.

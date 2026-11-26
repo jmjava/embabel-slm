@@ -1,0 +1,14 @@
+{
+  "task_id": "E10",
+  "prompt_id": "embabel-e10-spring-v1",
+  "prompt": "Add a minimal Spring @Configuration that exposes an Embabel agent bean for BootTests.",
+  "checks": {
+    "compile": true,
+    "test": false,
+    "reachability": false
+  },
+  "input_project": {},
+  "structure_checks": [],
+  "prose_checks": [],
+  "requires_extraction": true
+}

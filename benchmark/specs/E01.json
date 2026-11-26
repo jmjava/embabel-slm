@@ -1,0 +1,25 @@
+{
+  "task_id": "E01",
+  "prompt_id": "embabel-e01-simple-action-v1",
+  "prompt": "Write one Embabel @Action on an @EmbabelComponent class. It must take a String name and return a greeting domain type (not void). Include the domain type and the action class as separate Java files.",
+  "checks": {
+    "compile": true,
+    "test": false,
+    "reachability": false
+  },
+  "input_project": {},
+  "structure_checks": [
+    {
+      "kind": "regex",
+      "pattern": "@Action",
+      "message": "missing @Action"
+    },
+    {
+      "kind": "regex",
+      "pattern": "@EmbabelComponent",
+      "message": "missing component"
+    }
+  ],
+  "prose_checks": [],
+  "requires_extraction": true
+}

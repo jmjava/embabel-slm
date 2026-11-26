@@ -1,0 +1,14 @@
+{
+  "task_id": "E15",
+  "prompt_id": "embabel-e15-manual-v1",
+  "prompt": "Refactor ManualFlow to planner-driven @Action methods without manual chaining.",
+  "checks": {
+    "compile": true,
+    "test": false,
+    "reachability": false
+  },
+  "input_project": {},
+  "structure_checks": [],
+  "prose_checks": [],
+  "requires_extraction": true
+}

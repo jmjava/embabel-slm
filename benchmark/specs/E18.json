@@ -1,0 +1,14 @@
+{
+  "task_id": "E18",
+  "prompt_id": "embabel-e18-repair-boot-v1",
+  "prompt": "Fix the missing @Bean in BrokenConfig so ApplicationContext loads.",
+  "checks": {
+    "compile": true,
+    "test": false,
+    "reachability": false
+  },
+  "input_project": {},
+  "structure_checks": [],
+  "prose_checks": [],
+  "requires_extraction": true
+}

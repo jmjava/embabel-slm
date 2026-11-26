@@ -1,0 +1,14 @@
+{
+  "task_id": "E11",
+  "prompt_id": "embabel-e11-transform-v1",
+  "prompt": "Replace the body of LegacyService.process with an @Action on the same class.",
+  "checks": {
+    "compile": true,
+    "test": false,
+    "reachability": false
+  },
+  "input_project": {},
+  "structure_checks": [],
+  "prose_checks": [],
+  "requires_extraction": true
+}

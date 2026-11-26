@@ -9,3 +9,5 @@ __pycache__/
 *.pt
 *.safetensors
 adapter_model.*
+experiments/runs/**/raw/
+.cache/

@@ -1,0 +1,20 @@
+{
+  "task_id": "E14",
+  "prompt_id": "embabel-e14-blocked-v1",
+  "prompt": "Explain which input blocks PayInvoice in the provided fixture.",
+  "checks": {
+    "compile": false,
+    "test": false,
+    "reachability": false
+  },
+  "input_project": {},
+  "structure_checks": [],
+  "prose_checks": [
+    {
+      "kind": "contains",
+      "text": "InvoiceId",
+      "message": "name blocker"
+    }
+  ],
+  "requires_extraction": false
+}

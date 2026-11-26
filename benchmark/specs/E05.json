@@ -1,0 +1,19 @@
+{
+  "task_id": "E05",
+  "prompt_id": "embabel-e05-two-step-v1",
+  "prompt": "Provide two @Action methods: the first maps String id to Customer, the second maps Customer to CreditAssessment. Add a goal that needs CreditAssessment.",
+  "checks": {
+    "compile": true,
+    "test": false,
+    "reachability": true
+  },
+  "input_project": {},
+  "structure_checks": [],
+  "prose_checks": [],
+  "requires_extraction": true,
+  "reachability": {
+    "initial_types": [
+      "String"
+    ]
+  }
+}

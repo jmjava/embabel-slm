@@ -1,0 +1,14 @@
+{
+  "task_id": "E03",
+  "prompt_id": "embabel-e03-domain-v1",
+  "prompt": "Define an immutable domain type Product and an @Action that builds it from a String sku and int quantity.",
+  "checks": {
+    "compile": true,
+    "test": false,
+    "reachability": false
+  },
+  "input_project": {},
+  "structure_checks": [],
+  "prose_checks": [],
+  "requires_extraction": true
+}

@@ -1,0 +1,14 @@
+{
+  "task_id": "E20",
+  "prompt_id": "embabel-e20-app-v1",
+  "prompt": "From the requirement text, add domain, 2-3 actions, goal, and a minimal Boot entry class.",
+  "checks": {
+    "compile": true,
+    "test": false,
+    "reachability": false
+  },
+  "input_project": {},
+  "structure_checks": [],
+  "prose_checks": [],
+  "requires_extraction": true
+}
