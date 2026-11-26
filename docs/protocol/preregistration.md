@@ -126,7 +126,7 @@ Reproduce tables with `python3 -m analysis power`.
 
 ## Analysis plan (summary)
 
-Per-task paired design per domain: one greedy run (\(T=0\)) plus \(k\) sampled runs (\(T=0.2\), fixed seeds). Cluster bootstrap (10,000 resamples, fixed seed) for 95% CIs. Exact McNemar on greedy passes. Holm–Bonferroni across six domain-labeled tests. \(G\) reported per domain. Effect sizes with CIs, not p-values alone. Full detail: [analysis-plan.md](analysis-plan.md). Frozen script hash recorded in run manifest at holdout freeze.
+Per-task paired design per domain: one greedy run (\(T=0\)) plus \(k\) sampled runs (\(T=0.8\), fixed seeds). Cluster bootstrap (10,000 resamples, fixed seed) for 95% CIs. Exact McNemar on greedy passes. Holm–Bonferroni across six domain-labeled tests. \(G\) reported per domain. Effect sizes with CIs, not p-values alone. Full detail: [analysis-plan.md](analysis-plan.md). Frozen script hash recorded in run manifest at holdout freeze.
 
 ---
 
@@ -159,6 +159,38 @@ Any deviation from this protocol is logged in [deviations-log.md](deviations-log
 ## Inference backend
 
 **Only Ollama** on `host_class=halo-395` produces rows used in confirmatory tables. Downstairs fallback may run diagnostics but is not averaged with Halo rows.
+
+---
+
+## Grounding
+
+Confirmatory design choices below are grounded in cited prior work. Scope limits and deviations are stated when our setting differs.
+
+**Constraints (not findings from the literature).** Shareable arm eligibility (7–14B parameters, peak memory ≤16 GB at Q4_K_M and `num_ctx=8192`) defines who can run the release model; it is not an estimated optimum from any paper. The five-point general-coding floor in `docs/m0-bars.md` is an operational release rule frozen before any scored holdout run; it is not the confirmatory non-inferiority detection threshold (those margins are 10 pp on Embabel and 15 pp on Drivine from the power assumption below). Official S, M, and L shortlist tags are not locked in the JSON yet; the shortlist must be written into this protocol before any Embabel DEV scoring, and selection uses only the pre-registered rule above.
+
+**Pre-registration and timing.** Hypotheses, sample size, and analysis are specified before confirmatory scores (Nosek et al., 2018). The public timestamp is Zenodo upload of this document; that upload has not happened, and no holdout row is scored before it.
+
+**Reproducibility and budget reporting.** We pin model tag, digest, seed, context length, and decoding per run (Pineau et al., 2021). We report the evaluation budget and hyperparameters, not only the best number, including fixed `num_ctx=8192` and fixed decoding (Dodge et al., 2019).
+
+**Quantization.** Q4_K_M is the shared default quantization (Dettmers and Zettlemoyer, 2023, k-bit inference scaling laws). The single Q8_0 row on shareable config A is our pre-registered sensitivity check, not a result from that paper.
+
+**Decoding and pass@1.** Sampled holdout attempts use temperature 0.8 as in Chen et al. (2021) HumanEval sampling; greedy stays at temperature 0. We use Chen et al.’s unbiased pass@k estimator for pass@1. We pre-register \(k=5\) as a compute budget; their estimator is valid for any \(k\), and they drew far more than five samples per task.
+
+**Retrieval and adapters.** Retrieval augmentation follows Lewis et al. (2020). Domain LoRA follows Hu et al. (2022); a run that uses QLoRA also cites Dettmers et al. (2023, QLoRA)—we do not label a LoRA-only run as QLoRA. Config B is measured before any adapter because Ovadia et al. (2024) found RAG outperformed unsupervised fine-tuning for injecting corpus knowledge on factual QA; their tasks were not code and their fine-tune was continued pretraining, not LoRA, so we treat the ordering as supportive precedent, not a direct replication.
+
+**Executable outcomes and controls.** Drivine holdout tasks require executable oracles in the spirit of real-issue benchmarks (Jimenez et al., 2024); we do not use the SWE-bench task set. KB01 is a known-bad negative control after the Defects4J precedent (Just et al., 2014): a skipped or errored check layer is not a pass.
+
+**Repair and cascades.** We pre-register exactly one repair sample and report greedy pass@1 separately from any repair-augmented rate so repair gains cannot hide in a single headline (Olausson et al., 2024). The fast→one repair→strong policy is inspired by LLM cascades (Chen et al., 2024, FrugalGPT); our policy is fixed with no learned quality scorer.
+
+**Paired inference.** Greedy confirmatory tests use exact McNemar on paired pass/fail (Dietterich, 1998; McNemar, 1947). We pre-set \(\alpha=0.05\), name each test, and treat the paired task as the unit (Dror et al., 2018).
+
+**Multiplicity.** Holm’s sequential rejective procedure controls the six confirmatory McNemar-related tests (Holm, 1979).
+
+**Non-inferiority margins.** H2 uses fixed margins of 10 pp (Embabel, \(n \ge 200\)) and 15 pp (Drivine, \(n \ge 100\)) with one-sided bounds against those margins, following non-inferiority reporting practice (Piaggio et al., 2012). \(p_d=0.30\) for McNemar power is a planning assumption, not an estimate from data.
+
+**Bootstrap intervals.** Cluster bootstrap with \(B=10\,000\) resamples over tasks uses percentile intervals (Efron, 1979). \(B=10\,000\) is pre-registered here; resampling is over tasks as the paired unit (Dror et al., 2018; Dietterich, 1998).
+
+**Contamination.** Near-duplicate separation of training or retrieval material from holdout uses MinHash/Jaccard on normalized prompt and code (Lee et al., 2022). The Jaccard threshold 0.8 is pre-registered in this protocol and is not attributed to Lee et al.
 
 ---
 
@@ -239,7 +271,7 @@ Any deviation from this protocol is logged in [deviations-log.md](deviations-log
   },
   "decoding": {
     "greedy_temperature": 0,
-    "sample_temperature": 0.2,
+    "sample_temperature": 0.8,
     "sample_count_k": 5,
     "sample_seeds": [1, 2, 3, 4, 5],
     "top_p": 0.95

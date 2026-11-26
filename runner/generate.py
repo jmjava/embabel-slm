@@ -83,7 +83,7 @@ def generate_run(
     split: str = "pilot",
     num_ctx: int = 8192,
     samples: int = 0,
-    sample_temperature: float = 0.2,
+    sample_temperature: float = 0.8,
     sample_seeds: list[int] | None = None,
     top_p: float = 0.95,
     inference_backend: str = "ollama",

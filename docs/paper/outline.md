@@ -70,7 +70,7 @@ Target length: **6–10 pages** + references (MCP Part A + Embabel A-vs-B).
 
 ### II. Related Work (~0.75–1 p)
 
-Clusters (W2 seed pass 2026-11-25; promote must-cite after read gate in W6). Notes: [references/related-work.md](references/related-work.md).
+Clusters (W2 seed pass 2026-11-25; promote must-cite after read gate in W6). Notes: [references/related-work.md](references/related-work.md). W3 adds quantization, repair/cascade, confirmatory inference, preregistration, and contamination clusters tied to [preregistration.md](../protocol/preregistration.md#grounding).
 
 | Cluster | Distinction from us | Seed keys |
 | --- | --- | --- |
@@ -78,6 +78,10 @@ Clusters (W2 seed pass 2026-11-25; promote must-cite after read gate in W6). Not
 | Tool-using / MCP agents | We fix the tool and measure edit layers, not tool selection | `anthropic2024mcp`, `gao2025mcpradar`, `fan2025mcptoolbenchpp`, `wang2025mcpbench`, `wu2025mcpmark` |
 | Local / small coding models | We report usefulness under delegation + apply gate, not chat quality | _(pin live tags later)_ |
 | RAG / fine-tuning for code | Embabel base-vs-retrieval (and optional LoRA) is in-scope for v1 if frozen by late Feb | `lewis2020rag`, `hu2022lora` |
+| Quantization / k-bit inference | Q4_K_M default; one Q8_0 sensitivity row on shareable A | `dettmers2023kbit` |
+| Repair and model cascades | One repair; pass@1 vs pass@end; fixed fast→repair→strong | `olausson2024selfrepair`, `chen2024frugalgpt`, `chen2021evaluating` |
+| Confirmatory stats / preregistration | Paired McNemar, Holm, NI margins, bootstrap over tasks | `dror2018hitchhiker`, `holm1979simple`, `piaggio2012consort`, `nosek2018preregistration` |
+| Contamination / controls | MinHash holdout filter; KB01 negative control | `lee2022deduplicating`, `just2014defects4j` |
 
 ### III. Method (~1.5–2 p)
 

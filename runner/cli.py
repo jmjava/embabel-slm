@@ -28,7 +28,7 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     gen.add_argument("--split", default="pilot", choices=["pilot", "dev", "holdout"])
     gen.add_argument("--num-ctx", type=int, default=8192)
     gen.add_argument("--samples", type=int, default=0, help="sampled runs per task (k); 0 = greedy only")
-    gen.add_argument("--temperature", type=float, default=0.2, help="temperature for sampled runs")
+    gen.add_argument("--temperature", type=float, default=0.8, help="temperature for sampled runs")
     gen.add_argument("--seed", type=int, action="append", dest="seeds", help="sample seed (repeat for each seed)")
     gen.add_argument("--top-p", type=float, default=0.95)
 

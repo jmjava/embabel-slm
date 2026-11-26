@@ -145,3 +145,166 @@
   primaryClass  = {cs.SE},
   note          = {related-eval: broad agentic coding; we report MCP layer rates only}
 }
+
+% --- Protocol grounding (verified 2026-11-25) ---
+
+@inproceedings{dettmers2023kbit,
+  author    = {Dettmers, Tim and Zettlemoyer, Luke},
+  title     = {The Case for 4-Bit Precision: k-bit Inference Scaling Laws},
+  booktitle = {International Conference on Machine Learning ({ICML})},
+  year      = {2023},
+  eprint    = {2212.09720},
+  archivePrefix = {arXiv},
+  note      = {Grounds Q4\_K\_M default; Q8\_0 row is our sensitivity check}
+}
+
+@inproceedings{dettmers2023qlora,
+  author    = {Dettmers, Tim and Pagnoni, Artidoro and Holtzman, Ari and Zettlemoyer, Luke},
+  title     = {{QLoRA}: Efficient Finetuning of Quantized {LLMs}},
+  booktitle = {Advances in Neural Information Processing Systems ({NeurIPS})},
+  year      = {2023},
+  eprint    = {2305.14314},
+  archivePrefix = {arXiv},
+  note      = {Cite only when a run uses QLoRA, not plain LoRA}
+}
+
+@inproceedings{ovadia2024finetuning,
+  author    = {Ovadia, Oren and Brief, Moshik and Mishaeli, Mor and Elisha, Oren},
+  title     = {Fine-Tuning or Retrieval? Comparing Knowledge Injection in {LLMs}},
+  booktitle = {Proceedings of the 2024 Conference on Empirical Methods in Natural Language Processing ({EMNLP})},
+  year      = {2024},
+  eprint    = {2312.05934},
+  archivePrefix = {arXiv},
+  url       = {https://aclanthology.org/2024.emnlp-main.15/},
+  note      = {Factual QA / continued pretrain; supports B-before-adapter ordering}
+}
+
+@inproceedings{olausson2024selfrepair,
+  author    = {Olausson, Theo X. and Inala, Josep and Wang, Chenglong and Gao, Jiawei and Solar-Lezama, Armando},
+  title     = {Is Self-Repair a Silver Bullet for Code Generation?},
+  booktitle = {International Conference on Learning Representations ({ICLR})},
+  year      = {2024},
+  eprint    = {2306.09896},
+  archivePrefix = {arXiv},
+  url       = {https://proceedings.iclr.cc/paper_files/paper/2024/hash/9ddc141bdbf9d1db510cefff56c586ad-Abstract-Conference.html},
+  note      = {One repair pre-registered; pass@1 separate from pass@end}
+}
+
+@article{chen2024frugalgpt,
+  author    = {Chen, Lingjiao and Zaharia, Matei and Zou, James},
+  title     = {{FrugalGPT}: How to Use Large Language Models While Reducing Cost and Improving Performance},
+  journal   = {Transactions on Machine Learning Research ({TMLR})},
+  year      = {2024},
+  eprint    = {2305.05176},
+  archivePrefix = {arXiv},
+  note      = {Cascade precedent; our policy is fixed, no learned scorer}
+}
+
+@article{dietterich1998approximate,
+  author  = {Dietterich, Thomas G.},
+  title   = {Approximate Statistical Tests for Comparing Supervised Classification Learning Algorithms},
+  journal = {Neural Computation},
+  volume  = {10},
+  number  = {7},
+  pages   = {1895--1923},
+  year    = {1998},
+  note    = {McNemar for paired binary outcomes}
+}
+
+@article{mcnemar1947note,
+  author  = {McNemar, Quinn},
+  title   = {Note on the Sampling Error of the Difference Between Correlated Proportions or Percentages},
+  journal = {Psychometrika},
+  volume  = {12},
+  pages   = {153--157},
+  year    = {1947},
+  note    = {Original paired-proportions test}
+}
+
+@inproceedings{dror2018hitchhiker,
+  author    = {Dror, Rotem and Baumer, Gideon and Shlomov, Segev and Reichart, Roi},
+  title     = {The Hitchhiker's Guide to Testing Statistical Significance in Natural Language Processing},
+  booktitle = {Proceedings of the 56th Annual Meeting of the Association for Computational Linguistics ({ACL})},
+  year      = {2018},
+  pages     = {1383--1392},
+  doi       = {10.18653/v1/P18-1128},
+  note      = {Pre-set alpha; paired item as unit; nonparametric intervals}
+}
+
+@article{holm1979simple,
+  author  = {Holm, Sture},
+  title   = {A Simple Sequentially Rejective Multiple Test Procedure},
+  journal = {Scandinavian Journal of Statistics},
+  volume  = {6},
+  number  = {2},
+  pages   = {65--70},
+  year    = {1979},
+  note    = {Six-test Holm family in prereg}
+}
+
+@article{piaggio2012consort,
+  author  = {Piaggio, Giovanna and Elbourne, Diana R. and Pocock, Stuart J. and Evans, Sally J. W. and Altman, Douglas G.},
+  title   = {Reporting of Noninferiority and Equivalence Randomized Trials: Extension of the {CONSORT} 2010 Statement},
+  journal = {JAMA},
+  volume  = {308},
+  number  = {24},
+  pages   = {2594--2604},
+  year    = {2012},
+  doi     = {10.1001/jama.2012.87802},
+  note    = {Fixed NI margins; one-sided bound; p\_d is planning only}
+}
+
+@article{nosek2018preregistration,
+  author  = {Nosek, Brian A. and Ebersole, Charles R. and DeHaven, Alexander C. and Mellor, David T.},
+  title   = {The Preregistration Revolution},
+  journal = {Proceedings of the National Academy of Sciences},
+  volume  = {115},
+  number  = {11},
+  pages   = {2600--2606},
+  year    = {2018},
+  doi     = {10.1073/pnas.1708274114},
+  note    = {Zenodo upload is public freeze; not yet deposited}
+}
+
+@article{pineau2021reproducibility,
+  author  = {Pineau, Joelle and others},
+  title   = {Improving Reproducibility in Machine Learning Research (A Report from the {NeurIPS} Reproducibility Program)},
+  journal = {Journal of Machine Learning Research},
+  year    = {2021},
+  note    = {Pin tag, digest, seed, context, decoding}
+}
+
+@inproceedings{dodge2019show,
+  author    = {Dodge, Jesse and Gururangan, Suchin and Card, Dallas and Schwartz, Noah and Smith, Noah A.},
+  title     = {Show Your Work: Improved Reporting of Experimental Results},
+  booktitle = {Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing ({EMNLP})},
+  year      = {2019},
+  note      = {Report budget and hyperparameters; num\_ctx 8192}
+}
+
+@article{efron1979bootstrap,
+  author  = {Efron, Bradley},
+  title   = {Bootstrap Methods: Another Look at the Jackknife},
+  journal = {Annals of Statistics},
+  volume  = {7},
+  number  = {1},
+  pages   = {1--26},
+  year    = {1979},
+  note    = {Bootstrap CI method; B=10000 is pre-registered here}
+}
+
+@inproceedings{lee2022deduplicating,
+  author    = {Lee, Katherine and Ippolito, Daphne and Nystrom, Andrew and others},
+  title     = {Deduplicating Training Data Makes Language Models Better},
+  booktitle = {Proceedings of the 60th Annual Meeting of the Association for Computational Linguistics ({ACL})},
+  year      = {2022},
+  note      = {MinHash near-duplicate precedent; threshold 0.8 is ours}
+}
+
+@inproceedings{just2014defects4j,
+  author    = {Just, Ren{\'e} and Jalali, Darioush and Ernst, Michael D.},
+  title     = {{Defects4J}: A Database of Existing Faults to Enable Controlled Testing Studies for {Java} Programs},
+  booktitle = {International Symposium on Software Testing and Analysis ({ISSTA})},
+  year      = {2014},
+  note      = {KB01 negative-control precedent}
+}

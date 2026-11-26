@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parent.parent
 PAGE_PATH = ROOT / "docs" / "protocol" / "preregistration.md"
 AMEND_PATH = ROOT / "docs" / "protocol" / "preregistration-amendments.md"
 
-EXPECTED_SHA256 = "60db23774dc94ccfe77b3cc5fbbf1d2f466c06bf0bac54fbf0bebd60c0a10ef9"
+EXPECTED_SHA256 = "53ffc7e6229357c799a496c3a04e0602d4f9286c24e5ebd1b44fd8bd40b8526e"
 
 LOCK_PATHS = (
     "docs/protocol/preregistration.md",
@@ -112,7 +112,7 @@ EXPECTED_PREREG = {
     },
     "decoding": {
         "greedy_temperature": 0,
-        "sample_temperature": 0.2,
+        "sample_temperature": 0.8,
         "sample_count_k": 5,
         "sample_seeds": [1, 2, 3, 4, 5],
         "top_p": 0.95,

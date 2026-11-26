@@ -2,6 +2,10 @@
 
 Companion to [preregistration.md](preregistration.md). Confirmatory analyses use holdout rows only per domain; DEV and pilot are exploratory except for pre-declared model selection on **Embabel** DEV.
 
+## Grounding
+
+Greedy pass rates and paired McNemar tests use the task as the paired unit with pre-set \(\alpha=0.05\) (Dror et al., 2018; Dietterich, 1998; McNemar, 1947). Holm correction applies to the six confirmatory tests (Holm, 1979). H2 non-inferiority margins (10 pp Embabel, 15 pp Drivine) are fixed planning constants with one-sided bounds (Piaggio et al., 2012); \(p_d=0.30\) is a power assumption only. pass@1 uses Chen et al. (2021) with \(k=5\) sampled runs at temperature 0.8; \(k\) is a budget limit, not required by the estimator. Cluster bootstrap CIs use \(B=10\,000\) resamples over tasks (Efron, 1979). Full citations and deviations: [preregistration.md § Grounding](preregistration.md#grounding).
+
 ## Input contract
 
 Each scored config produces a run directory under `experiments/runs/` with:
