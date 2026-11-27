@@ -8,6 +8,7 @@ import unittest
 from pathlib import Path
 
 from analysis.hashes import sha256_text
+from analysis.project_oracle import path_under_source_root
 from analysis.snippet_oracle import check_python_snippets, evidence_record_from_check, write_work_manifest
 
 
@@ -49,6 +50,14 @@ class SnippetOracleTests(unittest.TestCase):
         self.assertEqual(len(record["covered_examples"]), 1)
         self.assertEqual(record["exit_code"], 0)
         self.assertEqual(json.loads(json.dumps(record["covered_examples"]))[0]["example_id"], "a" * 64)
+
+    def test_project_source_roots_skip_gradle_scripts(self) -> None:
+        self.assertTrue(path_under_source_root("src/main/kotlin/App.kt", ["src/main/kotlin"]))
+        self.assertTrue(
+            path_under_source_root("drivine4j-cli/src/test/kotlin/Cmd.kt", ["drivine4j-cli/src/test/kotlin"])
+        )
+        self.assertFalse(path_under_source_root("compiler/build.gradle.kts", ["compiler/src/commonMain"]))
+        self.assertFalse(path_under_source_root("src/main/kotlin/notes.md", ["src/main/kotlin"]))
 
     def test_nonzero_exit_produces_no_evidence(self) -> None:
         record = evidence_record_from_check(

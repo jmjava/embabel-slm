@@ -52,6 +52,7 @@ def run_fixed_argv(
     stderr = proc.stderr[:_MAX_CAPTURE]
     combined = stdout + stderr
     stdout_text = stdout.decode("utf-8", errors="replace")
+    stderr_text = stderr.decode("utf-8", errors="replace")
     return {
         "command_argv": list(argv),
         "command_sha256": canonical_command_sha256(argv),
@@ -59,6 +60,7 @@ def run_fixed_argv(
         "output_sha256": sha256_text(combined.decode("utf-8", errors="replace")),
         "artifact_sha256": hashlib.sha256(stdout).hexdigest(),
         "stdout_text": stdout_text,
+        "stderr_text": stderr_text,
     }
 
 

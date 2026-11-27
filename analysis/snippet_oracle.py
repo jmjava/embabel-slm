@@ -212,6 +212,26 @@ def _code_of(row: Mapping[str, object]) -> str | None:
     return None
 
 
+def checker_argv(
+    language: str,
+    workdir: Path,
+    *,
+    python_executable: str,
+    node_executable: str = "node",
+    typescript_package: str = "",
+) -> list[str]:
+    if language == "python":
+        return [python_executable, "-m", "analysis.snippet_oracle", "check-python", str(workdir)]
+    if language == "cypher":
+        return [python_executable, "-m", "analysis.snippet_oracle", "check-cypher", str(workdir)]
+    if language == "typescript":
+        script = Path(__file__).with_name("ts_syntax_check.mjs")
+        if not typescript_package:
+            raise ValueError("typescript checks require the typescript package path")
+        return [node_executable, str(script), typescript_package, str(workdir)]
+    raise ValueError("language must be python, cypher, or typescript")
+
+
 def emit_language(
     *,
     language: str,
@@ -220,11 +240,12 @@ def emit_language(
     work_root: Path,
     python_executable: str,
     limit: int | None = None,
+    node_executable: str = "node",
+    typescript_package: str = "",
 ) -> dict[str, object]:
-    if language not in {"python", "cypher"}:
-        raise ValueError("language must be python or cypher")
-    oracle_kind = "parser" if language == "python" else "compiler"
-    mode = "check-python" if language == "python" else "check-cypher"
+    if language not in {"python", "cypher", "typescript"}:
+        raise ValueError("language must be python, cypher, or typescript")
+    oracle_kind = "compiler" if language == "cypher" else "parser"
     grouped: dict[tuple[str, str], list[dict[str, str]]] = {}
     skipped = {"not_in_source": 0, "missing_code": 0, "hash_mismatch": 0}
     considered = 0
@@ -266,7 +287,13 @@ def emit_language(
                 if child.is_file():
                     child.unlink()
         write_work_manifest(workdir, rows)
-        argv = [python_executable, "-m", "analysis.snippet_oracle", mode, str(workdir)]
+        argv = checker_argv(
+            language,
+            workdir,
+            python_executable=python_executable,
+            node_executable=node_executable,
+            typescript_package=typescript_package,
+        )
         run_meta = run_fixed_argv(argv, cwd=Path(__file__).resolve().parents[1], timeout=900)
         result_path = workdir / "results.jsonl"
         passed = 0
@@ -325,13 +352,15 @@ def main(argv: list[str] | None = None) -> int:
     check_cypher = sub.add_parser("check-cypher")
     check_cypher.add_argument("workdir", type=Path)
     emit = sub.add_parser("emit")
-    emit.add_argument("--language", required=True, choices=("python", "cypher"))
+    emit.add_argument("--language", required=True, choices=("python", "cypher", "typescript"))
     emit.add_argument("--labeled", type=Path, required=True)
     emit.add_argument("--checkouts", type=Path, required=True)
     emit.add_argument("--workdir", type=Path, required=True)
     emit.add_argument("--evidence-out", type=Path, required=True)
     emit.add_argument("--summary-out", type=Path, required=True)
     emit.add_argument("--python", default=sys.executable)
+    emit.add_argument("--node", default="node")
+    emit.add_argument("--typescript", default="")
     emit.add_argument("--limit", type=int, default=None)
     args = parser.parse_args(argv)
     if args.command == "check-python":
@@ -347,6 +376,8 @@ def main(argv: list[str] | None = None) -> int:
         work_root=args.workdir,
         python_executable=args.python,
         limit=args.limit,
+        node_executable=args.node,
+        typescript_package=args.typescript,
     )
     evidence = summary.pop("evidence")
     from analysis.jsonl_io import write_canonical_jsonl

@@ -51,6 +51,8 @@ Pinned compile dependency: `com.embabel.agent:embabel-agent-api:1.5.4` from Mave
 (commit `3b9b74f494cb` builds as `1.5.5-SNAPSHOT` upstream). Run directories live under
 `experiments/runs/<utc>-<model>/` with `meta.json`, `scores.json`, and gitignored `raw/`.
 
+Admission oracles (JDK 21 for the Gradle toolchains, the `drivine-cypher-compiler==0.53.0` wheel, and the TypeScript parser) are documented in [experiments/paper-v1/README.md](experiments/paper-v1/README.md#oracle-environment).
+
 ## Standing rules
 
 - Do not start with fine-tuning.

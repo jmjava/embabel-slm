@@ -50,6 +50,55 @@ Every live or Embabel scored run writes a **new** directory (never overwrite):
 
 Zenodo gets scrubbed tables + `artifact-manifest.md`. Negative results count.
 
+## Oracle environment
+
+Admission runs on the labeled JSONL and the pinned checkouts. A checkout counts only when `git rev-parse HEAD` equals that row's `source_pin`. Embabel checkouts live under `checkouts/embabel/<repo>` and Drivine checkouts under `checkouts/drivine/<repo>`. Evidence is kept outside this repo. A green local run is not a sealed study.
+
+Install, from a clean shell:
+
+| Tool | Role |
+| --- | --- |
+| Python 3 | `python3 -m analysis` commands. Stdlib only. |
+| Node.js | TypeScript syntax checker `analysis/ts_syntax_check.mjs`. |
+| `typescript` npm package | Parser oracle. The emit command takes the package directory, for example `node_modules/typescript` after `npm install typescript@5.9.3`. |
+| `drivine-cypher-compiler==0.53.0` | Cypher compiler wheel declared by the pinned `drivine-python` package. Linux glibc x86_64 or aarch64. Pass that interpreter as `--python` for `--language cypher`. |
+| JDK 21 | Gradle toolchains in `drivine4j` and `drivine-cypher-spec/compiler` request language level 21 and do not download one unless a toolchain repository is configured. A JDK 25 `javac` does not satisfy that request. Temurin `21.0.13.1+2` works. Pass `-Dorg.gradle.java.installations.paths` pointing at that JDK. |
+| Maven | Embabel projects. `mvn -B -DskipTests compile` covers `src/main` only. Test sources need `mvn -B test-compile`. |
+
+Snippet checks (Python `ast.parse`, Cypher compile to SQLite SQL, TypeScript parse). A snippet is kept only when it is present in the pinned file and the checker exits 0:
+
+```bash
+python3 -m analysis.snippet_oracle emit \
+  --language python \
+  --labeled LABELED.jsonl \
+  --checkouts CHECKOUTS \
+  --workdir WORK \
+  --evidence-out python-evidence.jsonl \
+  --summary-out python-summary.json
+```
+
+Use `--language cypher` with `--python` set to the interpreter that has `drivine-cypher-compiler`. Use `--language typescript` with `--typescript` set to the installed `typescript` package directory.
+
+Project compiles cover a snippet only when the build exits 0, the source path is under a `--source-root` you name, and the suffix is `.kt`, `.java`, `.ts`, or `.tsx`. Do not name a root the command did not compile. `mvn -B -DskipTests compile` is main sources only.
+
+```bash
+python3 -m analysis.project_oracle \
+  --repo liberation-data/drivine4j \
+  --checkouts CHECKOUTS \
+  --labeled LABELED.jsonl \
+  --evidence-out drivine4j-evidence.jsonl \
+  --summary-out drivine4j-summary.json \
+  --source-root src/main/kotlin \
+  --source-root src/test/kotlin \
+  -- ./gradlew --no-daemon \
+       -Dorg.gradle.java.installations.paths=JDK21 \
+       compileKotlin compileJava compileTestKotlin compileTestJava
+```
+
+For `liberation-data/drivine-cypher-spec`, set `--command-cwd compiler` and compile `compileKotlinJvm compileTestKotlinJvm`. Source roots for that JVM build are `compiler/src/commonMain/kotlin`, `compiler/src/commonTest/kotlin`, `compiler/src/jvmMain/kotlin`, and `compiler/src/jvmTest/kotlin`.
+
+On 2026-11-27 this environment admitted **11,324** labeled rows (11,321 Drivine and 3 Embabel from `kotlin-agent-template`). That is short of the 16,000 clean-admitted floor. The other Embabel checkouts are not compiled yet. Do not seal from this count.
+
 ## Result tables
 
 Add CSV/Markdown here after live runs, e.g.:
