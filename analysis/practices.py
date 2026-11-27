@@ -1,8 +1,8 @@
 """Practices named in the protocol, as checks.
 
-The pre-registration page is the source of the labels, the 22 test names,
-the admission rule names, and the guide add-on. This module refuses an item
-or a dose that breaks those rules, and it reports each area on its own.
+The pre-registration page is the source of the area labels, the five prefix
+tests, the admission rule names, and the guide add-on. This module refuses an
+item or a dose list that breaks those rules.
 """
 
 from __future__ import annotations
@@ -34,15 +34,20 @@ def areas(prereg: dict) -> dict[str, tuple[str, ...]]:
     return {domain: tuple(labels) for domain, labels in raw.items()}
 
 
+def prefix_sizes(prereg: dict) -> tuple[int, ...]:
+    raw = prereg["statistics"]["example_doses"]["prefixes"]
+    return tuple(int(size) for size in raw)
+
+
 def holm_test_names(prereg: dict) -> tuple[str, ...]:
     names = tuple(prereg["statistics"]["holm_tests"])
-    expected = []
-    for domain, labels in areas(prereg).items():
-        for label in labels:
-            expected.append(f"{domain}_{label}_H1")
-            expected.append(f"{domain}_{label}_H2")
-    if names != tuple(expected):
-        raise ValueError("holm_tests must be H1 then H2 for every pre-registered area")
+    prefixes = prefix_sizes(prereg)
+    expected = tuple(
+        f"prefix_{prefixes[index]}_minus_{prefixes[index - 1]}"
+        for index in range(1, len(prefixes))
+    )
+    if names != expected:
+        raise ValueError("holm_tests must be the successive prefix doublings")
     return names
 
 
@@ -95,28 +100,38 @@ def admit_holdout(
     return reasons
 
 
-def lock_counts(middle: int, full: int) -> dict[str, int | bool]:
-    """One middle count and one full count, shared by every area."""
-    if isinstance(middle, bool) or isinstance(full, bool):
-        raise TypeError("counts must be integers")
-    if not isinstance(middle, int) or not isinstance(full, int):
-        raise TypeError("counts must be integers")
-    if middle < 1:
-        raise ValueError("middle count must be at least 1")
-    if full < 2 * middle:
-        raise ValueError("full count must be at least twice the middle count")
-    return {"middle": middle, "full": full, "same_pair_for_every_area": True}
+def lock_prefixes(prereg: dict) -> dict[str, object]:
+    """The six nested sizes named in the combined-dose plan."""
+    doses = prereg["statistics"]["example_doses"]
+    prefixes = prefix_sizes(prereg)
+    starts = tuple(int(size) for size in doses["starts"])
+    multipliers = tuple(int(size) for size in doses["multipliers"])
+    if prefixes != (500, 1000, 2000, 4000, 8000, 16000):
+        raise ValueError("prefixes must be 500, 1000, 2000, 4000, 8000, 16000")
+    if starts != (500, 1000, 2000) or multipliers != (1, 2, 4, 8):
+        raise ValueError("starts must be 500, 1000, 2000 and multipliers 1, 2, 4, 8")
+    if int(prereg["splits"]["holdout_min_tasks"]) != 742:
+        raise ValueError("the combined holdout is 742 tasks")
+    if prereg["splits"]["holdout_min_tasks_scope"] != "combined":
+        raise ValueError("the holdout scope is the combined exam")
+    return {
+        "prefixes": list(prefixes),
+        "starts": list(starts),
+        "multipliers": list(multipliers),
+        "holdout_min_tasks": 742,
+    }
 
 
-def assign_doses(ordered_ids: Sequence[str], middle: int, full: int) -> dict[str, list[str]]:
-    """The middle dose is the pre-fixed prefix of the full list."""
-    lock_counts(middle, full)
+def assign_doses(ordered_ids: Sequence[str], prereg: dict) -> dict[str, list[str]]:
+    """Every training size is a prefix of the one ordered list."""
+    locked = lock_prefixes(prereg)
+    full = int(locked["prefixes"][-1])
     if len(ordered_ids) < full:
-        raise ValueError("the authored list is shorter than the full count")
+        raise ValueError("the authored list is shorter than the largest prefix")
     if len(set(ordered_ids)) != len(ordered_ids):
-        raise ValueError("an example id appears twice in one area")
+        raise ValueError("an example id appears twice")
     chosen = list(ordered_ids[:full])
-    return {"middle": chosen[:middle], "full": chosen}
+    return {str(size): chosen[:size] for size in locked["prefixes"]}
 
 
 def discordant_counts(previous: Sequence[bool], later: Sequence[bool]) -> tuple[int, int]:
@@ -138,34 +153,24 @@ def one_sided_step_p(previous: Sequence[bool], later: Sequence[bool]) -> float:
     return exact_mcnemar_p_value_one_sided(b, c)
 
 
-def decide_areas(p_by_test: Mapping[str, float], prereg: dict) -> dict[str, object]:
-    """An area is proved when both of its Holm-adjusted tests reject.
+def decide_steps(p_by_test: Mapping[str, float], prereg: dict) -> dict[str, object]:
+    """A doubling is proved when its Holm-adjusted test rejects.
 
-    The study does not require every area to be proved.
+    The study does not require every step to be proved.
     """
     names = holm_test_names(prereg)
     missing = [name for name in names if name not in p_by_test]
     extra = [name for name in p_by_test if name not in names]
     if missing or extra:
-        raise ValueError(f"p-values must cover the 22 named tests; missing={missing} extra={extra}")
+        raise ValueError(f"p-values must cover the five prefix tests; missing={missing} extra={extra}")
     alpha = prereg["statistics"]["alpha_confirmatory"]
     adjusted = holm_bonferroni([float(p_by_test[name]) for name in names])
-    rejected = {name: adjusted[i] < alpha for i, name in enumerate(names)}
-    rows: dict[str, dict[str, bool]] = {}
-    for domain, labels in areas(prereg).items():
-        for label in labels:
-            h1 = f"{domain}_{label}_H1"
-            h2 = f"{domain}_{label}_H2"
-            rows[f"{domain}/{label}"] = {
-                "H1_rejects": rejected[h1],
-                "H2_rejects": rejected[h2],
-                "proved": rejected[h1] and rejected[h2],
-            }
+    rejected = {name: adjusted[index] < alpha for index, name in enumerate(names)}
     return {
-        "areas": rows,
-        "proved_count": sum(1 for row in rows.values() if row["proved"]),
-        "area_count": len(rows),
-        "requires_every_area": False,
+        "steps": {name: {"rejects": rejected[name]} for name in names},
+        "proved_count": sum(1 for name in names if rejected[name]),
+        "step_count": len(names),
+        "requires_every_step": False,
     }
 
 
@@ -174,7 +179,7 @@ def guide_practice_holds(prereg: dict) -> bool:
     guide = prereg["statistics"]["guide"]
     configs = prereg["configs"]
     return (
-        guide["when"] == "after_the_area_adapter_is_trained"
+        guide["when"] == "after_the_adapter_is_trained"
         and guide["what_it_does"] == "retrieves_pages_into_the_prompt"
         and guide["what_lora_does"] == "learns_the_admitted_examples"
         and guide["product_config"] == "D"
@@ -187,5 +192,5 @@ def guide_practice_holds(prereg: dict) -> bool:
 
 
 def guide_may_attach(adapter_trained: bool) -> bool:
-    """Product retrieval attaches only after the area adapter exists."""
+    """Product retrieval attaches only after the adapter exists."""
     return adapter_trained is True

@@ -2,22 +2,22 @@
 
 Performing the sequence below is scientifically sound for the claim it is allowed to make.
 
-Prove the decision rules, write the same middle and full example counts for every area, admit only area-labeled executable sourced items, seal 742 holdout tasks in each area, put the base-model shortlist in the protocol, and upload to Zenodo before any holdout score. A confirmatory result means that area's later dose beat the previous dose. Each area is reported. The study does not require every area to reject. A dose chosen after the scores is not part of the claim.
+Prove the decision rules, lock the prefixes 500, 1,000, 2,000, 4,000, 8,000, and 16,000, admit only area-labeled executable sourced items, seal one combined holdout of 742 tasks, put the base-model shortlist in the protocol, and upload to Zenodo before any holdout score. A confirmatory result means a later prefix beat the previous prefix on those tasks. Every step is reported. The study does not require every step to reject. A dose chosen after the scores is not part of the claim.
 
 Normative parameters live in [preregistration.md](preregistration.md). Estimators live in [analysis-plan.md](analysis-plan.md). This note is the reason those documents, followed in order, support that claim.
 
 ## The claim
 
-On a sealed holdout, using one base model chosen by the pre-registered rule, the result reports the paired gain inside each pre-registered area:
+On the sealed combined holdout, using one base model chosen by the pre-registered rule, the result reports the paired gain of each larger prefix:
 
-1. The middle dose of examples written for that area, minus zero.
-2. The full dose for that area, minus the middle dose.
+1. The 1,000-example prefix, minus the 500-example prefix.
+2. Each later doubling through the 16,000-example prefix, minus the prefix before it.
 
-An area is proved when both steps reject after Holm correction across the 22 area steps. A missed area is reported as not proved. The host ceiling and retrieval are reference measurements. They are not the example dose.
+A step is proved when its test rejects after Holm correction across the five prefix steps. A missed step is reported as not proved. The host ceiling and retrieval are reference measurements. They are not a training prefix.
 
 ## The sequence
 
-**1. Prove the four decision rules.** These are pure functions of the scored rows. A proof shows that every input produces the quantity named in the claim. `analysis/practices.py` is the admission check, the nested dose prefix, the one-sided area decision, and the guide add-on. `tests/test_practices.py` locks those rules. `tests/test_analysis.py` still checks the older estimators on examples. It does not yet cover every numeric input.
+**1. Prove the four decision rules.** These are pure functions of the scored rows. A proof shows that every input produces the quantity named in the claim. `analysis/practices.py` is the admission check, the nested prefix list, the one-sided step decision, and the guide add-on. `tests/test_practices.py` locks those rules. `tests/test_analysis.py` still checks the older estimators on examples. It does not yet cover every numeric input.
 
 **2. Close the three locks.** These are the assumptions the proof takes as given. They are closed by records made before any confirmatory score, not by the model results.
 
@@ -25,7 +25,7 @@ An area is proved when both steps reject after Holm correction across the 22 are
 
 ## Why this makes the result mean the claim
 
-The same tasks are scored at each nested dose, so the paired difference is the added examples. The smaller set is a subset of the larger set, so the comparison is more examples rather than a different sample. Tags are chosen on the Embabel development split and then frozen. Training examples are kept disjoint from the holdout, so a dose cannot be credited for an item it was shown. The 22 area-step tests are the confirmatory family. Each area needs at least 742 holdout tasks so a true 5-point step in that area has about 80% power on its own one-sided test.
+The same 742 tasks are scored at each nested prefix, so the paired difference is the added examples. The smaller set is a prefix of the larger set, so the comparison is more examples rather than a different sample. Tags are chosen on the Embabel development split and then frozen. Training examples are kept disjoint from the holdout, so a prefix cannot be credited for an item it was shown. The five prefix steps are the confirmatory family. Those 742 tasks give a true 5-point step about 80% power on its own one-sided test.
 
 If those conditions hold, a confirmatory report entails the claim above. If a lock is still open, a passing score does not yet mean the claim, because the procedure could still be aimed at a different quantity.
 
@@ -35,8 +35,8 @@ Each rule is the property the analysis code must have before holdout scoring. Th
 
 | Rule | What a reported number means | Research | Proof obligation |
 | --- | --- | --- | --- |
-| Dose differences | Inside one area, \(\Delta_1 = p_{\mathrm{mid}} - p_0\) and \(\Delta_2 = p_{\mathrm{full}} - p_{\mathrm{mid}}\), each with a task-level bootstrap interval | The task is the paired unit (Dror et al., 2018; Dietterich, 1998). The interval method is Efron (1979). The 5-point figure sizes the holdout. It is not a second pass rule. | Both differences are computed on that area's jointly resampled tasks. |
-| Dose tests | A confirmatory rejection is one of the four one-sided paired tests after Holm correction. Retrieval and the ceiling contrasts are not in that family | Exact McNemar on paired pass/fail (McNemar, 1947; Dietterich, 1998). Holm's sequential procedure controls the family-wise error rate (Holm, 1979). The direction and the dose counts are named before scores (Dror et al., 2018). | The implementation matches Holm's procedure, and a fifth comparison is not labeled confirmatory. Monotonicity is tested on one triple of p-values. |
+| Dose differences | On the combined holdout, each \(\Delta\) is the later prefix minus the previous prefix, with a task-level bootstrap interval | The task is the paired unit (Dror et al., 2018; Dietterich, 1998). The interval method is Efron (1979). The 5-point figure sizes the holdout. It is not a second pass rule. | Each difference is computed on the 742 jointly resampled tasks. |
+| Dose tests | A confirmatory rejection is one of the five one-sided paired tests after Holm correction. Retrieval and the ceiling contrasts are not in that family | Exact McNemar on paired pass/fail (McNemar, 1947; Dietterich, 1998). Holm's sequential procedure controls the family-wise error rate (Holm, 1979). The direction and the prefix sizes are named before scores (Dror et al., 2018). | The implementation matches Holm's procedure, and a size outside the six prefixes is not confirmatory. |
 | pass@1 | Chen's unbiased estimator at \(k=5\) and temperature 0.8. Greedy temperature 0 remains the primary paired outcome | Chen et al. (2021). The estimator is valid for any \(k\). Five samples is this study's budget. Chen drew far more than five. | `unbiased_pass_at_k` matches the formula. The all-pass and all-fail cases are tested. |
 | Paired p-value | The p-value is McNemar's exact test on the discordant pairs for that named hypothesis | McNemar (1947); Dietterich (1998). | `exact_mcnemar_p_value` matches the exact test. One numeric example is tested. |
 
@@ -58,15 +58,15 @@ These choices define the quantity being measured. They are grounded in prior wor
 - **Greedy as the primary outcome, samples reported separately.** Sampled runs use temperature 0.8, matching Chen et al. (2021). The primary tests use one greedy run per task so the paired comparison is not an average over draws.
 - **The shareable limit and the five-point floor are constraints.** Eligibility is 7–14B parameters and at most 16 GB at Q4_K_M with context 8192. That defines who can run the release model. The five-point general-coding floor in `docs/m0-bars.md` is an operational release rule: config D must not drop more than 5 points below the base on general coding. Neither number is an estimated optimum from a paper, and neither is the test that a step improved.
 
-Under the planning assumption \(p_d=0.30\), about 230 Embabel tasks detect a 10-point paired difference and about 100 Drivine tasks detect a 15-point difference (the power function checked in `tests/test_analysis.py`). Those are the gains this sample can reliably detect. A step is supported by its one-sided paired test, not by clearing 10 or 15 points.
+Under the planning assumption \(p_d=0.30\), 742 tasks detect a 5-point paired difference on the combined holdout. A step is supported by its one-sided paired test, not by the point estimate alone.
 
 The Part A harness, with one repair and a fast-then-strong cascade, is a separate measurement. Its sources are Olausson et al. (2024) and FrugalGPT (Chen, Zaharia, and Zou, 2024). Its layer order is this project's contract. Its 16-case sessions are diagnostics. They are not the holdout result described here.
 
 ## What a confirmatory result does not say
 
 - It does not say an example set chosen after the scores will also raise the score. The three doses were named in advance. A fourth dose needs its own confirmation set.
-- It does not say the full dose beat zero examples through both steps. The second step compares the full dose with the middle dose. One jump from zero to the full dose is not a gradual gain.
-- It does not prove the confidence interval sits above 5 points. 742 tasks power a test of a 5-point gain against zero. They do not put the lower bound itself above 5. The practical rule is the point estimate plus the paired test.
+- It does not say the largest prefix beat the smallest through every step. Each test compares one prefix with the prefix before it. One jump across several sizes is not a separate claim.
+- It does not prove the confidence interval sits above 5 points. 742 tasks power a test of a 5-point gain on the combined exam. They do not put the lower bound itself above 5. The practical rule is the point estimate plus the paired test.
 - It does not estimate a random 7–14B model. It estimates the tags the development rule selected.
 - It does not show that the model matched the host ceiling. That comparison is a reference.
 - It does not generalize beyond this holdout, this host, and context 8192. Researcher-written tasks and one host limit how far the claim travels. They do not change the paired estimate on the sealed items.

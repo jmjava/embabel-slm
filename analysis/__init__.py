@@ -11,11 +11,11 @@ from analysis.practices import (
     admit_example,
     admit_holdout,
     assign_doses,
-    decide_areas,
+    decide_steps,
     guide_may_attach,
     guide_practice_holds,
     load_prereg,
-    lock_counts,
+    lock_prefixes,
 )
 
 __all__ = [
@@ -27,9 +27,9 @@ __all__ = [
     "load_prereg",
     "admit_example",
     "admit_holdout",
-    "lock_counts",
+    "lock_prefixes",
     "assign_doses",
-    "decide_areas",
+    "decide_steps",
     "guide_practice_holds",
     "guide_may_attach",
     "holm_bonferroni",

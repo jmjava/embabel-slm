@@ -85,11 +85,11 @@ Exit: a written A-vs-B result on the untrained base. The product guide is added 
 ### M4 — Lock the holdout
 
 - [ ] M4: Write the official base-model shortlist into the protocol before any development score. Upload the protocol to Zenodo **before any holdout scoring** (see [protocol/preregistration.md](protocol/preregistration.md); operator upload only; complete [internal publication-review checklist](../internal/publication-review.md) first — that file is not part of the Zenodo package)
-- [ ] M4: Write the same middle and full example counts for every area into the protocol before authoring
+- [ ] M4: The prefixes 500, 1,000, 2,000, 4,000, 8,000, and 16,000 are locked in the protocol before authoring
 - [ ] M4: Build the admission checker (one area label, executable oracle, source pin, not a near-duplicate)
-- [ ] M4: Author ≥742 held-out tasks in **each** of generation, repair, planning, transformation, refactor, and integration (4,452); commit the manifest hash before scoring
+- [ ] M4: Author the combined holdout of 742 tasks and keep it disjoint from those prefixes; commit the manifest hash before scoring
 - [ ] M4: Score middle (M) and ceiling (L) reference baselines under configs A and B on DEV (comparison only)
-- [ ] M4 (legacy bar): the earlier 100-task draft remains a floor until the confirmatory set reaches 742
+- [ ] M4 (legacy bar): the earlier 100-task draft remains a pilot until the combined holdout reaches 742
 - [ ] M4: Add a general-coding holdout large enough to catch a specialist that lost ordinary Java/Kotlin
 - [ ] M4: Keep benchmark tasks out of every training directory
 
@@ -98,10 +98,10 @@ Exit: a frozen split. Near-duplicates of holdout tasks are rejected before train
 ### M5 — Verified data, then the smallest adapter
 
 - [ ] M5: Extract Spring and Kotlin pattern cards from Guide, DICE, and the learning demos, each card citing its source file
-- [ ] M5: Produce compiler-verified training examples outside the holdout, authored for exactly one area, at the locked middle and full counts for every area
-- [ ] M5: Adapt the selected base on each area's nested doses
-- [ ] M5: Score zero, middle, and full on that area's sealed tasks
-- [ ] M5: Keep a dose only when its area tests reject, and only if the M0 general floor still holds
+- [ ] M5: Produce compiler-verified training examples outside the holdout, each labeled with one area, and cut the locked prefixes
+- [ ] M5: Adapt the selected base on the combined prefix list
+- [ ] M5: Score the six prefixes on the sealed 742-task holdout
+- [ ] M5: Report each prefix step, and keep the run only if the M0 general floor still holds
 
 Exit: the A/B/C/D table. An adapter that only memorizes docs retrieval should have supplied is discarded.
 
@@ -145,17 +145,17 @@ Exit: written A-vs-B on pilot. Adapter waits on the written gap.
 
 ### D4 — Lock the Drivine holdout (parallel M4)
 
-- [ ] D4: Author ≥742 executable holdout tasks in **each** of generation, repair, query, graph-RAG, and integration (3,710); commit the manifest hash before scoring
+- [ ] D4: Drivine tasks inside the combined 742-task holdout are executable; commit the manifest hash before scoring
 - [ ] D4: Exclude `data/drivine_instruct.json` (100 training/DEV pairs) via near-duplicate rule
 
 Exit: frozen Drivine split disjoint from the 100 instruct pairs.
 
 ### D5 — One domain-specific adapter (parallel M5)
 
-- [ ] D5: Train on Drivine examples authored for one area, at the same middle and full counts as Embabel, disjoint from the Drivine holdout
-- [ ] D5: Score zero, middle, and full on each area's sealed executable tasks using the Embabel-selected base tag
+- [ ] D5: Drivine examples sit on the same ordered list as Embabel examples, disjoint from the combined holdout
+- [ ] D5: Score the six prefixes on the sealed 742-task holdout using the Embabel-selected base tag
 
-Exit: Drivine A/B/C/D table on holdout. No shared adapter with Embabel.
+Exit: one A/B/C/D table on the combined holdout. One adapter trains on the combined list.
 
 ## Standing rules
 

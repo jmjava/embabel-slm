@@ -7,12 +7,12 @@ from analysis.practices import (
     admit_example,
     admit_holdout,
     assign_doses,
-    decide_areas,
+    decide_steps,
     guide_may_attach,
     guide_practice_holds,
     holm_test_names,
     load_prereg,
-    lock_counts,
+    lock_prefixes,
     areas,
 )
 
@@ -52,9 +52,9 @@ class PracticeLockTests(unittest.TestCase):
         self.assertEqual(len(labels["embabel"]), 6)
         self.assertEqual(len(labels["drivine"]), 5)
         names = holm_test_names(self.prereg)
-        self.assertEqual(len(names), 22)
-        self.assertEqual(names[0], "embabel_generation_H1")
-        self.assertEqual(names[-1], "drivine_integration_H2")
+        self.assertEqual(len(names), 5)
+        self.assertEqual(names[0], "prefix_1000_minus_500")
+        self.assertEqual(names[-1], "prefix_16000_minus_8000")
 
     def test_guide_is_an_addon_after_training(self):
         self.assertTrue(guide_practice_holds(self.prereg))
@@ -117,39 +117,40 @@ class AdmissionTests(unittest.TestCase):
 
 
 class DoseTests(unittest.TestCase):
-    def test_shared_counts(self):
-        locked = lock_counts(10, 20)
-        self.assertEqual(locked["middle"], 10)
-        self.assertEqual(locked["full"], 20)
-        self.assertTrue(locked["same_pair_for_every_area"])
-        with self.assertRaises(ValueError):
-            lock_counts(10, 19)
-
-    def test_middle_is_prefix(self):
-        ids = [f"e{i}" for i in range(6)]
-        doses = assign_doses(ids, 2, 4)
-        self.assertEqual(doses["middle"], ["e0", "e1"])
-        self.assertEqual(doses["full"], ["e0", "e1", "e2", "e3"])
-        self.assertEqual(doses["full"][:2], doses["middle"])
-
-
-class AreaDecisionTests(unittest.TestCase):
     def setUp(self):
         self.prereg = load_prereg()
 
-    def test_one_area_can_be_proved_alone(self):
+    def test_named_ladder(self):
+        locked = lock_prefixes(self.prereg)
+        self.assertEqual(locked["prefixes"], [500, 1000, 2000, 4000, 8000, 16000])
+        self.assertEqual(locked["starts"], [500, 1000, 2000])
+        self.assertEqual(locked["multipliers"], [1, 2, 4, 8])
+        self.assertEqual(locked["holdout_min_tasks"], 742)
+
+    def test_each_size_is_a_prefix_of_the_next(self):
+        ids = [f"e{i}" for i in range(16000)]
+        doses = assign_doses(ids, self.prereg)
+        self.assertEqual(len(doses["500"]), 500)
+        self.assertEqual(doses["16000"][:8000], doses["8000"])
+        self.assertEqual(doses["1000"][:500], doses["500"])
+
+
+class StepDecisionTests(unittest.TestCase):
+    def setUp(self):
+        self.prereg = load_prereg()
+
+    def test_one_step_can_be_proved_alone(self):
         p_values = {name: 0.9 for name in holm_test_names(self.prereg)}
-        p_values["embabel_generation_H1"] = 0.001
-        p_values["embabel_generation_H2"] = 0.001
-        decision = decide_areas(p_values, self.prereg)
+        p_values["prefix_1000_minus_500"] = 0.001
+        decision = decide_steps(p_values, self.prereg)
         self.assertEqual(decision["proved_count"], 1)
-        self.assertTrue(decision["areas"]["embabel/generation"]["proved"])
-        self.assertFalse(decision["areas"]["drivine/query"]["proved"])
-        self.assertFalse(decision["requires_every_area"])
+        self.assertTrue(decision["steps"]["prefix_1000_minus_500"]["rejects"])
+        self.assertFalse(decision["steps"]["prefix_16000_minus_8000"]["rejects"])
+        self.assertFalse(decision["requires_every_step"])
 
     def test_missing_test_is_rejected(self):
         with self.assertRaises(ValueError):
-            decide_areas({}, self.prereg)
+            decide_steps({}, self.prereg)
 
 
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
 # Pre-registration: example dose and practical gain (Embabel and Drivine holdouts)
 
-Registered-report style protocol for area-by-area improvement on **two domains**: Embabel (Part B) and Drivine (Part C). Examples are written for one pre-registered area. They are not drawn from a mixed pool. Within each area the doses are nested, and each larger dose is tested on that area's tasks only. Every pre-registered area is part of the confirmatory claim. Arms, quantization, `num_ctx`, decoding, and model **selection** are shared. Retrieval and the host-ceiling model are reference measurements, not the dose. Inference for every scored row uses **Ollama** on `host_class=halo-395`. This document is the normative protocol; [analysis-plan.md](analysis-plan.md) gives estimators and tests. The work still required before any dose is scored is [example-dose-plan.md](example-dose-plan.md). Machine-checkable parameters sit in the JSON block below.
+Registered-report style protocol for one combined holdout on **two domains**: Embabel (Part B) and Drivine (Part C). Admitted examples keep one pre-registered area label and are placed on one ordered list. Every training size is a prefix of that list. The same 742 tasks are scored after each prefix. Area labels build the mix. An area breakdown is reported with the result and is not its own 742-task exam. Arms, quantization, `num_ctx`, decoding, and model **selection** are shared. Retrieval and the host-ceiling model are reference measurements, not the dose. Inference for every scored row uses **Ollama** on `host_class=halo-395`. This document is the normative protocol; [analysis-plan.md](analysis-plan.md) gives estimators and tests. The dose ladder is [combined-dose-plan.md](combined-dose-plan.md). Machine-checkable parameters sit in the JSON block below.
 
 **Publication gate (operator checklist):** No Zenodo upload until the operator's internal publication-review checklist is complete.
 
@@ -10,13 +10,13 @@ Registered-report style protocol for area-by-area improvement on **two domains**
 
 ## Title
 
-Do examples written for each area incrementally raise that area's holdout score?
+Does a larger nested training set raise the combined holdout score?
 
 ---
 
 ## Research question
 
-On sealed holdouts, does each larger nested set of examples written for an area raise full-task success over the previous set, **on that area's tasks**? Embabel areas are generation, repair, planning, transformation, refactor, and integration. Drivine areas are generation, repair, query, graph-RAG, and integration. A mixed pool of examples is not a dose. An area that is dropped after scores is not a result. The count of examples in each area's middle and full dose is written into this protocol before any example is authored.
+On one sealed holdout of 742 tasks, does each larger prefix of the ordered example list raise full-task success over the previous prefix? Embabel labels are generation, repair, planning, transformation, refactor, and integration. Drivine labels are generation, repair, query, graph-RAG, and integration. The list is drawn in the labeled-pool shares, not in equal area weights. The named prefixes are 500, 1,000, 2,000, 4,000, 8,000, and 16,000. They come from starts of 500, 1,000, and 2,000 at multipliers 1, 2, 4, and 8. A size outside that list is not part of the claim.
 
 Model tags for S, M, and L are chosen **only** on the Embabel DEV split. Drivine uses those same tags; Drivine outcomes do not re-pick the base, middle, or ceiling.
 
@@ -26,21 +26,24 @@ Model tags for S, M, and L are chosen **only** on the Embabel DEV split. Drivine
 
 | ID | Where | Statement | Test |
 | --- | --- | --- | --- |
-| H1 | Each pre-registered area | The middle dose of examples authored for that area beats zero examples, on that area's tasks | One-sided exact McNemar |
-| H2 | Each pre-registered area | The full dose beats the middle dose, on that area's tasks | One-sided exact McNemar |
-| H4 | Both domains | General floor: the full doses together hold the M0 general-coding floor versus zero examples | Per m0-bars rules; **one** gate, outside the area family |
+| prefix_1000_minus_500 | Combined holdout | The 1,000-example prefix beats the 500-example prefix | One-sided exact McNemar |
+| prefix_2000_minus_1000 | Combined holdout | The 2,000-example prefix beats the 1,000-example prefix | One-sided exact McNemar |
+| prefix_4000_minus_2000 | Combined holdout | The 4,000-example prefix beats the 2,000-example prefix | One-sided exact McNemar |
+| prefix_8000_minus_4000 | Combined holdout | The 8,000-example prefix beats the 4,000-example prefix | One-sided exact McNemar |
+| prefix_16000_minus_8000 | Combined holdout | The 16,000-example prefix beats the 8,000-example prefix | One-sided exact McNemar |
+| H4 | Both domains | General floor: the largest prefix holds the M0 general-coding floor versus zero examples | Per m0-bars rules; **one** gate, outside the prefix family |
 
-**Headline estimand (per area, per step):** the paired pass-rate difference, this dose minus the previous dose, with a cluster-bootstrap 95% CI. An increment in an area is proved when that area's one-sided test rejects after Holm correction across every area step. Each area is its own result. The study does not require all 22 tests to reject. A missed area is reported as not proved for that area. A gain on a pooled mix of areas is not that claim. The full dose can beat zero while the second step fails. That area then has one jump, not an incremental gain.
+**Headline estimand (per step):** the paired pass-rate difference on the 742 tasks, this prefix minus the previous prefix, with a cluster-bootstrap 95% CI. A step is proved when its one-sided test rejects after Holm correction across the five prefix steps. The study does not require all five tests to reject. A missed step is reported as not proved. The training example is a method, and the enclosing type signature is its frame.
 
-Examples admitted to an area are written for that area and carry its label. A compiler-verified example from another area does not count. Within an area, the middle dose is a prefix of the full dose in an order fixed before any score. It is not a reshuffle of a mixed pool.
+Each admitted example carries exactly one pre-registered area label. The order is fixed before any score. Each larger prefix contains the smaller one. The mix follows the labeled pool at every prefix.
 
-The 5-point difference in `docs/m0-bars.md` remains the release floor. It is not a second gate on these tests. **742** tasks **in one area** is the one-sided sample size for a true 5-point step in that area (\(p_d=0.30\), \(\alpha=0.05\), power 0.80). Embabel has six areas and Drivine has five, so a 5-point proof in every area is 742 tasks per area, not 742 tasks in total. A larger within-area gain can be powered with fewer tasks only if that planning delta is written here before those tasks are authored. The confidence interval is reported. It is not required to lie entirely above 5 points.
+The 5-point difference in `docs/m0-bars.md` remains the release floor. It is not a second gate on these tests. **742** tasks on the combined holdout is the one-sided sample size for a true 5-point step (\(p_d=0.30\), \(\alpha=0.05\), power 0.80). The confidence interval is reported. It is not required to lie entirely above 5 points.
 
 **What a later dose is not.** The holdout is scored once at these three doses. Adding examples after seeing the scores, then rescoring the same holdout, is not further evidence that more examples help.
 
 **Reference, not confirmatory:** retrieval versus the base; gap closure \(G\) versus the host ceiling (undefined when the ceiling-gap interval includes 0); ceiling contrasts.
 
-**Multiplicity:** Holm–Bonferroni on the 22 one-sided McNemar tests named in the JSON: H1 and H2 for each of the six Embabel areas and each of the five Drivine areas. H4 is outside that family. An area is not added or removed after scores exist.
+**Multiplicity:** Holm–Bonferroni on the five one-sided McNemar tests named in the JSON, one for each successive prefix doubling. H4 is outside that family. A prefix is not added or removed after scores exist.
 
 Exploratory: retrieval; size curve across S/M/L; ceiling contrasts; \(G\); quantization effect (Q4_K_M vs one Q8_0 row at dose 0).
 
@@ -58,7 +61,7 @@ Exploratory: retrieval; size curve across S/M/L; ceiling contrasts; \(G\); quant
 
 **Quantization:** Q4_K_M for every arm and config. One additional **Q8_0** row for the selected shareable base (config A only) to measure quantization effect.
 
-**A/B/C/D** (arm S): A = base; B = guide retrieval on the untrained base; C = LoRA; D = the same guide attached to the already trained model. LoRA learns the practices in the admitted examples: compiler-checked, written for one area, and sourced. The guide does not train the model. It retrieves pages into the prompt at answer time, and on the product path it is added only after that adapter exists. Config B is the reference row that scores the guide before training. The guide does not fill an example dose. **LoRA is per domain:** the Embabel adapter trains only on Embabel material disjoint from the Embabel holdout; the Drivine adapter trains only on Drivine material disjoint from the Drivine holdout. Configs C and D **never** share one adapter across domains.
+**A/B/C/D** (arm S): A = base; B = guide retrieval on the untrained base; C = LoRA; D = the same guide attached to the already trained model. LoRA learns the admitted examples on the one ordered list: compiler-checked or executable, labeled with one area, and sourced. The guide does not train the model. It retrieves pages into the prompt at answer time, and on the product path it is added only after that adapter exists. Config B is the reference row that scores the guide before training. The guide does not fill a prefix. One adapter trains on the combined list. That list stays disjoint from the 742-task holdout.
 
 ### Model selection (pre-declared, Embabel DEV split only)
 
@@ -76,7 +79,7 @@ Pilot results (Embabel E01–E20 + KB01; Drivine pilot executable tasks) **never
 | --- | --- | --- |
 | Pilot | E01–E20 + KB01; may become DEV | No |
 | DEV | Prompt, retrieval pack, **Embabel** adapter tuning; model shortlist selection | No |
-| Holdout | ≥742 tasks in **each** of the six areas; sealed manifest | Yes — exactly one scored pass per area dose |
+| Holdout | 742 tasks in the combined exam; sealed manifest | Yes — one scored pass per prefix |
 
 Before Embabel holdout scoring: commit **only** the sha256 of the canonical Embabel holdout task files. Each config is scored once with the frozen [analysis](../../analysis/) scripts. Near-duplicates between training/retrieval data and Embabel holdout are filtered (MinHash/Jaccard on normalized code+prompt; threshold in JSON). Each model's stated training cutoff vs Embabel release dates is recorded; a post-cutoff task subset flag supports contamination sensitivity analysis.
 
@@ -86,7 +89,7 @@ Before Embabel holdout scoring: commit **only** the sha256 of the canonical Emba
 | --- | --- | --- |
 | DEV / training | `jmjava/drivine-slm` `data/drivine_instruct.json` (100 pairs); retrieval and **Drivine** adapter tuning | No — not a scored benchmark |
 | Pilot | ~20 newly authored **executable** tasks; may be scored before holdout | No |
-| Holdout | ≥742 newly authored **executable** tasks in **each** area; generation, repair, query, graph-RAG, integration | Yes — exactly one scored pass per area dose |
+| Holdout | The same 742-task combined exam. Drivine tasks in it are executable | Yes — one scored pass per prefix |
 
 **Primary Drivine outcome:** `full_task_success` on **executable** tasks only. The Drivine runner extracts code; a task passes only when parse, compile or query-execute against a pinned Drivine, and fixture assertions succeed. Tasks with no executable oracle **cannot** enter the confirmatory holdout. Explanation items are secondary (written rubric, two blinded raters, Cohen's κ); they are **not** in the primary denominator.
 
@@ -102,7 +105,7 @@ Same system prompt and task prompts per domain, `num_ctx=8192`, greedy and sampl
 
 ## Outcomes
 
-**Primary (per domain):** `full_task_success` on domain holdout (greedy and pass@1 via Chen et al. unbiased estimator). Drivine primary denominator is executable tasks only.
+**Primary:** `full_task_success` on the combined holdout (greedy and pass@1 via Chen et al. unbiased estimator). Drivine tasks in that denominator are executable only.
 
 **Secondary:** domain-specific automated metrics; general-coding floor tasks (H4); accuracy per GB peak memory; tokens/s; latency.
 
@@ -112,7 +115,7 @@ Human-judged explanation items: written rubric, two blinded raters, Cohen's κ r
 
 ## Sample size and power
 
-**Per area:** holdout ≥742 tasks in each pre-registered area. Drivine's tasks must be executable. Embabel has six areas (4,452 tasks). Drivine has five (3,710 tasks). The confirmatory tests are one-sided. Under \(p_d \approx 0.30\), \(\alpha=0.05\), and power 0.80, `mcnemar_n_required(0.05, two_sided=False)` is 742 for one step in one area. Each area is reported on its own. The study does not require all 22 tests to reject.
+**Combined exam:** holdout = 742 tasks. Drivine tasks in that exam must be executable. The confirmatory tests are one-sided. Under \(p_d \approx 0.30\), \(\alpha=0.05\), and power 0.80, `mcnemar_n_required(0.05, two_sided=False)` is 742 for one 5-point step on this exam. The five prefix steps share that exam. The study does not require all five tests to reject.
 
 | \(n\) | Detectable \(\delta\), one-sided (approx., \(p_d=0.30\)) |
 | --- | --- |
@@ -127,7 +130,7 @@ Reproduce tables with `python3 -m analysis power`.
 
 ## Analysis plan (summary)
 
-Per-task paired design per domain: one greedy run (\(T=0\)) plus \(k\) sampled runs (\(T=0.8\), fixed seeds). Cluster bootstrap (10,000 resamples, fixed seed) for 95% CIs on each dose step (mid minus zero, full minus mid). One-sided exact McNemar on greedy passes for H1 and H2, plus the 5-point point-estimate check. Holm–Bonferroni across the four domain-labeled tests. Retrieval, \(G\), and ceiling contrasts are exploratory. Effect sizes with CIs, not p-values alone. Full detail: [analysis-plan.md](analysis-plan.md). Frozen script hash recorded in run manifest at holdout freeze.
+Per-task paired design: one greedy run (\(T=0\)) plus \(k\) sampled runs (\(T=0.8\), fixed seeds). Cluster bootstrap (10,000 resamples, fixed seed) for 95% CIs on each prefix step. One-sided exact McNemar on greedy passes for the five prefix doublings. Holm–Bonferroni across those five tests. Retrieval, \(G\), and ceiling contrasts are exploratory. Effect sizes with CIs, not p-values alone. Full detail: [analysis-plan.md](analysis-plan.md). Frozen script hash recorded in run manifest at holdout freeze.
 
 ---
 
@@ -167,7 +170,7 @@ Any deviation from this protocol is logged in [deviations-log.md](deviations-log
 
 Confirmatory design choices below are grounded in cited prior work. Scope limits and deviations are stated when our setting differs.
 
-**Constraints (not findings from the literature).** Shareable arm eligibility (7–14B parameters, peak memory ≤16 GB at Q4_K_M and `num_ctx=8192`) defines who can run the release model; it is not an estimated optimum from any paper. The five-point difference in `docs/m0-bars.md` is the release floor: a full dose that drops more than 5 points on general coding fails. It is not the test that a dose step improved. The holdout minimum of 742 tasks is the one-sided sample size for a 5-point difference inside one area. It is not an estimated optimum. The same minimum applies to every pre-registered area. Official S, M, and L shortlist tags are not locked in the JSON yet; the shortlist must be written into this protocol before any Embabel DEV scoring, and selection uses only the pre-registered rule above.
+**Constraints (not findings from the literature).** Shareable arm eligibility (7–14B parameters, peak memory ≤16 GB at Q4_K_M and `num_ctx=8192`) defines who can run the release model; it is not an estimated optimum from any paper. The five-point difference in `docs/m0-bars.md` is the release floor: a full dose that drops more than 5 points on general coding fails. It is not the test that a dose step improved. The holdout minimum of 742 tasks is the one-sided sample size for a 5-point difference on the combined exam. It is not an estimated optimum. Official S, M, and L shortlist tags are not locked in the JSON yet; the shortlist must be written into this protocol before any Embabel DEV scoring, and selection uses only the pre-registered rule above.
 
 **Pre-registration and timing.** Hypotheses, sample size, and analysis are specified before confirmatory scores (Nosek et al., 2018). The public timestamp is Zenodo upload of this document; that upload has not happened, and no holdout row is scored before it.
 
@@ -185,9 +188,9 @@ Confirmatory design choices below are grounded in cited prior work. Scope limits
 
 **Paired inference.** Greedy confirmatory tests use exact McNemar on paired pass/fail (Dietterich, 1998; McNemar, 1947). We pre-set \(\alpha=0.05\), name each test, and treat the paired task as the unit (Dror et al., 2018).
 
-**Multiplicity.** Holm’s sequential rejective procedure controls the six confirmatory McNemar-related tests (Holm, 1979).
+**Multiplicity.** Holm’s sequential rejective procedure controls the five confirmatory prefix tests (Holm, 1979).
 
-**Example doses.** H1 and H2 are one-sided exact McNemar tests, repeated for every pre-registered area: the larger nested set of examples authored for that area passes more of that area's holdout tasks than the previous set (McNemar, 1947; Dietterich, 1998). The same middle and full counts are written into this protocol before any example is authored (Dror et al., 2018). They are not taken from a data-scaling paper. A checked citation for score versus number of training examples is still required before Zenodo. \(p_d=0.30\) for McNemar power is a planning assumption, not an estimate from data. Ceiling comparisons are not non-inferiority tests. Piaggio et al. (2012) would apply only if a later amendment made a ceiling margin confirmatory.
+**Example doses.** The five confirmatory tests are one-sided exact McNemar tests on the combined holdout: each larger prefix passes more of the same 742 tasks than the previous prefix (McNemar, 1947; Dietterich, 1998). The prefixes and the three starting values are written into this protocol before any example is authored (Dror et al., 2018). They are not taken from a data-scaling paper. A checked citation for score versus number of training examples is still required before Zenodo. \(p_d=0.30\) for McNemar power is a planning assumption, not an estimate from data. Ceiling comparisons are not non-inferiority tests. Piaggio et al. (2012) would apply only if a later amendment made a ceiling margin confirmatory.
 
 **Bootstrap intervals.** Cluster bootstrap with \(B=10\,000\) resamples over tasks uses percentile intervals (Efron, 1979). \(B=10\,000\) is pre-registered here; resampling is over tasks as the paired unit (Dror et al., 2018; Dietterich, 1998).
 
@@ -233,7 +236,7 @@ Confirmatory design choices below are grounded in cited prior work. Scope limits
     "C": {"retrieval": false, "lora": true},
     "D": {"retrieval": true, "lora": true}
   },
-  "lora_per_domain": true,
+  "lora_per_domain": false,
   "selection_rules": {
     "metric": "full_task_success",
     "tie_break": "smaller_peak_memory_gb",
@@ -245,12 +248,11 @@ Confirmatory design choices below are grounded in cited prior work. Scope limits
     "confirmatory_split": "holdout",
     "dev_allows_tuning": true,
     "model_selection_domain": "embabel",
+    "holdout_min_tasks": 742,
+    "holdout_min_tasks_scope": "combined",
     "embabel": {
       "part": "B",
       "pilot_task_ids": "E01-E20,KB01",
-      "holdout_min_tasks": 742,
-      "holdout_min_tasks_scope": "per_area",
-      "holdout_area_count": 6,
       "holdout_categories": 6
     },
     "drivine": {
@@ -260,9 +262,6 @@ Confirmatory design choices below are grounded in cited prior work. Scope limits
       "dev_training_pairs_count": 100,
       "dev_excluded_from_holdout": true,
       "pilot_executable_min_tasks": 20,
-      "holdout_min_tasks": 742,
-      "holdout_min_tasks_scope": "per_area",
-      "holdout_area_count": 5,
       "holdout_category_labels": [
         "generation",
         "repair",
@@ -286,48 +285,39 @@ Confirmatory design choices below are grounded in cited prior work. Scope limits
   "statistics": {
     "alpha_confirmatory": 0.05,
     "holm_tests": [
-      "embabel_generation_H1",
-      "embabel_generation_H2",
-      "embabel_repair_H1",
-      "embabel_repair_H2",
-      "embabel_planning_H1",
-      "embabel_planning_H2",
-      "embabel_transformation_H1",
-      "embabel_transformation_H2",
-      "embabel_refactor_H1",
-      "embabel_refactor_H2",
-      "embabel_integration_H1",
-      "embabel_integration_H2",
-      "drivine_generation_H1",
-      "drivine_generation_H2",
-      "drivine_repair_H1",
-      "drivine_repair_H2",
-      "drivine_query_H1",
-      "drivine_query_H2",
-      "drivine_graph_rag_H1",
-      "drivine_graph_rag_H2",
-      "drivine_integration_H1",
-      "drivine_integration_H2"
+      "prefix_1000_minus_500",
+      "prefix_2000_minus_1000",
+      "prefix_4000_minus_2000",
+      "prefix_8000_minus_4000",
+      "prefix_16000_minus_8000"
     ],
     "areas": {
       "embabel": ["generation", "repair", "planning", "transformation", "refactor", "integration"],
       "drivine": ["generation", "repair", "query", "graph_rag", "integration"]
     },
     "example_doses": {
-      "unit": "compiler_verified_examples_authored_for_one_area",
+      "unit": "admitted_example_on_one_ordered_list",
       "assignment": "authored_for_exactly_one_area",
       "random_pool_rejected": true,
-      "nested_within_area": true,
-      "within_area_order_seed": 20260227,
-      "counts_per_area_locked_before_authoring": true,
-      "counts_per_area": null
+      "nested_prefixes": true,
+      "order_seed": 20260227,
+      "starts": [500, 1000, 2000],
+      "multipliers": [1, 2, 4, 8],
+      "prefixes": [500, 1000, 2000, 4000, 8000, 16000],
+      "mix": "labeled_pool_shares",
+      "equal_area_weights": false,
+      "grain": "method",
+      "counts_locked_before_authoring": true
     },
-    "confirmatory_contrast": "larger_nested_dose_minus_previous_dose_within_area",
+    "confirmatory_contrast": "later_prefix_minus_previous_prefix_on_combined_holdout",
     "confirmatory_comparisons": {
-      "H1": "area_dose_mid_minus_area_dose_0",
-      "H2": "area_dose_full_minus_area_dose_mid"
+      "prefix_1000_minus_500": "prefix_1000_minus_prefix_500",
+      "prefix_2000_minus_1000": "prefix_2000_minus_prefix_1000",
+      "prefix_4000_minus_2000": "prefix_4000_minus_prefix_2000",
+      "prefix_8000_minus_4000": "prefix_8000_minus_prefix_4000",
+      "prefix_16000_minus_8000": "prefix_16000_minus_prefix_8000"
     },
-    "confirmatory_unit": "every_pre_registered_area",
+    "confirmatory_unit": "combined_holdout",
     "increment_decision": "holm_reject_later_dose_beats_previous",
     "release_floor_percentage_points": 5,
     "release_floor_role": "general_coding_drop_limit_not_the_increment_test",
@@ -341,7 +331,7 @@ Confirmatory design choices below are grounded in cited prior work. Scope limits
         "source_file_and_pin_recorded",
         "not_near_duplicate_of_holdout",
         "authored_for_exactly_one_area",
-        "dose_membership_by_pre_fixed_within_area_order"
+        "dose_membership_by_pre_fixed_prefix_order"
       ],
       "holdout_admission": [
         "slice_label_before_any_model_output",
@@ -349,11 +339,11 @@ Confirmatory design choices below are grounded in cited prior work. Scope limits
         "manifest_hash_before_first_score",
         "no_edit_after_first_model_output"
       ],
-      "presentation": "every_preregistered_area_and_dose_including_non_improvements"
+      "presentation": "every_prefix_step_including_non_improvements"
     },
     "retrieval_role": "exploratory",
     "guide": {
-      "when": "after_the_area_adapter_is_trained",
+      "when": "after_the_adapter_is_trained",
       "what_it_does": "retrieves_pages_into_the_prompt",
       "what_lora_does": "learns_the_admitted_examples",
       "product_config": "D",
@@ -379,7 +369,14 @@ Confirmatory design choices below are grounded in cited prior work. Scope limits
     "numbers_freeze_date": "2027-02-27",
     "doi_target_date": "2027-03-31"
   },
-  "hypotheses_confirmatory": ["H1", "H2", "H4"],
+  "hypotheses_confirmatory": [
+    "prefix_1000_minus_500",
+    "prefix_2000_minus_1000",
+    "prefix_4000_minus_2000",
+    "prefix_8000_minus_4000",
+    "prefix_16000_minus_8000",
+    "H4"
+  ],
   "publication_gate_internal_review_required": true,
   "protocol_freeze": {
     "effective_at": "zenodo_upload",

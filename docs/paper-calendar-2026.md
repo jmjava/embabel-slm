@@ -62,7 +62,7 @@ Evidence gates (freeze target: **Fri 30 Jan 2027** for Part A numbers):
 | Frozen general + Embabel bars | M0 | One page that later runs cannot quietly edit |
 | Reproducible baseline on 20 tasks | M1–M2 | Run id with model, quant, prompt, commit, scores; known-bad fixture fails |
 | Base vs retrieval on same 20 | M3 | Written A-vs-B table (compile, hallucination, full success) |
-| Holdout ≥742 tasks in each of 6 Embabel areas + area dose table | M4–M5 | Counts locked before authoring; manifest hash before scoring; missed areas reported; cells missing at freeze → **not run** |
+| Combined holdout of 742 tasks and the six locked prefixes | M4–M5 | Prefixes locked before authoring; manifest hash before scoring; missed steps reported; cells missing at freeze → **not run** |
 
 **Part C — Drivine** (parallel track beside Embabel in P3–P4; same numbers freeze)
 
@@ -70,7 +70,7 @@ Evidence gates (freeze target: **Fri 30 Jan 2027** for Part A numbers):
 | --- | --- | --- |
 | Executable runner + pilot (~20) | D1–D2 | Pilot never confirmatory; harness records Drivine doc + package pins |
 | Retrieval before adapter | D3 | Same 20 pilot tasks; written A-vs-B |
-| Holdout ≥742 executable tasks in each of 5 Drivine areas | D4–D5 | Same base tag and same per-area example counts as Embabel; hash before scoring; missing at **Fri 27 Feb 2027** → **not run** |
+| Drivine tasks inside the combined 742-task holdout are executable | D4–D5 | Same base tag and the same prefix list; hash before scoring; missing at **Fri 27 Feb 2027** → **not run** |
 
 **Allowed verdicts:** works under contract / works only with repair-escalation / fails a named layer / retrieval closes most of the Embabel gap / weights still needed / inconclusive. All publishable if measured.
 
