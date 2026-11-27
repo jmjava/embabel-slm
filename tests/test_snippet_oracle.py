@@ -9,7 +9,14 @@ from pathlib import Path
 
 from analysis.hashes import sha256_text
 from analysis.project_oracle import path_under_source_root
-from analysis.snippet_oracle import check_python_snippets, evidence_record_from_check, write_work_manifest
+from analysis.snippet_oracle import (
+    check_python_snippets,
+    cypher_parameters,
+    cypher_text_in_document,
+    evidence_record_from_check,
+    recorded_cypher_parameters,
+    write_work_manifest,
+)
 
 
 class SnippetOracleTests(unittest.TestCase):
@@ -50,6 +57,25 @@ class SnippetOracleTests(unittest.TestCase):
         self.assertEqual(len(record["covered_examples"]), 1)
         self.assertEqual(record["exit_code"], 0)
         self.assertEqual(json.loads(json.dumps(record["covered_examples"]))[0]["example_id"], "a" * 64)
+
+    def test_cypher_parameters_bind_each_name_once(self) -> None:
+        self.assertEqual(cypher_parameters("RETURN $p + $p + $row_2"), {"p": "x", "row_2": "x"})
+
+    def test_recorded_cypher_parameters_follow_the_matching_step(self) -> None:
+        document = {
+            "cases": [
+                {"steps": [{"cypher": "RETURN $n", "parameters": {"n": 2}}]},
+                {"steps": [{"cypher": "RETURN $n", "parameters": {"n": "x"}}]},
+            ]
+        }
+        self.assertEqual(
+            recorded_cypher_parameters(document, "RETURN $n"),
+            [{"n": 2}, {"n": "x"}],
+        )
+        self.assertEqual(recorded_cypher_parameters(document, "RETURN $missing"), [])
+        self.assertEqual(recorded_cypher_parameters(document, "RETURN $n\n"), [{"n": 2}, {"n": "x"}])
+        self.assertTrue(cypher_text_in_document(document, "RETURN $n\n"))
+        self.assertFalse(cypher_text_in_document(document, "RETURN $missing"))
 
     def test_project_source_roots_skip_gradle_scripts(self) -> None:
         self.assertTrue(path_under_source_root("src/main/kotlin/App.kt", ["src/main/kotlin"]))

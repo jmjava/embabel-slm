@@ -64,6 +64,7 @@ def run_project_compile(
     argv: Sequence[str],
     timeout: int,
     command_cwd: Path | None = None,
+    evidence_suffix: str = "",
 ) -> dict[str, object]:
     verify_git_pin(checkout, pin)
     checkout_resolved = checkout.resolve()
@@ -76,8 +77,9 @@ def run_project_compile(
     if int(run_meta["exit_code"]) == 0:
         covered = covered_by_successful_build(repo_rows, checkout, roots)
         if covered:
+            suffix = f"-{evidence_suffix}" if evidence_suffix else ""
             record = evidence_record_from_check(
-                evidence_id=f"compiler-project-{repo.replace('/', '__')}-{pin[:12]}",
+                evidence_id=f"compiler-project-{repo.replace('/', '__')}-{pin[:12]}{suffix}",
                 source_repo=repo,
                 source_pin=pin,
                 oracle_kind="compiler",
@@ -107,6 +109,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--source-root", action="append", required=True)
     parser.add_argument("--timeout", type=int, default=1800)
     parser.add_argument("--command-cwd", default=".", help="directory under the checkout where the compile command runs")
+    parser.add_argument("--evidence-suffix", default="", help="extra evidence id token when one repo has more than one compile")
     parser.add_argument("command", nargs=argparse.REMAINDER)
     args = parser.parse_args(argv)
     command = list(args.command)
@@ -136,6 +139,7 @@ def main(argv: list[str] | None = None) -> int:
         argv=command,
         timeout=args.timeout,
         command_cwd=(checkout / args.command_cwd).resolve(),
+        evidence_suffix=args.evidence_suffix,
     )
     evidence = summary.pop("evidence")
     args.evidence_out.parent.mkdir(parents=True, exist_ok=True)
