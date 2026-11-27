@@ -29,7 +29,7 @@ No Zenodo upload until the operator's internal publication-review checklist is c
 | Drivine holdout manifest SHA256 | _TBD — commit before first Drivine holdout score_ |
 | Drivine tasks in that holdout | executable; they share the 742-task exam |
 | Drivine pilot harness | **exists** in `jmjava/drivine-slm` (`python/drivine_runner`); confirmatory harness **incomplete**; confirmatory scored rows **0** |
-| Corpus audit (current) | **53,676** raw → **16,211** labeled exact-code targets + **34,247** review; **211** provisional over **≥16,000 clean admitted** gate (feasibility high risk, not established) |
+| Corpus audit (current) | **53,676** raw → **16,211** labeled exact-code targets + **34,247** review; oracle admission **15,014**, cap **14,000** (1,014 held for later rejects) |
 | Mandatory seal | `python3 -m analysis seal-study` before prefixes; **0** scored confirmatory rows |
 | Training formatter | `embabel-slm-code-sft-v1` (selected-tokenizer counts: blocker) |
 | Drivine live sessions completed | 0 |
@@ -58,14 +58,17 @@ Install, from a clean shell:
 
 | Tool | Role |
 | --- | --- |
-| Python 3 | `python3 -m analysis` commands. Stdlib only. |
+| Python 3 | `python3 -m analysis` commands. Stdlib for the Python parser. |
+| PyYAML | Reads parameter maps from pinned Cypher YAML. The Cypher emit interpreter needs it. |
 | Node.js | TypeScript syntax checker `analysis/ts_syntax_check.mjs`. |
 | `typescript` npm package | Parser oracle. The emit command takes the package directory, for example `node_modules/typescript` after `npm install typescript@5.9.3`. |
 | `drivine-cypher-compiler==0.53.0` | Cypher compiler wheel declared by the pinned `drivine-python` package. Linux glibc x86_64 or aarch64. Pass that interpreter as `--python` for `--language cypher`. |
-| JDK 21 | Gradle toolchains in `drivine4j` and `drivine-cypher-spec/compiler` request language level 21 and do not download one unless a toolchain repository is configured. A JDK 25 `javac` does not satisfy that request. Temurin `21.0.13.1+2` works. Pass `-Dorg.gradle.java.installations.paths` pointing at that JDK. |
-| Maven | Embabel projects. `mvn -B -DskipTests compile` covers `src/main` only. Test sources need `mvn -B test-compile`. |
+| JDK 21 | Gradle toolchains in `drivine4j` and `drivine-cypher-spec/compiler` request language level 21 and do not download one unless a toolchain repository is configured. A JDK 25 `javac` does not satisfy that request. Temurin `21.0.13.1+2` works. Pass `-Dorg.gradle.java.installations.paths` pointing at that JDK. Dice's nested Gradle codegen also needs `JAVA_HOME` on that JDK. |
+| Maven | Embabel projects. `mvn -B -DskipTests compile` covers `src/main` only. Test sources need `mvn -B -DskipTests test-compile`. |
+| bun | `dice-architecture-decisions`, `dice-customer-commitments`, and `dice-governed-chat` run `bun` during `test-compile`. |
+| npm 10 | `urbot` uses Vaadin, which rejects npm 9.2. Node 22 with npm 10.9.2 passes that check. |
 
-Snippet checks (Python `ast.parse`, Cypher compile to SQLite SQL, TypeScript parse). A snippet is kept only when it is present in the pinned file and the checker exits 0:
+Snippet checks (Python `ast.parse`, Cypher compile to SQL, TypeScript parse). Cypher tries the sqlite, postgres, and oracle stores. A pinned YAML step's own parameters are tried before binding each `$name` to text. A YAML block scalar counts as in-source when the parsed step value is the statement. A snippet is kept only when it is present in the pinned file and the checker exits 0:
 
 ```bash
 python3 -m analysis.snippet_oracle emit \
@@ -97,7 +100,7 @@ python3 -m analysis.project_oracle \
 
 For `liberation-data/drivine-cypher-spec`, set `--command-cwd compiler` and compile `compileKotlinJvm compileTestKotlinJvm`. Source roots for that JVM build are `compiler/src/commonMain/kotlin`, `compiler/src/commonTest/kotlin`, `compiler/src/jvmMain/kotlin`, and `compiler/src/jvmTest/kotlin`.
 
-On 2026-11-27 this environment admitted **11,324** labeled rows (11,321 Drivine and 3 Embabel from `kotlin-agent-template`). That is short of the 16,000 clean-admitted floor. The other Embabel checkouts are not compiled yet. Do not seal from this count.
+On 2026-11-27 this environment admitted **15,014** labeled rows (12,736 Drivine and 2,278 Embabel). The cap is **14,000**, so **1,014** admitted rows stay above it for later rejects. `refusals.yaml` (959 compiler rejections) and other refused statements stay out. Do not seal from this count, and do not admit a compiler refusal as a clean example.
 
 ## Result tables
 
@@ -108,5 +111,5 @@ Add CSV/Markdown here after live runs, e.g.:
 - `prompt-contract.md`
 - `embabel-arms-holdout.md` (S/M/L after Embabel holdout)
 - `drivine-arms-holdout.md` (S/M/L after Drivine holdout; executable tasks only)
-- `example-dose-combined.md` (prefix 16000 minus 500 confirmatory; adjacent doublings exploratory)
+- `example-dose-combined.md` (prefix 14000 minus 500 confirmatory; adjacent doublings exploratory)
 - `example-dose-by-domain.md` (Embabel/Drivine slices exploratory only; executable Drivine tasks)

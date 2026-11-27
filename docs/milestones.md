@@ -85,7 +85,7 @@ Exit: a written A-vs-B result on the untrained base. The product guide is added 
 ### M4 — Lock the holdout
 
 - [ ] M4: Write the official base-model shortlist into the protocol before any development score. Upload the protocol to Zenodo **before any holdout scoring** (see [protocol/preregistration.md](protocol/preregistration.md); operator upload only; complete [internal publication-review checklist](../internal/publication-review.md) first — that file is not part of the Zenodo package)
-- [ ] M4: The prefixes 500, 1,000, 2,000, 4,000, 8,000, and 16,000 are locked in the protocol before authoring
+- [ ] M4: The prefixes 500, 1,000, 2,000, 4,000, 8,000, and 14,000 are locked in the protocol before authoring
 - [ ] M4: Build the admission checker (one area label, executable oracle, source pin, not a near-duplicate)
 - [ ] M4: Independently author and seal the combined holdout of 742 executable tasks (371+371; area counts from admitted-pool shares, not subtracted from training supply); `analysis seal-study` before prefix cut; commit manifest hash before scoring
 - [ ] M4: Score middle (M) and ceiling (L) reference baselines under configs A and B on DEV (comparison only)
@@ -98,7 +98,7 @@ Exit: a frozen split. Near-duplicates of holdout tasks are rejected before train
 ### M5 — Verified data, then the smallest adapter
 
 - [ ] M5: Extract Spring and Kotlin pattern cards from Guide, DICE, and the learning demos, each card citing its source file
-- [ ] M5: Produce ≥16,000 clean admitted training examples (feasibility high risk until oracle admission); cut locked prefixes only after seal (`build-prefixes` requires admission receipt)
+- [ ] M5: Produce ≥14,000 clean admitted training examples (feasibility high risk until oracle admission); cut locked prefixes only after seal (`build-prefixes` requires admission receipt)
 - [ ] M5: Adapt the selected base on the combined prefix list
 - [ ] M5: Score the six prefixes on the sealed 742-task holdout
 - [ ] M5: Report each prefix step, and keep the run only if the M0 general floor still holds

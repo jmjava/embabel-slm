@@ -549,7 +549,7 @@ def analyze_study_results(
     confirmatory = _paired_contrast(
         rows,
         prereg,
-        later_prefix=16000,
+        later_prefix=14000,
         earlier_prefix=500,
         training_seed=primary_seed,
         confirmatory=True,
@@ -561,7 +561,7 @@ def analyze_study_results(
         _paired_contrast(
             rows,
             prereg,
-            later_prefix=16000,
+            later_prefix=14000,
             earlier_prefix=500,
             training_seed=seed,
             confirmatory=False,
@@ -598,7 +598,7 @@ def analyze_study_results(
         "confirmatory": False,
         "role": "pooled_seed_summary_exploratory_only",
         "contrast": confirmatory_name,
-        "later_prefix": 16000,
+        "later_prefix": 14000,
         "earlier_prefix": 500,
         "effect_percentage_points_mean": sum(primary_effects) / len(primary_effects),
         "effect_percentage_points_min": min(primary_effects),

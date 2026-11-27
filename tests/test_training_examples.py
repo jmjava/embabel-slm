@@ -221,7 +221,7 @@ class PrefixBuildTests(unittest.TestCase):
                 json.loads(line)["example_id"] for line in (outdir / "ordered.jsonl").read_text().splitlines()
             ]
             for size in prefix_sizes(self.prereg)[1:]:
-                smaller = size // 2 if size in (1000, 2000, 4000, 8000, 16000) else None
+                smaller = size // 2 if size in (1000, 2000, 4000, 8000, 14000) else None
                 for check in prefix_sizes(self.prereg):
                     if check < size:
                         self.assertEqual(ordered[:check], ordered[:size][:check])

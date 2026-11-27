@@ -13,7 +13,7 @@ Claim: On the pinned slm-setup corpus @ sha <TBD>, with official Ollama tags
 <fast=TBD, strong=TBD>, under the layered harness policy (fast → one repair → strong),
 the local coding SLM on host_class=halo-395 achieves <pass@end / layer rates TBD>,
 which <supports / does not support> usefulness for bounded MCP-delegated coding edits.
-Combined holdout: 742 sealed tasks (371 Embabel + 371 Drivine), scored after each prefix 500, 1,000, 2,000, 4,000, 8,000, and 16,000 (LoRA seeds 20260227 primary, 20260228/20260229 replications; equal compute budget across sizes). Confirmatory contrast: 16,000 vs 500 at seed 20260227 only; adjacent doublings exploratory. Drivine tasks executable. Same base tag (Embabel DEV selection). Ollama on halo-395 only. Per-area holdout slices exploratory (min 10/area/domain). No universal monotonicity or seed-population causal claim.
+Combined holdout: 742 sealed tasks (371 Embabel + 371 Drivine), scored after each prefix 500, 1,000, 2,000, 4,000, 8,000, and 14,000 (LoRA seeds 20260227 primary, 20260228/20260229 replications; equal compute budget across sizes). Confirmatory contrast: 14,000 vs 500 at seed 20260227 only; adjacent doublings exploratory. Drivine tasks executable. Same base tag (Embabel DEV selection). Ollama on halo-395 only. Per-area holdout slices exploratory (min 10/area/domain). No universal monotonicity or seed-population causal claim.
 
 Non-claims:
 - General model quality / SOTA coding
@@ -26,7 +26,7 @@ Non-claims:
 - Pilot E01–E20 rows as confirmatory evidence
 
 Pre-registered success definition (see docs/protocol/preregistration.md):
-- One confirmatory McNemar (16,000 vs 500) plus H4; adjacent doublings exploratory (optional descriptive Holm only)
+- One confirmatory McNemar (14,000 vs 500) plus H4; adjacent doublings exploratory (optional descriptive Holm only)
 - Greedy primary paired outcome; pass@5 (Chen unbiased, k=5) reported separately from greedy
 - Part A: ≥3 independent live sessions, same corpus SHA, host_class=halo-395
 - Embabel holdout: one scored pass per config; manifest hash committed before scoring

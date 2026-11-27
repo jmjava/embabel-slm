@@ -2,7 +2,7 @@
 
 Performing the sequence below is scientifically sound for the claim it is allowed to make.
 
-Lock the decision rules in code, lock the prefixes 500, 1,000, 2,000, 4,000, 8,000, and 16,000, admit only area-labeled executable sourced items with provenance groups split across train and holdout (file/fixture/class, not whole repository), **author and seal** one combined holdout of **742 independently authored** tasks (371 Embabel + 371 Drivine) with frozen per-area counts that do not consume training supply, run `seal-study` before prefix construction, put the base-model shortlist in the protocol, freeze training hyperparameters and randomness controls, and upload to Zenodo before any holdout score. A **confirmatory** result means the primary one-sided test **rejects the no-improvement null** on the 16,000 vs 500 contrast at **primary** training seed **20260227** under the frozen recipe; replications at **20260228** and **20260229** support robustness but do not replace the primary decision. Adjacent doubling steps are reported as exploratory dose-curve analyses. A dose chosen after the scores is not part of the claim.
+Lock the decision rules in code, lock the prefixes 500, 1,000, 2,000, 4,000, 8,000, and 14,000, admit only area-labeled executable sourced items with provenance groups split across train and holdout (file/fixture/class, not whole repository), **author and seal** one combined holdout of **742 independently authored** tasks (371 Embabel + 371 Drivine) with frozen per-area counts that do not consume training supply, run `seal-study` before prefix construction, put the base-model shortlist in the protocol, freeze training hyperparameters and randomness controls, and upload to Zenodo before any holdout score. A **confirmatory** result means the primary one-sided test **rejects the no-improvement null** on the 14,000 vs 500 contrast at **primary** training seed **20260227** under the frozen recipe; replications at **20260228** and **20260229** support robustness but do not replace the primary decision. Adjacent doubling steps are reported as exploratory dose-curve analyses. A dose chosen after the scores is not part of the claim.
 
 Normative parameters live in [preregistration.md](preregistration.md). Estimators live in [analysis-plan.md](analysis-plan.md). This note is the reason those documents, followed in order, support that claim.
 
@@ -10,9 +10,9 @@ Normative parameters live in [preregistration.md](preregistration.md). Estimator
 
 On the sealed combined holdout, using one base model chosen by the pre-registered rule and three matched training seeds per prefix with identical non-padding target-token, batch-token, and optimizer-update budgets at every prefix, the **confirmatory** report addresses:
 
-1. The 16,000-example prefix minus the 500-example prefix (one-sided paired test at \(\alpha=0.05\), no Holm family).
+1. The 14,000-example prefix minus the 500-example prefix (one-sided paired test at \(\alpha=0.05\), no Holm family).
 
-Exploratory tables may also show adjacent doublings (500→1,000 through 8,000→16,000) with bootstrap intervals and optional descriptive Holm adjustment that does **not** carry confirmatory family-wise power. The host ceiling and retrieval are reference measurements. They are not a training prefix.
+Exploratory tables may also show adjacent steps (500→1,000 through 8,000→14,000; the last step is not a doubling) with bootstrap intervals and optional descriptive Holm adjustment that does **not** carry confirmatory family-wise power. The host ceiling and retrieval are reference measurements. They are not a training prefix.
 
 ## The sequence
 
@@ -34,10 +34,10 @@ Each rule is the property the analysis code must have before holdout scoring. Th
 
 | Rule | What a reported number means | Research | Test obligation |
 | --- | --- | --- | --- |
-| Dose differences | On the combined holdout, \(\Delta_{\mathrm{conf}} = p_{16000} - p_{500}\) with a task-level bootstrap interval at primary seed **20260227**; adjacent steps are exploratory | The task is the paired unit (Dror et al., 2018; Dietterich, 1998). The interval method is Efron (1979). The 5-point figure sizes the holdout. It is not a second pass rule. | The confirmatory difference is computed on the 742 jointly resampled tasks at seed 20260227; replications at 20260228 and 20260229 are separate. |
-| Dose tests | Confirmatory rejection is the one-sided paired test for 16,000 vs 500. Adjacent doublings are exploratory; optional Holm is descriptive only | Exact McNemar on paired pass/fail (McNemar, 1947; Dietterich, 1998). No confirmatory Holm family (Holm, 1979, applies only to optional exploratory adjustment). Direction and prefix sizes are named before scores (Dror et al., 2018). | Implementation matches the named confirmatory contrast; exploratory Holm must be labeled non-confirmatory. |
+| Dose differences | On the combined holdout, \(\Delta_{\mathrm{conf}} = p_{14000} - p_{500}\) with a task-level bootstrap interval at primary seed **20260227**; adjacent steps are exploratory | The task is the paired unit (Dror et al., 2018; Dietterich, 1998). The interval method is Efron (1979). The 5-point figure sizes the holdout. It is not a second pass rule. | The confirmatory difference is computed on the 742 jointly resampled tasks at seed 20260227; replications at 20260228 and 20260229 are separate. |
+| Dose tests | Confirmatory rejection is the one-sided paired test for 14,000 vs 500. Adjacent doublings are exploratory; optional Holm is descriptive only | Exact McNemar on paired pass/fail (McNemar, 1947; Dietterich, 1998). No confirmatory Holm family (Holm, 1979, applies only to optional exploratory adjustment). Direction and prefix sizes are named before scores (Dror et al., 2018). | Implementation matches the named confirmatory contrast; exploratory Holm must be labeled non-confirmatory. |
 | pass@5 | Chen's unbiased estimator at \(k=5\) and temperature 0.8. Greedy temperature 0 remains the primary paired outcome for confirmatory tests | Chen et al. (2021). pass@1 means \(k=1\), not five samples. Five samples is this study's budget for pass@5. | `unbiased_pass_at_k` matches the formula. The all-pass and all-fail cases are tested. |
-| Paired p-value | The confirmatory p-value is McNemar's exact test on discordant pairs for 16,000 vs 500 | McNemar (1947); Dietterich (1998). | `exact_mcnemar_p_value` matches the exact test. One numeric example is tested. |
+| Paired p-value | The confirmatory p-value is McNemar's exact test on discordant pairs for 14,000 vs 500 | McNemar (1947); Dietterich (1998). | `exact_mcnemar_p_value` matches the exact test. One numeric example is tested. |
 
 ## Locks (open until closed)
 
@@ -67,7 +67,7 @@ The Part A harness, with one repair and a fast-then-strong cascade, is a separat
 ## What a confirmatory result does not say
 
 - It does not say an example set chosen after the scores will also raise the score. The six prefixes were named in advance. A seventh size needs its own confirmation set.
-- It does not say every adjacent doubling improved. Only 16,000 vs 500 is confirmatory. Monotonicity along the ladder is exploratory.
+- It does not say every adjacent doubling improved. Only 14,000 vs 500 is confirmatory. Monotonicity along the ladder is exploratory.
 - It does not require the confidence interval to sit above 5 points. 742 tasks power a test of a 5-point **planning** step at **0.783839** exact unconditional power. They do not put the lower bound itself above 5. The 5-point figure is not a practical-significance gate.
 - It does not generalize beyond this holdout, this host, context 8192, primary training seed, and frozen recipe, nor claim a universal causal scaling law across seeds or areas.
 - It does not estimate a random 7–14B model. It estimates the tags the development rule selected.

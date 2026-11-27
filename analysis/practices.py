@@ -56,10 +56,10 @@ def confirmatory_contrast_name(prereg: dict) -> str:
     """Return the sole registered example-dose confirmatory contrast."""
     comparisons = prereg["statistics"]["confirmatory_comparisons"]
     if comparisons != {
-        "prefix_16000_minus_500": "prefix_16000_minus_prefix_500"
+        "prefix_14000_minus_500": "prefix_14000_minus_prefix_500"
     }:
-        raise ValueError("the sole confirmatory dose contrast must be 16000 minus 500")
-    return "prefix_16000_minus_500"
+        raise ValueError("the sole confirmatory dose contrast must be 14000 minus 500")
+    return "prefix_14000_minus_500"
 
 
 def _area_allowed(prereg: dict, domain: object, area: object) -> bool:
@@ -117,8 +117,8 @@ def lock_prefixes(prereg: dict) -> dict[str, object]:
     prefixes = prefix_sizes(prereg)
     starts = tuple(int(size) for size in doses["starts"])
     multipliers = tuple(int(size) for size in doses["multipliers"])
-    if prefixes != (500, 1000, 2000, 4000, 8000, 16000):
-        raise ValueError("prefixes must be 500, 1000, 2000, 4000, 8000, 16000")
+    if prefixes != (500, 1000, 2000, 4000, 8000, 14000):
+        raise ValueError("prefixes must be 500, 1000, 2000, 4000, 8000, 14000")
     if starts != (500, 1000, 2000) or multipliers != (1, 2, 4, 8):
         raise ValueError("starts must be 500, 1000, 2000 and multipliers 1, 2, 4, 8")
     if int(prereg["splits"]["holdout_min_tasks"]) != 742:

@@ -57,8 +57,8 @@ class PracticeLockTests(unittest.TestCase):
         names = exploratory_contrast_names(self.prereg)
         self.assertEqual(len(names), 5)
         self.assertEqual(names[0], "prefix_1000_minus_500")
-        self.assertEqual(names[-1], "prefix_16000_minus_8000")
-        self.assertEqual(confirmatory_contrast_name(self.prereg), "prefix_16000_minus_500")
+        self.assertEqual(names[-1], "prefix_14000_minus_8000")
+        self.assertEqual(confirmatory_contrast_name(self.prereg), "prefix_14000_minus_500")
 
     def test_guide_is_an_addon_after_training(self):
         self.assertTrue(guide_practice_holds(self.prereg))
@@ -133,16 +133,16 @@ class DoseTests(unittest.TestCase):
 
     def test_named_ladder(self):
         locked = lock_prefixes(self.prereg)
-        self.assertEqual(locked["prefixes"], [500, 1000, 2000, 4000, 8000, 16000])
+        self.assertEqual(locked["prefixes"], [500, 1000, 2000, 4000, 8000, 14000])
         self.assertEqual(locked["starts"], [500, 1000, 2000])
         self.assertEqual(locked["multipliers"], [1, 2, 4, 8])
         self.assertEqual(locked["holdout_min_tasks"], 742)
 
     def test_each_size_is_a_prefix_of_the_next(self):
-        ids = [f"e{i}" for i in range(16000)]
+        ids = [f"e{i}" for i in range(14000)]
         doses = assign_doses(ids, self.prereg)
         self.assertEqual(len(doses["500"]), 500)
-        self.assertEqual(doses["16000"][:8000], doses["8000"])
+        self.assertEqual(doses["14000"][:8000], doses["8000"])
         self.assertEqual(doses["1000"][:500], doses["500"])
 
 
@@ -159,12 +159,12 @@ class ContrastDecisionTests(unittest.TestCase):
             decision["steps"]["prefix_1000_minus_500"]["descriptive_rejects"]
         )
         self.assertFalse(
-            decision["steps"]["prefix_16000_minus_8000"]["descriptive_rejects"]
+            decision["steps"]["prefix_14000_minus_8000"]["descriptive_rejects"]
         )
 
     def test_primary_contrast_uses_unadjusted_registered_alpha(self):
         decision = decide_confirmatory_contrast(
-            {"prefix_16000_minus_500": 0.05},
+            {"prefix_14000_minus_500": 0.05},
             self.prereg,
         )
         self.assertTrue(decision["confirmatory"])
@@ -179,7 +179,7 @@ class ContrastDecisionTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             decide_confirmatory_contrast(
                 {
-                    "prefix_16000_minus_500": 0.01,
+                    "prefix_14000_minus_500": 0.01,
                     "prefix_1000_minus_500": 0.01,
                 },
                 self.prereg,

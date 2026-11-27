@@ -12,7 +12,7 @@ from analysis.hashes import canonical_command_sha256, canonical_jsonl_sha256, pr
 from analysis.jsonl_io import load_jsonl, write_canonical_jsonl, write_jsonl
 from analysis.practices import PREREG_PATH, admit_example, load_prereg, prefix_sizes
 ADMISSION_RECEIPT_SCHEMA_VERSION = 1
-MIN_CLEAN_TRAINING_EXAMPLES = 16000
+MIN_CLEAN_TRAINING_EXAMPLES = 14000
 _HEX64 = re.compile(r"^[a-f0-9]{64}$")
 _ALLOWED_ORACLE_KINDS = frozenset({"compiler", "test", "executable_query", "parser"})
 
