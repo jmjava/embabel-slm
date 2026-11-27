@@ -63,7 +63,7 @@ prefer measured open models once digests exist. Do not claim SLM SOTA.
 | Key | Distinction |
 | --- | --- |
 | `dietterich1998approximate`, `mcnemar1947note`, `dror2018hitchhiker` | Paired McNemar on tasks; pre-set α |
-| `holm1979simple` | Six confirmatory tests in one family |
+| `holm1979simple` | Optional descriptive Holm on exploratory adjacent dose contrasts only; one confirmatory McNemar (16k vs 500) |
 | `piaggio2012consort` | Fixed NI margins (10 / 15 pp); planning \(p_d\) only |
 | `efron1979bootstrap` | Task-level bootstrap; B=10 000 pre-registered here |
 | `nosek2018preregistration` | In-repo protocol until Zenodo upload |

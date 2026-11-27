@@ -7,10 +7,12 @@ from analysis.practices import (
     admit_example,
     admit_holdout,
     assign_doses,
-    decide_steps,
+    confirmatory_contrast_name,
+    decide_confirmatory_contrast,
+    descriptive_exploratory_steps,
+    exploratory_contrast_names,
     guide_may_attach,
     guide_practice_holds,
-    holm_test_names,
     load_prereg,
     lock_prefixes,
     areas,
@@ -22,6 +24,7 @@ def _example(**overrides):
         "domain": "embabel",
         "area": "generation",
         "executable_oracle": True,
+        "oracle_evidence_validated": True,
         "source_file": "guide/actions.md",
         "source_pin": "abc123",
     }
@@ -47,14 +50,15 @@ class PracticeLockTests(unittest.TestCase):
     def setUp(self):
         self.prereg = load_prereg()
 
-    def test_areas_and_holm_names(self):
+    def test_areas_and_registered_contrasts(self):
         labels = areas(self.prereg)
         self.assertEqual(len(labels["embabel"]), 6)
         self.assertEqual(len(labels["drivine"]), 5)
-        names = holm_test_names(self.prereg)
+        names = exploratory_contrast_names(self.prereg)
         self.assertEqual(len(names), 5)
         self.assertEqual(names[0], "prefix_1000_minus_500")
         self.assertEqual(names[-1], "prefix_16000_minus_8000")
+        self.assertEqual(confirmatory_contrast_name(self.prereg), "prefix_16000_minus_500")
 
     def test_guide_is_an_addon_after_training(self):
         self.assertTrue(guide_practice_holds(self.prereg))
@@ -76,7 +80,14 @@ class AdmissionTests(unittest.TestCase):
         )
         self.assertIn(
             "compiler_or_executable_oracle",
-            admit_example(_example(executable_oracle=False), self.prereg),
+            admit_example(
+                _example(executable_oracle=False, oracle_evidence_validated=False),
+                self.prereg,
+            ),
+        )
+        self.assertIn(
+            "compiler_or_executable_oracle",
+            admit_example(_example(executable_oracle=True, oracle_evidence_validated=False), self.prereg),
         )
         self.assertIn(
             "source_file_and_pin_recorded",
@@ -135,22 +146,44 @@ class DoseTests(unittest.TestCase):
         self.assertEqual(doses["1000"][:500], doses["500"])
 
 
-class StepDecisionTests(unittest.TestCase):
+class ContrastDecisionTests(unittest.TestCase):
     def setUp(self):
         self.prereg = load_prereg()
 
-    def test_one_step_can_be_proved_alone(self):
-        p_values = {name: 0.9 for name in holm_test_names(self.prereg)}
+    def test_exploratory_holm_is_descriptive_only(self):
+        p_values = {name: 0.9 for name in exploratory_contrast_names(self.prereg)}
         p_values["prefix_1000_minus_500"] = 0.001
-        decision = decide_steps(p_values, self.prereg)
-        self.assertEqual(decision["proved_count"], 1)
-        self.assertTrue(decision["steps"]["prefix_1000_minus_500"]["rejects"])
-        self.assertFalse(decision["steps"]["prefix_16000_minus_8000"]["rejects"])
-        self.assertFalse(decision["requires_every_step"])
+        decision = descriptive_exploratory_steps(p_values, self.prereg)
+        self.assertFalse(decision["confirmatory"])
+        self.assertTrue(
+            decision["steps"]["prefix_1000_minus_500"]["descriptive_rejects"]
+        )
+        self.assertFalse(
+            decision["steps"]["prefix_16000_minus_8000"]["descriptive_rejects"]
+        )
 
-    def test_missing_test_is_rejected(self):
+    def test_primary_contrast_uses_unadjusted_registered_alpha(self):
+        decision = decide_confirmatory_contrast(
+            {"prefix_16000_minus_500": 0.05},
+            self.prereg,
+        )
+        self.assertTrue(decision["confirmatory"])
+        self.assertTrue(decision["rejects"])
+        self.assertEqual(decision["alpha"], 0.05)
+
+    def test_missing_exploratory_tests_are_rejected(self):
         with self.assertRaises(ValueError):
-            decide_steps({}, self.prereg)
+            descriptive_exploratory_steps({}, self.prereg)
+
+    def test_extra_primary_test_is_rejected(self):
+        with self.assertRaises(ValueError):
+            decide_confirmatory_contrast(
+                {
+                    "prefix_16000_minus_500": 0.01,
+                    "prefix_1000_minus_500": 0.01,
+                },
+                self.prereg,
+            )
 
 
 if __name__ == "__main__":

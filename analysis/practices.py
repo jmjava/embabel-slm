@@ -1,8 +1,8 @@
 """Practices named in the protocol, as checks.
 
-The pre-registration page is the source of the area labels, the five prefix
-tests, the admission rule names, and the guide add-on. This module refuses an
-item or a dose list that breaks those rules.
+The pre-registration page is the source of the area labels, primary contrast,
+exploratory dose curve, admission rule names, and guide add-on. This module
+refuses an item or a dose list that breaks those rules.
 """
 
 from __future__ import annotations
@@ -39,16 +39,27 @@ def prefix_sizes(prereg: dict) -> tuple[int, ...]:
     return tuple(int(size) for size in raw)
 
 
-def holm_test_names(prereg: dict) -> tuple[str, ...]:
-    names = tuple(prereg["statistics"]["holm_tests"])
+def exploratory_contrast_names(prereg: dict) -> tuple[str, ...]:
+    """Return the ordered adjacent contrasts used for descriptive analysis."""
+    names = tuple(prereg["statistics"]["exploratory_adjacent_contrasts"])
     prefixes = prefix_sizes(prereg)
     expected = tuple(
         f"prefix_{prefixes[index]}_minus_{prefixes[index - 1]}"
         for index in range(1, len(prefixes))
     )
     if names != expected:
-        raise ValueError("holm_tests must be the successive prefix doublings")
+        raise ValueError("exploratory contrasts must be the successive prefix doublings")
     return names
+
+
+def confirmatory_contrast_name(prereg: dict) -> str:
+    """Return the sole registered example-dose confirmatory contrast."""
+    comparisons = prereg["statistics"]["confirmatory_comparisons"]
+    if comparisons != {
+        "prefix_16000_minus_500": "prefix_16000_minus_prefix_500"
+    }:
+        raise ValueError("the sole confirmatory dose contrast must be 16000 minus 500")
+    return "prefix_16000_minus_500"
 
 
 def _area_allowed(prereg: dict, domain: object, area: object) -> bool:
@@ -66,7 +77,7 @@ def admit_example(record: Mapping[str, object], prereg: dict) -> list[str]:
     listed = record.get("areas")
     if listed is not None and listed != [area]:
         reasons.append("authored_for_exactly_one_area")
-    if record.get("executable_oracle") is not True:
+    if record.get("oracle_evidence_validated") is not True:
         reasons.append("compiler_or_executable_oracle")
     source = record.get("source_file")
     pin = record.get("source_pin")
@@ -153,24 +164,51 @@ def one_sided_step_p(previous: Sequence[bool], later: Sequence[bool]) -> float:
     return exact_mcnemar_p_value_one_sided(b, c)
 
 
-def decide_steps(p_by_test: Mapping[str, float], prereg: dict) -> dict[str, object]:
-    """A doubling is proved when its Holm-adjusted test rejects.
-
-    The study does not require every step to be proved.
-    """
-    names = holm_test_names(prereg)
+def descriptive_exploratory_steps(
+    p_by_test: Mapping[str, float],
+    prereg: dict,
+) -> dict[str, object]:
+    """Holm-adjust adjacent-dose p-values for descriptive reporting only."""
+    names = exploratory_contrast_names(prereg)
     missing = [name for name in names if name not in p_by_test]
     extra = [name for name in p_by_test if name not in names]
     if missing or extra:
-        raise ValueError(f"p-values must cover the five prefix tests; missing={missing} extra={extra}")
+        raise ValueError(
+            f"p-values must cover the five exploratory contrasts; "
+            f"missing={missing} extra={extra}"
+        )
     alpha = prereg["statistics"]["alpha_confirmatory"]
     adjusted = holm_bonferroni([float(p_by_test[name]) for name in names])
-    rejected = {name: adjusted[index] < alpha for index, name in enumerate(names)}
     return {
-        "steps": {name: {"rejects": rejected[name]} for name in names},
-        "proved_count": sum(1 for name in names if rejected[name]),
-        "step_count": len(names),
-        "requires_every_step": False,
+        "confirmatory": False,
+        "adjustment": "holm_descriptive",
+        "steps": {
+            name: {
+                "raw_p": float(p_by_test[name]),
+                "adjusted_p": adjusted[index],
+                "descriptive_rejects": adjusted[index] <= alpha,
+            }
+            for index, name in enumerate(names)
+        },
+    }
+
+
+def decide_confirmatory_contrast(
+    p_by_test: Mapping[str, float],
+    prereg: dict,
+) -> dict[str, object]:
+    """Apply the registered one-sided alpha to the sole primary contrast."""
+    name = confirmatory_contrast_name(prereg)
+    if set(p_by_test) != {name}:
+        raise ValueError(f"p-values must contain exactly the primary contrast {name}")
+    p_value = float(p_by_test[name])
+    alpha = float(prereg["statistics"]["alpha_confirmatory"])
+    return {
+        "confirmatory": True,
+        "contrast": name,
+        "p_value": p_value,
+        "alpha": alpha,
+        "rejects": p_value <= alpha,
     }
 
 

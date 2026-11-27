@@ -11,11 +11,15 @@ import argparse
 import hashlib
 import json
 import re
-import subprocess
 from pathlib import Path
 from typing import Mapping
 
+from analysis.jsonl_io import iter_physical_jsonl_lines, load_jsonl, write_jsonl
 from analysis.practices import areas, load_prereg
+from analysis.training_examples import attach_unit_code_metadata
+
+_EXAMPLE_ID_SCHEMA_VERSION = 1
+_HEX64 = re.compile(r"^[a-f0-9]{64}$")
 
 _EMBABEL_RULES: tuple[tuple[str, re.Pattern[str]], ...] = (
     ("repair", re.compile(r"repair|unreachable|missing[-_ ]dependenc|diagnos|known-bad", re.I)),
@@ -235,10 +239,10 @@ def label_text(domain: str, path: str, text: str) -> dict[str, object]:
 
 
 def balance_sheet(labeled: list[Mapping[str, object]], review: list[Mapping[str, object]], prereg: dict) -> dict[str, object]:
-    """Count labeled code against the combined holdout and the six prefixes."""
+    """Count labeled code against the independently sourced training prefixes."""
     prefixes = [int(size) for size in prereg["statistics"]["example_doses"]["prefixes"]]
     holdout = int(prereg["splits"]["holdout_min_tasks"])
-    needed = holdout + prefixes[-1]
+    needed = prefixes[-1]
     rows: dict[str, dict[str, object]] = {}
     total = 0
     for domain, names in areas(prereg).items():
@@ -281,16 +285,6 @@ def _checkout_file(checkouts: Path, repo: str, source_file: str) -> Path:
     return checkouts / domain / name / source_file
 
 
-def _git_pin(root: Path) -> str:
-    result = subprocess.run(
-        ["git", "-C", str(root), "rev-parse", "HEAD"],
-        check=False,
-        capture_output=True,
-        text=True,
-    )
-    return result.stdout.strip()
-
-
 def _read_source(path: Path) -> str:
     if not path.is_file() or path.stat().st_size > 1_000_000:
         return ""
@@ -300,7 +294,151 @@ def _read_source(path: Path) -> str:
 def _load_jsonl(path: Path) -> list[dict[str, object]]:
     if not path.is_file():
         return []
-    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    return load_jsonl(path)
+
+
+def base_source_file(source_file: str) -> str:
+    """Path without method ``#`` suffix (slashes normalized)."""
+    return source_file.replace("\\", "/").split("#", 1)[0]
+
+
+def _unit_identity(row: Mapping[str, object]) -> dict[str, object]:
+    """Stable grain, section, or query identity for canonical hashing."""
+    base = base_source_file(str(row.get("source_file", "")))
+    if row.get("source_kind") == "query":
+        unit: dict[str, object] = {"kind": "query", "source_file": base}
+        case_name = row.get("case_name")
+        if isinstance(case_name, str) and case_name.strip():
+            unit["case_name"] = case_name.strip()
+        cypher = row.get("cypher")
+        if isinstance(cypher, str) and cypher.strip():
+            unit["cypher_sha256"] = hashlib.sha256(cypher.encode("utf-8")).hexdigest()
+        return unit
+    section = row.get("section")
+    grain = row.get("grain")
+    if isinstance(section, str) and section.strip():
+        return {"kind": str(grain or "method"), "source_file": base, "section": section.strip()}
+    source_file = str(row.get("source_file", ""))
+    if "#" in source_file:
+        _, section_name = source_file.split("#", 1)
+        return {"kind": str(grain or "method"), "source_file": base, "section": section_name}
+    return {"kind": str(grain or "class"), "source_file": base}
+
+
+def example_id_canonical_payload(row: Mapping[str, object]) -> dict[str, object]:
+    """Versioned fields hashed into ``example_id`` (input-order independent)."""
+    text_sha = row.get("text_sha256")
+    if not isinstance(text_sha, str) or not _HEX64.fullmatch(text_sha):
+        raise ValueError("labeled unit missing text_sha256")
+    for key in ("domain", "source_repo", "source_pin"):
+        value = row.get(key)
+        if not isinstance(value, str) or not value.strip():
+            raise ValueError(f"labeled unit missing {key}")
+    return {
+        "schema_version": _EXAMPLE_ID_SCHEMA_VERSION,
+        "domain": str(row["domain"]).strip(),
+        "source_repo": str(row["source_repo"]).strip(),
+        "source_pin": str(row["source_pin"]).strip(),
+        "unit": _unit_identity(row),
+        "text_sha256": text_sha,
+    }
+
+
+def compute_example_id(row: Mapping[str, object]) -> str:
+    payload = example_id_canonical_payload(row)
+    blob = json.dumps(payload, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(blob.encode("utf-8")).hexdigest()
+
+
+def provenance_groups_for(row: Mapping[str, object]) -> list[str]:
+    """Namespaced provenance groups for train/holdout separation (no repository-wide)."""
+    pin = str(row["source_pin"]).strip()
+    base = base_source_file(str(row.get("source_file", "")))
+    groups: list[str] = [f"file:{base}@{pin}"]
+    if row.get("source_kind") == "query":
+        groups.append(f"fixture:{base}@{pin}")
+    frame = row.get("class_frame")
+    if isinstance(frame, str) and frame.strip():
+        frame_digest = hashlib.sha256(frame.strip().encode("utf-8")).hexdigest()
+        groups.append(f"class:{frame_digest}@{pin}")
+    seen: set[str] = set()
+    unique: list[str] = []
+    for group in groups:
+        if group not in seen:
+            seen.add(group)
+            unique.append(group)
+    return unique
+
+
+def _identity_sort_key(row: Mapping[str, object]) -> tuple[str, ...]:
+    return (
+        str(row.get("domain", "")),
+        str(row.get("area", "")),
+        str(row.get("source_repo", "")),
+        str(row.get("source_file", "")),
+        str(row.get("grain", "")),
+        str(row.get("section", "")),
+        str(row.get("example_id", "")),
+    )
+
+
+def _dedup_exact_code_candidates(
+    candidates: list[dict[str, object]],
+) -> tuple[list[dict[str, object]], list[dict[str, object]], dict[str, object]]:
+    """Dedup by exact code hash; conflicts on domain/area go to review."""
+    raw_count = len(candidates)
+    by_code: dict[str, list[dict[str, object]]] = {}
+    for item in candidates:
+        digest = str(item.get("text_sha256") or item.get("code_sha256") or "")
+        if not digest:
+            continue
+        by_code.setdefault(digest, []).append(item)
+    exact_groups = sum(1 for members in by_code.values() if len(members) > 1)
+    removed = sum(len(members) - 1 for members in by_code.values() if len(members) > 1)
+    labeled: list[dict[str, object]] = []
+    review: list[dict[str, object]] = []
+    conflicting = 0
+    for members in by_code.values():
+        sorted_members = sorted(members, key=_identity_sort_key)
+        labels = {
+            (str(row.get("domain", "")), str(row.get("area", "")))
+            for row in members
+            if "area" in row
+        }
+        if len(labels) > 1:
+            conflicting += 1
+            for row in sorted_members:
+                conflict = dict(row)
+                conflict["reason"] = "conflicting_label_exact_duplicate"
+                conflict["matches"] = sorted(
+                    {f"{dom}/{ar}" for dom, ar in labels if dom and ar}
+                )
+                review.append(conflict)
+            continue
+        chosen = sorted_members[0]
+        decision = {key: chosen[key] for key in ("area", "admitted_example") if key in chosen}
+        if "area" in decision:
+            labeled.append(chosen)
+        else:
+            review.append(chosen)
+    labeled.sort(key=_identity_sort_key)
+    review.sort(key=lambda row: (str(row.get("reason", "")), *_identity_sort_key(row)))
+    audit = {
+        "raw_candidates": raw_count,
+        "exact_code_duplicate_groups": exact_groups,
+        "exact_duplicates_removed": removed,
+        "conflicting_label_exact_duplicates": conflicting,
+        "labeled": len(labeled),
+        "review": len(review),
+    }
+    return labeled, review, audit
+
+
+def attach_example_identity(item: dict[str, object]) -> dict[str, object]:
+    """Add deterministic ``example_id`` and ``provenance_groups``."""
+    item["example_id"] = compute_example_id(item)
+    item["provenance_groups"] = provenance_groups_for(item)
+    return item
 
 
 def _identity(row: Mapping[str, object]) -> dict[str, object]:
@@ -312,10 +450,12 @@ def _identity(row: Mapping[str, object]) -> dict[str, object]:
     return kept
 
 
-def label_manifest(manifest: Path, checkouts: Path) -> tuple[list[dict[str, object]], list[dict[str, object]]]:
-    labeled: list[dict[str, object]] = []
-    review: list[dict[str, object]] = []
-    seen: set[str] = set()
+def label_manifest(
+    manifest: Path,
+    checkouts: Path,
+) -> tuple[list[dict[str, object]], list[dict[str, object]], dict[str, object]]:
+    candidates: list[dict[str, object]] = []
+    id_payloads: dict[str, str] = {}
     for name in ("embabel-units.jsonl", "drivine-queries.jsonl", "drivine-units.jsonl"):
         for row in _load_jsonl(manifest / name):
             if row.get("source_kind") == "query" and isinstance(row.get("cypher"), str):
@@ -324,61 +464,60 @@ def label_manifest(manifest: Path, checkouts: Path) -> tuple[list[dict[str, obje
                 text = _read_source(_checkout_file(checkouts, str(row["source_repo"]), str(row["source_file"])))
                 pieces = [
                     (
-                        f"{row['source_file']}#{name}" if grain == "method" else str(row["source_file"]),
+                        f"{row['source_file']}#{section_name}" if grain == "method" else str(row["source_file"]),
                         section,
                         grain,
                         frame,
                     )
-                    for name, section, grain, frame in code_sections(str(row["source_file"]), text)
+                    for section_name, section, grain, frame in code_sections(str(row["source_file"]), text)
                 ]
             for source_file, piece, grain, frame in pieces:
                 decision = label_text(str(row["domain"]), source_file, piece)
                 item = {**_identity(row), **decision, "source_file": source_file, "grain": grain}
+                attach_unit_code_metadata(item, piece)
                 if grain == "method" and frame:
                     item["class_frame"] = frame
                 if source_file != row["source_file"]:
-                    item["text_sha256"] = hashlib.sha256(piece.encode("utf-8")).hexdigest()
                     item["section"] = source_file.split("#", 1)[-1]
-                digest = str(item.get("text_sha256") or "")
-                if digest and digest in seen:
-                    continue
-                if digest:
-                    seen.add(digest)
-                if "area" in decision:
-                    labeled.append(item)
-                else:
-                    review.append(item)
-    return labeled, review
-
-
-def mine_short_areas(
-    checkouts: Path,
-    labeled: list[dict[str, object]],
-    review: list[dict[str, object]],
-    prereg: dict,
-) -> list[dict[str, object]]:
-    """The combined ladder does not top an area up to its own 742-task exam."""
-    del checkouts, labeled, review, prereg
-    return []
+                attach_example_identity(item)
+                payload = json.dumps(
+                    example_id_canonical_payload(item),
+                    sort_keys=True,
+                    separators=(",", ":"),
+                )
+                example_id = str(item["example_id"])
+                prior_payload = id_payloads.get(example_id)
+                if prior_payload is not None and prior_payload != payload:
+                    raise ValueError(f"example_id collision for {example_id}")
+                id_payloads[example_id] = payload
+                candidates.append(item)
+    labeled, review, audit = _dedup_exact_code_candidates(candidates)
+    by_domain_area: dict[str, int] = {}
+    for row in labeled:
+        key = f"{row['domain']}/{row['area']}"
+        by_domain_area[key] = by_domain_area.get(key, 0) + 1
+    for row in review:
+        if "domain" in row and "area" in row:
+            key = f"{row['domain']}/{row['area']}"
+            by_domain_area[key] = by_domain_area.get(key, 0) + 1
+    audit["by_domain_area"] = dict(sorted(by_domain_area.items()))
+    unique_code_hashes = {str(row.get("text_sha256")) for row in labeled if row.get("text_sha256")}
+    audit["unique_target_code_hashes"] = len(unique_code_hashes)
+    return labeled, review, audit
 
 
 def write_labels(manifest: Path, checkouts: Path, prereg: dict | None = None) -> dict[str, object]:
     prereg = prereg or load_prereg()
-    labeled, review = label_manifest(manifest, checkouts)
-    labeled.extend(mine_short_areas(checkouts, labeled, review, prereg))
+    labeled, review, audit = label_manifest(manifest, checkouts)
     sheet = balance_sheet(labeled, review, prereg)
-    _write_jsonl(manifest / "labeled.jsonl", labeled)
-    _write_jsonl(manifest / "methods.jsonl", [row for row in labeled if row.get("grain") == "method"])
-    _write_jsonl(manifest / "classes.jsonl", [row for row in labeled if row.get("grain") == "class"])
-    _write_jsonl(manifest / "review.jsonl", review)
+    sheet["label_audit"] = audit
+    write_jsonl(manifest / "labeled.jsonl", labeled)
+    write_jsonl(manifest / "methods.jsonl", [row for row in labeled if row.get("grain") == "method"])
+    write_jsonl(manifest / "classes.jsonl", [row for row in labeled if row.get("grain") == "class"])
+    write_jsonl(manifest / "review.jsonl", review)
     (manifest / "balance.json").write_text(json.dumps(sheet, indent=2) + "\n", encoding="utf-8")
+    (manifest / "label-audit.json").write_text(json.dumps(audit, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return sheet
-
-
-def _write_jsonl(path: Path, rows: list[dict[str, object]]) -> None:
-    with path.open("w", encoding="utf-8") as handle:
-        for row in rows:
-            handle.write(json.dumps(row, ensure_ascii=False) + "\n")
 
 
 def main(argv: list[str] | None = None) -> int:

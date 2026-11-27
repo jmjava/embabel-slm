@@ -57,7 +57,7 @@ Exit: [m0-bars.md](m0-bars.md) is the page. The checker rejects a later edit tha
 - [x] M0.5: Freeze the first 20 tasks from the gap list (paths + checks only) — [benchmark/tasks/](../benchmark/tasks/) E01–E20
 - [x] M0.5: Author one known-bad fixture specification — [KB01](../benchmark/fixtures/known-bad/KB01-missing-action-dependency.md)
 
-Exit: a gap list that can become `benchmark/tasks/` without a live model. Continues while Halo is on Windows pureplay. **Met 2026-11-25** (specs only; runner is M2).
+Exit: a gap list that can become `benchmark/tasks/` without a live model. The no-GPU track finished; Halo is on Linux as of 2026-11-26. **Met 2026-11-25** (specs only; runner is M2).
 
 ### M1 — One reproducible baseline
 
@@ -72,7 +72,7 @@ Exit: a run id with model, quant, prompt, commit, and scores. The permanent base
 - [x] M2: Run extract, isolated project, compile, and tests unattended on those 20 tasks
 - [x] M2: Keep a known-bad fixture in the suite and show that it fails
 
-Exit: the same command can score a model and can fail a broken one. Can be stubbed with fixtures before Halo Ubuntu is free.
+Exit: the same command can score a model and can fail a broken one. Halo is on Linux; live scoring uses `host_class=halo-395` (fixtures still valid for CI).
 
 ### M3 — Retrieval before weights
 
@@ -87,7 +87,7 @@ Exit: a written A-vs-B result on the untrained base. The product guide is added 
 - [ ] M4: Write the official base-model shortlist into the protocol before any development score. Upload the protocol to Zenodo **before any holdout scoring** (see [protocol/preregistration.md](protocol/preregistration.md); operator upload only; complete [internal publication-review checklist](../internal/publication-review.md) first — that file is not part of the Zenodo package)
 - [ ] M4: The prefixes 500, 1,000, 2,000, 4,000, 8,000, and 16,000 are locked in the protocol before authoring
 - [ ] M4: Build the admission checker (one area label, executable oracle, source pin, not a near-duplicate)
-- [ ] M4: Author the combined holdout of 742 tasks and keep it disjoint from those prefixes; commit the manifest hash before scoring
+- [ ] M4: Independently author and seal the combined holdout of 742 executable tasks (371+371; area counts from admitted-pool shares, not subtracted from training supply); `analysis seal-study` before prefix cut; commit manifest hash before scoring
 - [ ] M4: Score middle (M) and ceiling (L) reference baselines under configs A and B on DEV (comparison only)
 - [ ] M4 (legacy bar): the earlier 100-task draft remains a pilot until the combined holdout reaches 742
 - [ ] M4: Add a general-coding holdout large enough to catch a specialist that lost ordinary Java/Kotlin
@@ -98,7 +98,7 @@ Exit: a frozen split. Near-duplicates of holdout tasks are rejected before train
 ### M5 — Verified data, then the smallest adapter
 
 - [ ] M5: Extract Spring and Kotlin pattern cards from Guide, DICE, and the learning demos, each card citing its source file
-- [ ] M5: Produce compiler-verified training examples outside the holdout, each labeled with one area, and cut the locked prefixes
+- [ ] M5: Produce ≥16,000 clean admitted training examples (feasibility high risk until oracle admission); cut locked prefixes only after seal (`build-prefixes` requires admission receipt)
 - [ ] M5: Adapt the selected base on the combined prefix list
 - [ ] M5: Score the six prefixes on the sealed 742-task holdout
 - [ ] M5: Report each prefix step, and keep the run only if the M0 general floor still holds

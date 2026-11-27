@@ -380,12 +380,12 @@ def validate_unit(record: Mapping[str, object]) -> list[str]:
 
 
 def size_report(collected: Mapping[str, int], prereg: dict) -> dict[str, object]:
-    """Compare cleansed counts with the combined holdout plus the largest prefix."""
+    """Compare code-unit counts with the largest independently trained prefix."""
     doses = prereg["statistics"]["example_doses"]
     prefixes = [int(size) for size in doses["prefixes"]]
     holdout = int(prereg["splits"]["holdout_min_tasks"])
     largest = prefixes[-1]
-    needed = holdout + largest
+    needed = largest
     domains: dict[str, dict[str, object]] = {}
     total = 0
     for domain, names in areas(prereg).items():
@@ -409,8 +409,8 @@ def size_report(collected: Mapping[str, int], prereg: dict) -> dict[str, object]
         "shortfall": max(0, needed - total),
         "covers_plan": total >= needed,
         "unit_note": (
-            "Only code is collected. The confirmatory exam is one combined holdout "
-            "of 742 tasks, kept disjoint from the training prefixes. "
+            "Only code is collected for training. The independently authored "
+            "742-task confirmatory exam is kept disjoint from the training prefixes. "
             "A collected unit is not an authored holdout task and not an admitted example."
         ),
         "domains": domains,

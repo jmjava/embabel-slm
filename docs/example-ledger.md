@@ -103,3 +103,4 @@ Next no-GPU step is the M2 extract→compile runner stub (still no Halo required
 | --- | --- |
 | 2026-11-25 | Initial ledger; pinned priority repos; Halo Ubuntu blocked by Windows pureplay — no live rates yet |
 | 2026-11-25 | Frozen E01–E20 + KB01 under `benchmark/`; Related Work / seed.bib W2 pass |
+| 2026-11-26 | Halo is on Linux; live rates still not scored |

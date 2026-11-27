@@ -15,6 +15,8 @@ def unbiased_pass_at_k(correct: int, n: int, k: int) -> float:
     """Unbiased pass@k for one task with `correct` successes in `n` samples."""
     if n < k or k < 1:
         raise ValueError("need n >= k >= 1")
+    if correct < 0 or correct > n:
+        raise ValueError("correct must satisfy 0 <= correct <= n")
     failed = n - correct
     if failed < k:
         return 1.0
