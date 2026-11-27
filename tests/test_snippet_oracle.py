@@ -1,0 +1,72 @@
+"""Snippet oracle checks cover only snippets a real parser accepts."""
+
+from __future__ import annotations
+
+import json
+import tempfile
+import unittest
+from pathlib import Path
+
+from analysis.hashes import sha256_text
+from analysis.snippet_oracle import check_python_snippets, evidence_record_from_check, write_work_manifest
+
+
+class SnippetOracleTests(unittest.TestCase):
+    def test_python_parser_accepts_only_valid_syntax(self) -> None:
+        valid = "def answer():\n    return 1\n"
+        invalid = "def answer(\n"
+        rows = [
+            {"example_id": "a" * 64, "code_sha256": sha256_text(valid), "code": valid},
+            {"example_id": "b" * 64, "code_sha256": sha256_text(invalid), "code": invalid},
+        ]
+        with tempfile.TemporaryDirectory() as tmp:
+            workdir = Path(tmp)
+            write_work_manifest(workdir, rows)
+            results = check_python_snippets(workdir)
+        self.assertEqual([row["ok"] for row in results], [True, False])
+
+    def test_evidence_omits_failed_snippets(self) -> None:
+        results = [
+            {"example_id": "a" * 64, "code_sha256": "c" * 64, "ok": True},
+            {"example_id": "b" * 64, "code_sha256": "d" * 64, "ok": False},
+        ]
+        record = evidence_record_from_check(
+            evidence_id="parser-python-example",
+            source_repo="embabel/example",
+            source_pin="e" * 40,
+            oracle_kind="parser",
+            argv=["python3", "-m", "analysis.snippet_oracle", "check-python", "/tmp/work"],
+            run_meta={
+                "exit_code": 0,
+                "command_sha256": "f" * 64,
+                "output_sha256": "1" * 64,
+                "artifact_sha256": "2" * 64,
+            },
+            results=results,
+        )
+        self.assertIsNotNone(record)
+        assert record is not None
+        self.assertEqual(len(record["covered_examples"]), 1)
+        self.assertEqual(record["exit_code"], 0)
+        self.assertEqual(json.loads(json.dumps(record["covered_examples"]))[0]["example_id"], "a" * 64)
+
+    def test_nonzero_exit_produces_no_evidence(self) -> None:
+        record = evidence_record_from_check(
+            evidence_id="parser-python-example",
+            source_repo="embabel/example",
+            source_pin="e" * 40,
+            oracle_kind="parser",
+            argv=["python3"],
+            run_meta={
+                "exit_code": 1,
+                "command_sha256": "f" * 64,
+                "output_sha256": "1" * 64,
+                "artifact_sha256": "2" * 64,
+            },
+            results=[{"example_id": "a" * 64, "code_sha256": "c" * 64, "ok": True}],
+        )
+        self.assertIsNone(record)
+
+
+if __name__ == "__main__":
+    unittest.main()
