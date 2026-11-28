@@ -67,11 +67,11 @@ Exploratory (other): retrieval; size curve across S/M/L; ceiling contrasts; \(G\
 - **Feasibility recount** after executable-oracle admission, provenance-group splitting, near-duplicate filtering, and independent holdout authoring/validation: training needs **≥14,000 clean admitted** examples; holdout does not subtract from that supply. **Deterministic audit (current):** **53,676** raw candidates → **16,211** uniquely labeled exact-code targets + **34,247** review rows. **4,315** extra exact-code copies were removed across **3,543** duplicate groups. **996** conflicting-label groups were quarantined as **2,093** review rows, not 996 rows. *(Historical: 19,392 and 17,212 were intermediate noncanonical counts.)* Oracle admission on 2026-11-27 produced **15,014** clean examples. That is **1,014** above the **14,000** cap, held back for later rejects. Near-duplicate filtering and the other gates can still lower the count. If the clean count falls below 14,000, reduce the 14,000 maximum prefix before sealing.
 - **Mandatory production seal:** `python3 -m analysis seal-study` performs evidence-backed admission, independent holdout validation/allocation, provenance disjointness, MinHash+exact Jaccard, prefix construction, receipts/hashes, and publishes the sealed directory by rename. The admission receipt hashes the canonical `admitted.jsonl` bytes. `build-prefixes` requires an admission receipt; `study-results` requires the sealed manifest. Physical-line JSONL handles U+2028/U+2029. Scoring is bound to exact task IDs/domain/area from the seal. A sealed receipt does not prove an oracle process was executed; real oracle runs remain absent.
 - **Real oracle evidence / admission** joined to exact code hashes, repo/pin, canonical argv hash, successful exit, and output/artifact hashes (`python3 -m analysis admit`; **real oracle runs still absent**).
-- **Selected-tokenizer token counts** are recorded for the Phi-4 tokenizer `microsoft/phi-4` (`tokenizer.json` sha256 `9f38d05d9d25756bb2f181ab5a0cebcd59e638df10336fc7ed1010f7296d0298`). The counted field is the sealed response, with no special tokens added. One capped pass of the 14,000-example prefix is **353** updates of **8192** tokens (**2,891,776** non-padding target tokens). Five examples in that prefix are longer than 8192 tokens and keep only the leading tokens. The other training values remain open.
+- **Selected-tokenizer token counts** are recorded for the Phi-4 tokenizer `microsoft/phi-4` (`tokenizer.json` sha256 `9f38d05d9d25756bb2f181ab5a0cebcd59e638df10336fc7ed1010f7296d0298`). The counted field is the sealed response, with no special tokens added. One capped pass of the 14,000-example prefix is **353** updates of **8192** tokens (**2,891,776** non-padding target tokens). Five examples in that prefix are longer than 8192 tokens and keep only the leading tokens.
 - **742 authored/sealed holdout tasks** and manifest hash before first score.
 - **Drivine confirmatory package/JVM oracles**, ~20 pilot executable task set, Ollama batch wiring for confirmatory rows (pilot runner exists in `jmjava/drivine-slm`; confirmatory harness incomplete).
 - **Scored confirmatory runs** (live paper-scored rows **0**).
-- **Training hyperparameter values** (base model/tag/hash through checkpoint selection and seed roles) frozen before training.
+- **Training hyperparameter values.** The base tag is `phi4:14b`. LoRA adapts the query and value slices of Phi-4's fused `qkv_proj`. The numeric row is Hu et al. 2022 Appendix D Table 11, the E2E column: rank 4, alpha 32, dropout 0.1, weight decay 0.01, AdamW, linear schedule, learning rate 0.0002. That column's batch size of 8 and 5 epochs are not used; this study keeps the frozen batch of 8192 tokens and 353 updates. That column's 500 warmup steps are longer than 353 updates, so warmup is **35** updates, the closest integer to one tenth of 353. One tenth is the warmup ratio printed in the same appendix. Precision, shuffle, and checkpoint selection stay unset. `training_hyperparameter_values_populated` stays false.
 - **Zenodo DOI** after upload (public protocol freeze).
 
 **Provenance groups:** Split related units by **file, fixture, or class** (not whole repository); semantic families must be authored when applicable so **no provenance group may span training and holdout**.
@@ -404,6 +404,24 @@ Confirmatory design choices below are grounded in cited prior work. Scope limits
     "vocab_size": 100352,
     "counted_field": "response",
     "add_special_tokens": false
+  },
+  "lora_training": {
+    "target_paper_matrices": ["W_q", "W_v"],
+    "module_name": "qkv_proj",
+    "query_slice_output_rows": [0, 5120],
+    "key_slice_frozen_output_rows": [5120, 6400],
+    "value_slice_output_rows": [6400, 7680],
+    "head_dim": 128,
+    "rank": 4,
+    "alpha": 32,
+    "dropout": 0.1,
+    "weight_decay": 0.01,
+    "optimizer": "AdamW",
+    "learning_rate_schedule": "linear",
+    "learning_rate": 0.0002,
+    "warmup_optimizer_updates": 35,
+    "warmup_adjustment": "table11_lists_500_warmup_steps_which_exceeds_353_updates_so_warmup_is_35_updates",
+    "source": "Hu et al. 2022 arXiv:2106.09685 Appendix D Table 11 E2E column. Batch size 8, 5 epochs, and label smoothing are not used."
   },
   "decoding": {
     "greedy_temperature": 0,

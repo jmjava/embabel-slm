@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parent.parent
 PAGE_PATH = ROOT / "docs" / "protocol" / "preregistration.md"
 AMEND_PATH = ROOT / "docs" / "protocol" / "preregistration-amendments.md"
 
-EXPECTED_SHA256 = "82f686f3e13017306179097cdc8a92d45918585a72e7c860ba847ed1a1ff8fee"
+EXPECTED_SHA256 = "097833581c9250801cfcfd01dbc411f9d97f8321a2f23b2a17b3f7039a410e55"
 
 LOCK_PATHS = (
     "docs/protocol/preregistration.md",
@@ -188,6 +188,24 @@ EXPECTED_PREREG = {'frozen_on': '2026-11-25',
                         'vocab_size': 100352,
                         'counted_field': 'response',
                         'add_special_tokens': False},
+ 'lora_training': {'target_paper_matrices': ['W_q', 'W_v'],
+                   'module_name': 'qkv_proj',
+                   'query_slice_output_rows': [0, 5120],
+                   'key_slice_frozen_output_rows': [5120, 6400],
+                   'value_slice_output_rows': [6400, 7680],
+                   'head_dim': 128,
+                   'rank': 4,
+                   'alpha': 32,
+                   'dropout': 0.1,
+                   'weight_decay': 0.01,
+                   'optimizer': 'AdamW',
+                   'learning_rate_schedule': 'linear',
+                   'learning_rate': 0.0002,
+                   'warmup_optimizer_updates': 35,
+                   'warmup_adjustment': 'table11_lists_500_warmup_steps_which_exceeds_353_updates_so_warmup_is_35_updates',
+                   'source': 'Hu et al. 2022 arXiv:2106.09685 Appendix D Table '
+                             '11 E2E column. Batch size 8, 5 epochs, and label '
+                             'smoothing are not used.'},
  'decoding': {'greedy_temperature': 0,
               'sample_temperature': 0.8,
               'sample_count_k': 5,
