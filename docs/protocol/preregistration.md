@@ -62,7 +62,7 @@ Exploratory (other): retrieval; size curve across S/M/L; ceiling contrasts; \(G\
 ### Preregistration blockers (open)
 
 - **Exact integer area holdout counts and per-area source counts** (frozen before holdout authoring).
-- **Official S/M/L shortlist tags** in the JSON before Embabel DEV scoring.
+- **Official S/M/L shortlist tags** are listed in the JSON. A digest is recorded only for a tag that has been pulled. Uninstalled tags keep a null digest, so this blocker stays open. The selected base tag is null. No Embabel DEV score is recorded.
 - **Holdout manifest** sha256 committed before first score.
 - **Feasibility recount** after executable-oracle admission, provenance-group splitting, near-duplicate filtering, and independent holdout authoring/validation: training needs **≥14,000 clean admitted** examples; holdout does not subtract from that supply. **Deterministic audit (current):** **53,676** raw candidates → **16,211** uniquely labeled exact-code targets + **34,247** review rows. **4,315** extra exact-code copies were removed across **3,543** duplicate groups. **996** conflicting-label groups were quarantined as **2,093** review rows, not 996 rows. *(Historical: 19,392 and 17,212 were intermediate noncanonical counts.)* Oracle admission on 2026-11-27 produced **15,014** clean examples. That is **1,014** above the **14,000** cap, held back for later rejects. Near-duplicate filtering and the other gates can still lower the count. If the clean count falls below 14,000, reduce the 14,000 maximum prefix before sealing.
 - **Mandatory production seal:** `python3 -m analysis seal-study` performs evidence-backed admission, independent holdout validation/allocation, provenance disjointness, MinHash+exact Jaccard, prefix construction, receipts/hashes, and publishes the sealed directory by rename. The admission receipt hashes the canonical `admitted.jsonl` bytes. `build-prefixes` requires an admission receipt; `study-results` requires the sealed manifest. Physical-line JSONL handles U+2028/U+2029. Scoring is bound to exact task IDs/domain/area from the seal. A sealed receipt does not prove an oracle process was executed; real oracle runs remain absent.
@@ -205,7 +205,7 @@ Any deviation from this protocol is logged in [deviations-log.md](deviations-log
 
 Confirmatory design choices below are grounded in cited prior work. Scope limits and deviations are stated when our setting differs.
 
-**Constraints (not findings from the literature).** Shareable arm eligibility (7–14B parameters, peak memory ≤16 GB at Q4_K_M and `num_ctx=8192`) defines who can run the release model; it is not an estimated optimum from any paper. The five-point difference in `docs/m0-bars.md` is the release floor: a full dose that drops more than 5 points on general coding fails. It is not the test that a dose step improved. The holdout minimum of 742 tasks is the normal-approximation planning size for a 5-point one-sided difference. Exact unconditional power at that size is about **0.783839**; **776** tasks are required for exact 80% power under the same assumptions. 742 is not an 80% exact-power design and it is not an estimated optimum. Official S, M, and L shortlist tags are not locked in the JSON yet; the shortlist must be written into this protocol before any Embabel DEV scoring, and selection uses only the pre-registered rule above.
+**Constraints (not findings from the literature).** Shareable arm eligibility (7–14B parameters, peak memory ≤16 GB at Q4_K_M and `num_ctx=8192`) defines who can run the release model; it is not an estimated optimum from any paper. The five-point difference in `docs/m0-bars.md` is the release floor: a full dose that drops more than 5 points on general coding fails. It is not the test that a dose step improved. The holdout minimum of 742 tasks is the normal-approximation planning size for a 5-point one-sided difference. Exact unconditional power at that size is about **0.783839**; **776** tasks are required for exact 80% power under the same assumptions. 742 is not an 80% exact-power design and it is not an estimated optimum. The official S, M, and L tag list is in the JSON `model_shortlist`. A tag with a null digest is not scored. The selected base tag is null, and selection uses only the pre-registered rule above.
 
 **Pre-registration and timing.** Hypotheses, sample size, and analysis are specified before confirmatory scores (Nosek et al., 2018). The public timestamp is Zenodo upload of this document; that upload has not happened, and no holdout row is scored before it.
 
@@ -300,6 +300,37 @@ Confirmatory design choices below are grounded in cited prior work. Scope limits
     "split_for_selection": "dev",
     "config_for_selection": "A",
     "selection_domain": "embabel"
+  },
+  "model_shortlist": {
+    "selected_base_tag": null,
+    "selection_not_run": true,
+    "S": [
+      {"tag": "qwen3.5:9b", "digest": "56671c2ab938", "parameters_billion": 9.0, "quant_observed": "Q4_K_M"},
+      {"tag": "llama3.1:8b", "digest": null},
+      {"tag": "qwen2.5:7b", "digest": null},
+      {"tag": "qwen2.5:14b", "digest": null},
+      {"tag": "qwen3:8b", "digest": null},
+      {"tag": "qwen3:14b", "digest": null},
+      {"tag": "gemma2:9b", "digest": null},
+      {"tag": "gemma3:12b", "digest": null},
+      {"tag": "mistral:7b", "digest": null},
+      {"tag": "mistral-nemo:12b", "digest": null},
+      {"tag": "phi4:14b", "digest": null}
+    ],
+    "M": [
+      {"tag": "qwen3-coder:30b", "digest": "06c1097efce0", "parameters_billion": 30.5, "quant_observed": "Q4_K_M"},
+      {"tag": "devstral-small-2:latest", "digest": "24277f07f62d", "parameters_billion": 24.0, "quant_observed": "Q4_K_M", "digest_pins_the_pulled_build": true},
+      {"tag": "qwen2.5:32b", "digest": null},
+      {"tag": "qwen3:32b", "digest": null},
+      {"tag": "gemma2:27b", "digest": null},
+      {"tag": "gemma3:27b", "digest": null}
+    ],
+    "L": [
+      {"tag": "llama3.1:70b", "digest": null},
+      {"tag": "llama3.3:70b", "digest": null},
+      {"tag": "mixtral:8x7b", "digest": null},
+      {"tag": "gpt-oss:120b", "digest": "714d86958b6e", "parameters_billion": 116.8, "quant_observed": "MXFP4"}
+    ]
   },
   "splits": {
     "confirmatory_split": "holdout",
