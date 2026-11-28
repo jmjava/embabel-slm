@@ -4,7 +4,7 @@ Registered-report style protocol for one combined holdout on **two domains**: Em
 
 **Publication gate (operator checklist):** No Zenodo upload until the operator's internal publication-review checklist is complete.
 
-**Protocol status:** This text is normative in-repo as of `frozen_on` below. Holdout size (742 combined, 371 Embabel + 371 Drivine), domain and area allocation rules, training-pool exhaustion, primary/replication training-seed inference, MinHash parameters, formatter id, and Drivine pilot-vs-confirmatory harness flags are **resolved** in this text. It is **not** sealed for confirmatory scoring while preregistration blockers in the JSON remain open (oracle admission, clean-unit feasibility, exact area/source holdout counts, 742 sealed tasks, shortlist tags/digests, selected-tokenizer counts, hyperparameter values, Drivine confirmatory oracles/pilots, manifest hash, scored runs, Zenodo DOI). The public registered freeze takes effect at **Zenodo upload**; record the Zenodo DOI in a later `amend(prereg):` entry (not before upload).
+**Protocol status:** This text is normative in-repo as of `frozen_on` below. Holdout size (742 combined, 371 Embabel + 371 Drivine), domain and area allocation rules, training-pool exhaustion, primary/replication training-seed inference, MinHash parameters, formatter id, and Drivine pilot-vs-confirmatory harness flags are **resolved** in this text. It is **not** sealed for confirmatory scoring while preregistration blockers in the JSON remain open (oracle admission, clean-unit feasibility, exact area/source holdout counts, 742 sealed tasks, shortlist tags/digests, hyperparameter values, Drivine confirmatory oracles/pilots, manifest hash, scored runs, Zenodo DOI). The public registered freeze takes effect at **Zenodo upload**; record the Zenodo DOI in a later `amend(prereg):` entry (not before upload).
 
 ---
 
@@ -62,12 +62,12 @@ Exploratory (other): retrieval; size curve across S/M/L; ceiling contrasts; \(G\
 ### Preregistration blockers (open)
 
 - **Exact integer area holdout counts and per-area source counts** (frozen before holdout authoring).
-- **Official S/M/L shortlist tags** are listed in the JSON. A digest is recorded only for a tag that has been pulled. Uninstalled tags keep a null digest, so this blocker stays open. The selected base tag is null. No Embabel DEV score is recorded.
+- **Official S/M/L shortlist tags** are listed in the JSON. A digest is recorded only for a tag that has been pulled. The shareable base selected by the pre-registered rule is `phi4:14b` (digest `ac896e5b8b34`, library quant Q4_K_M, 14.7B parameters, peak 10.02 GB at `num_ctx` 8192). The selecting score is Embabel pilot tasks E01–E20, config A, `full_task_success` 0.80 (16 of 20). Those generations used `num_predict` 2048. KB01 was not scored. The sealed 742 were not scored. A tag whose library quant is not Q4_K_M was not eligible. Unpulled M and L tags keep a null digest, so this blocker stays open.
 - **Holdout manifest** sha256 committed before first score.
 - **Feasibility recount** after executable-oracle admission, provenance-group splitting, near-duplicate filtering, and independent holdout authoring/validation: training needs **≥14,000 clean admitted** examples; holdout does not subtract from that supply. **Deterministic audit (current):** **53,676** raw candidates → **16,211** uniquely labeled exact-code targets + **34,247** review rows. **4,315** extra exact-code copies were removed across **3,543** duplicate groups. **996** conflicting-label groups were quarantined as **2,093** review rows, not 996 rows. *(Historical: 19,392 and 17,212 were intermediate noncanonical counts.)* Oracle admission on 2026-11-27 produced **15,014** clean examples. That is **1,014** above the **14,000** cap, held back for later rejects. Near-duplicate filtering and the other gates can still lower the count. If the clean count falls below 14,000, reduce the 14,000 maximum prefix before sealing.
 - **Mandatory production seal:** `python3 -m analysis seal-study` performs evidence-backed admission, independent holdout validation/allocation, provenance disjointness, MinHash+exact Jaccard, prefix construction, receipts/hashes, and publishes the sealed directory by rename. The admission receipt hashes the canonical `admitted.jsonl` bytes. `build-prefixes` requires an admission receipt; `study-results` requires the sealed manifest. Physical-line JSONL handles U+2028/U+2029. Scoring is bound to exact task IDs/domain/area from the seal. A sealed receipt does not prove an oracle process was executed; real oracle runs remain absent.
 - **Real oracle evidence / admission** joined to exact code hashes, repo/pin, canonical argv hash, successful exit, and output/artifact hashes (`python3 -m analysis admit`; **real oracle runs still absent**).
-- **Selected-tokenizer token counts** for training budget (lexical/char diagnostics are reported; selected-tokenizer counts remain blocked).
+- **Selected-tokenizer token counts** are recorded for the Phi-4 tokenizer `microsoft/phi-4` (`tokenizer.json` sha256 `9f38d05d9d25756bb2f181ab5a0cebcd59e638df10336fc7ed1010f7296d0298`). The counted field is the sealed response, with no special tokens added. One capped pass of the 14,000-example prefix is **353** updates of **8192** tokens (**2,891,776** non-padding target tokens). Five examples in that prefix are longer than 8192 tokens and keep only the leading tokens. The other training values remain open.
 - **742 authored/sealed holdout tasks** and manifest hash before first score.
 - **Drivine confirmatory package/JVM oracles**, ~20 pilot executable task set, Ollama batch wiring for confirmatory rows (pilot runner exists in `jmjava/drivine-slm`; confirmatory harness incomplete).
 - **Scored confirmatory runs** (live paper-scored rows **0**).
@@ -179,7 +179,7 @@ Near-duplicate filter before training using deterministic MinHash LSH on **5-tok
 
 ## Training example formatter (frozen)
 
-Selected SFT formatter: **`embabel-slm-code-sft-v1`** — code-only prompt context (domain, area, language, grain, class frame/method or fixture context); response is the exact admitted method/class/query code with **no** prose or model-generated descriptions. Lexical and character diagnostics are reported; **selected-tokenizer counts remain a blocker** before training seals.
+Selected SFT formatter: **`embabel-slm-code-sft-v1`** — code-only prompt context (domain, area, language, grain, class frame/method or fixture context); response is the exact admitted method/class/query code with **no** prose or model-generated descriptions. Lexical and character diagnostics are reported. The selected tokenizer and the shared budget counted with it are in the JSON: 353 updates of 8192 tokens.
 
 ---
 
@@ -205,7 +205,7 @@ Any deviation from this protocol is logged in [deviations-log.md](deviations-log
 
 Confirmatory design choices below are grounded in cited prior work. Scope limits and deviations are stated when our setting differs.
 
-**Constraints (not findings from the literature).** Shareable arm eligibility (7–14B parameters, peak memory ≤16 GB at Q4_K_M and `num_ctx=8192`) defines who can run the release model; it is not an estimated optimum from any paper. The five-point difference in `docs/m0-bars.md` is the release floor: a full dose that drops more than 5 points on general coding fails. It is not the test that a dose step improved. The holdout minimum of 742 tasks is the normal-approximation planning size for a 5-point one-sided difference. Exact unconditional power at that size is about **0.783839**; **776** tasks are required for exact 80% power under the same assumptions. 742 is not an 80% exact-power design and it is not an estimated optimum. The official S, M, and L tag list is in the JSON `model_shortlist`. A tag with a null digest is not scored. The selected base tag is null, and selection uses only the pre-registered rule above.
+**Constraints (not findings from the literature).** Shareable arm eligibility (7–14B parameters, peak memory ≤16 GB at Q4_K_M and `num_ctx=8192`) defines who can run the release model; it is not an estimated optimum from any paper. The five-point difference in `docs/m0-bars.md` is the release floor: a full dose that drops more than 5 points on general coding fails. It is not the test that a dose step improved. The holdout minimum of 742 tasks is the normal-approximation planning size for a 5-point one-sided difference. Exact unconditional power at that size is about **0.783839**; **776** tasks are required for exact 80% power under the same assumptions. 742 is not an 80% exact-power design and it is not an estimated optimum. The official S, M, and L tag list is in the JSON `model_shortlist`. A tag with a null digest is not scored. The selected base tag is `phi4:14b`, chosen by the pre-registered rule on Embabel pilot tasks E01–E20 under config A. That pilot score is not a confirmatory holdout score.
 
 **Pre-registration and timing.** Hypotheses, sample size, and analysis are specified before confirmatory scores (Nosek et al., 2018). The public timestamp is Zenodo upload of this document; that upload has not happened, and no holdout row is scored before it.
 
@@ -302,20 +302,34 @@ Confirmatory design choices below are grounded in cited prior work. Scope limits
     "selection_domain": "embabel"
   },
   "model_shortlist": {
-    "selected_base_tag": null,
-    "selection_not_run": true,
+    "selected_base_tag": "phi4:14b",
+    "selection_not_run": false,
+    "selection_result": {
+      "split": "pilot",
+      "task_ids": "E01-E20",
+      "config": "A",
+      "full_task_success": 0.8,
+      "passed_count": 16,
+      "task_count": 20,
+      "peak_memory_gb": 10.02025390509516,
+      "quant_observed": "Q4_K_M",
+      "parameters_billion": 14.7,
+      "num_predict": 2048,
+      "kb01_scored": false,
+      "holdout_scored": false
+    },
     "S": [
       {"tag": "qwen3.5:9b", "digest": "56671c2ab938", "parameters_billion": 9.0, "quant_observed": "Q4_K_M"},
-      {"tag": "llama3.1:8b", "digest": null},
-      {"tag": "qwen2.5:7b", "digest": null},
-      {"tag": "qwen2.5:14b", "digest": null},
-      {"tag": "qwen3:8b", "digest": null},
-      {"tag": "qwen3:14b", "digest": null},
-      {"tag": "gemma2:9b", "digest": null},
-      {"tag": "gemma3:12b", "digest": null},
-      {"tag": "mistral:7b", "digest": null},
-      {"tag": "mistral-nemo:12b", "digest": null},
-      {"tag": "phi4:14b", "digest": null}
+      {"tag": "llama3.1:8b", "digest": "46e0c10c039e", "parameters_billion": 8.0, "quant_observed": "Q4_K_M"},
+      {"tag": "qwen2.5:7b", "digest": "845dbda0ea48", "parameters_billion": 7.6, "quant_observed": "Q4_K_M"},
+      {"tag": "qwen2.5:14b", "digest": "7cdf5a0187d5", "parameters_billion": 14.8, "quant_observed": "Q4_K_M"},
+      {"tag": "qwen3:8b", "digest": "500a1f067a9f", "parameters_billion": 8.2, "quant_observed": "Q4_K_M"},
+      {"tag": "qwen3:14b", "digest": "bdbd181c33f2", "parameters_billion": 14.8, "quant_observed": "Q4_K_M"},
+      {"tag": "gemma2:9b", "digest": "ff02c3702f32", "parameters_billion": 9.2, "quant_observed": "Q4_0"},
+      {"tag": "gemma3:12b", "digest": "b92b218582c5", "parameters_billion": 11.8, "quant_observed": "Q4_K_M"},
+      {"tag": "mistral:7b", "digest": "6577803aa9a0", "parameters_billion": 7.2, "quant_observed": "Q4_K_M"},
+      {"tag": "mistral-nemo:12b", "digest": "e7e06d107c6c", "parameters_billion": 12.2, "quant_observed": "Q4_0"},
+      {"tag": "phi4:14b", "digest": "ac896e5b8b34", "parameters_billion": 14.7, "quant_observed": "Q4_K_M"}
     ],
     "M": [
       {"tag": "qwen3-coder:30b", "digest": "06c1097efce0", "parameters_billion": 30.5, "quant_observed": "Q4_K_M"},
@@ -383,7 +397,14 @@ Confirmatory design choices below are grounded in cited prior work. Scope limits
   },
   "training_formatter_version": "embabel-slm-code-sft-v1",
   "training_formatter_role": "code_only_prompt_exact_admitted_code_response_no_prose",
-  "selected_tokenizer_token_counts_blocker": true,
+  "selected_tokenizer_token_counts_blocker": false,
+  "selected_tokenizer": {
+    "source": "huggingface:microsoft/phi-4",
+    "tokenizer_json_sha256": "9f38d05d9d25756bb2f181ab5a0cebcd59e638df10336fc7ed1010f7296d0298",
+    "vocab_size": 100352,
+    "counted_field": "response",
+    "add_special_tokens": false
+  },
   "decoding": {
     "greedy_temperature": 0,
     "sample_temperature": 0.8,
@@ -506,6 +527,10 @@ Confirmatory design choices below are grounded in cited prior work. Scope limits
     "target_truncation": "keep_leading_target_tokens_drop_tail",
     "packing_policy": "split_capped_target_tokens_into_exact_batch_updates_no_target_padding",
     "equal_compute_numeric_rule": "effective_batch_tokens_equals_sequence_length_optimizer_updates_cover_one_capped_pass_of_prefix_14000",
+    "non_padding_target_token_budget": 2891776,
+    "effective_batch_token_budget": 8192,
+    "optimizer_update_count": 353,
+    "prefix_14000_truncated_examples": 5,
     "corpus_audit_raw_candidates": 53676,
     "labeled_units_current_count": 16211,
     "labeled_units_routed_to_review": 34247,
@@ -542,7 +567,6 @@ Confirmatory design choices below are grounded in cited prior work. Scope limits
       "exact_integer_area_holdout_counts_and_source_counts",
       "742_authored_sealed_holdout_tasks",
       "official_s_m_l_shortlist_tags_and_digests",
-      "selected_tokenizer_token_counts",
       "training_hyperparameter_values",
       "drivine_confirmatory_package_oracles_and_pilot_task_set",
       "holdout_manifest_sha256",
