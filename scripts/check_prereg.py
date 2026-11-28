@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parent.parent
 PAGE_PATH = ROOT / "docs" / "protocol" / "preregistration.md"
 AMEND_PATH = ROOT / "docs" / "protocol" / "preregistration-amendments.md"
 
-EXPECTED_SHA256 = "3a298f7fc38d240d83d3236bea312bac12336fcfd921fcb54a27c8097c7c1d94"
+EXPECTED_SHA256 = "020c6e878a4d528893f32ba8d8a8395d5a14933a1700c1d49707be1db80a0d25"
 
 LOCK_PATHS = (
     "docs/protocol/preregistration.md",

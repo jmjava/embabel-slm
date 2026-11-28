@@ -42,6 +42,7 @@ prefer measured open models once digests exist. Do not claim SLM SOTA.
 | `hu2022lora` | Adapter method if M5 lands inside paper window |
 | `dettmers2023qlora` | Only when a confirmatory row uses QLoRA |
 | `ovadia2024finetuning` | Ordering B before adapter; factual QA / continued pretrain, not our code-LoRA setting |
+| `raghavendra2024superficial` | Score rose with more finetuning examples, including coding. Full-parameter public benchmarks. Not our prefix sizes or equal-compute LoRA |
 
 ## Cluster F — Quantization / efficiency
 

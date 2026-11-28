@@ -12,7 +12,7 @@ On the sealed combined holdout, using one base model chosen by the pre-registere
 
 1. The 14,000-example prefix minus the 500-example prefix (one-sided paired test at \(\alpha=0.05\), no Holm family).
 
-Exploratory tables may also show adjacent steps (500→1,000 through 8,000→14,000; the last step is not a doubling) with bootstrap intervals and optional descriptive Holm adjustment that does **not** carry confirmatory family-wise power. The host ceiling and retrieval are reference measurements. They are not a training prefix.
+Exploratory tables may also show adjacent steps (500→1,000 through 8,000→14,000; the last step is not a doubling) with bootstrap intervals and optional descriptive Holm adjustment that does **not** carry confirmatory family-wise power. The host ceiling and retrieval are reference measurements. They are not a training prefix. Raghavendra, Nath, and Hendryx (2024) are the checked citation that a post-training score, including on a coding benchmark, can rise as the number of finetuning examples rises. Their full-parameter public-benchmark runs are not the source of these prefix sizes.
 
 ## The sequence
 
@@ -96,5 +96,6 @@ The Part A harness, with one repair and a fast-then-strong cascade, is a separat
 - Ovadia, O., Brief, M., Mishaeli, M., and Elisha, O. 2024. Fine-tuning or retrieval? Comparing knowledge injection in LLMs. Empirical Methods in Natural Language Processing. arXiv:2312.05934.
 - Piaggio, G., Elbourne, D. R., Pocock, S. J., Evans, S. J. W., and Altman, D. G. 2012. Reporting of noninferiority and equivalence randomized trials: Extension of the CONSORT 2010 statement. JAMA 308(24):2594–2604. DOI 10.1001/jama.2012.87802.
 - Pineau, J., Vincent-Lamarre, P., Sinha, K., Larivière, V., Beygelzimer, A., d'Alché-Buc, F., Fox, E., and Larochelle, H. 2021. Improving reproducibility in machine learning research: A report from the NeurIPS reproducibility program. Journal of Machine Learning Research.
+- Raghavendra, M., Nath, V., and Hendryx, S. 2024. Revisiting the superficial alignment hypothesis. arXiv:2410.03717.
 
 BibTeX for these works is in [../paper/references/seed.bib](../paper/references/seed.bib).
