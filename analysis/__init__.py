@@ -88,6 +88,7 @@ from analysis.equal_compute import (
     budget_covering_one_pass,
     plan_equal_compute,
 )
+from analysis.study_run import StudyRunPlan
 from analysis.training_examples import (
     FORMATTER_VERSION,
     attach_unit_code_metadata,
@@ -181,6 +182,7 @@ __all__ = [
     "batch_sizes_that_repeat",
     "budget_covering_one_pass",
     "plan_equal_compute",
+    "StudyRunPlan",
     "FORMATTER_VERSION",
     "attach_unit_code_metadata",
     "build_prefix_manifests",
