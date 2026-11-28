@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parent.parent
 PAGE_PATH = ROOT / "docs" / "protocol" / "preregistration.md"
 AMEND_PATH = ROOT / "docs" / "protocol" / "preregistration-amendments.md"
 
-EXPECTED_SHA256 = "097833581c9250801cfcfd01dbc411f9d97f8321a2f23b2a17b3f7039a410e55"
+EXPECTED_SHA256 = "1317e2571dcab0f9cc6ee0297350141baac06a583d5607ed991c347ef7da3131"
 
 LOCK_PATHS = (
     "docs/protocol/preregistration.md",
@@ -205,7 +205,11 @@ EXPECTED_PREREG = {'frozen_on': '2026-11-25',
                    'warmup_adjustment': 'table11_lists_500_warmup_steps_which_exceeds_353_updates_so_warmup_is_35_updates',
                    'source': 'Hu et al. 2022 arXiv:2106.09685 Appendix D Table '
                              '11 E2E column. Batch size 8, 5 epochs, and label '
-                             'smoothing are not used.'},
+                             'smoothing are not used.',
+                   'precision': 'bfloat16',
+                   'shuffle': 'fisher_yates_of_each_prefix_then_repeat_that_order',
+                   'shuffle_seed': 'training_seed',
+                   'checkpoint_selection': 'adapter_at_update_353'},
  'decoding': {'greedy_temperature': 0,
               'sample_temperature': 0.8,
               'sample_count_k': 5,

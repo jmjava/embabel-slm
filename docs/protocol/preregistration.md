@@ -71,7 +71,7 @@ Exploratory (other): retrieval; size curve across S/M/L; ceiling contrasts; \(G\
 - **742 authored/sealed holdout tasks** and manifest hash before first score.
 - **Drivine confirmatory package/JVM oracles**, ~20 pilot executable task set, Ollama batch wiring for confirmatory rows (pilot runner exists in `jmjava/drivine-slm`; confirmatory harness incomplete).
 - **Scored confirmatory runs** (live paper-scored rows **0**).
-- **Training hyperparameter values.** The base tag is `phi4:14b`. LoRA adapts the query and value slices of Phi-4's fused `qkv_proj`. The numeric row is Hu et al. 2022 Appendix D Table 11, the E2E column: rank 4, alpha 32, dropout 0.1, weight decay 0.01, AdamW, linear schedule, learning rate 0.0002. That column's batch size of 8 and 5 epochs are not used; this study keeps the frozen batch of 8192 tokens and 353 updates. That column's 500 warmup steps are longer than 353 updates, so warmup is **35** updates, the closest integer to one tenth of 353. One tenth is the warmup ratio printed in the same appendix. Precision, shuffle, and checkpoint selection stay unset. `training_hyperparameter_values_populated` stays false.
+- **Training hyperparameter values.** The base tag is `phi4:14b`. LoRA adapts the query and value slices of Phi-4's fused `qkv_proj`. The numeric row is Hu et al. 2022 Appendix D Table 11, the E2E column: rank 4, alpha 32, dropout 0.1, weight decay 0.01, AdamW, linear schedule, learning rate 0.0002. That column's batch size of 8 and 5 epochs are not used; this study keeps the frozen batch of 8192 tokens and 353 updates. That column's 500 warmup steps are longer than 353 updates, so warmup is **35** updates, the closest integer to one tenth of 353. One tenth is the warmup ratio printed in the same appendix. Training precision is **bfloat16**, the dtype Phi-4 was released with. Each prefix is shuffled once with that run's training seed, then that same order is repeated out to 353 updates. The scored adapter is the one at update 353. Padding and loss masking, kernel determinism, and framework versions stay unset. `training_hyperparameter_values_populated` stays false.
 - **Zenodo DOI** after upload (public protocol freeze).
 
 **Provenance groups:** Split related units by **file, fixture, or class** (not whole repository); semantic families must be authored when applicable so **no provenance group may span training and holdout**.
@@ -421,7 +421,11 @@ Confirmatory design choices below are grounded in cited prior work. Scope limits
     "learning_rate": 0.0002,
     "warmup_optimizer_updates": 35,
     "warmup_adjustment": "table11_lists_500_warmup_steps_which_exceeds_353_updates_so_warmup_is_35_updates",
-    "source": "Hu et al. 2022 arXiv:2106.09685 Appendix D Table 11 E2E column. Batch size 8, 5 epochs, and label smoothing are not used."
+    "source": "Hu et al. 2022 arXiv:2106.09685 Appendix D Table 11 E2E column. Batch size 8, 5 epochs, and label smoothing are not used.",
+    "precision": "bfloat16",
+    "shuffle": "fisher_yates_of_each_prefix_then_repeat_that_order",
+    "shuffle_seed": "training_seed",
+    "checkpoint_selection": "adapter_at_update_353"
   },
   "decoding": {
     "greedy_temperature": 0,
