@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parent.parent
 PAGE_PATH = ROOT / "docs" / "protocol" / "preregistration.md"
 AMEND_PATH = ROOT / "docs" / "protocol" / "preregistration-amendments.md"
 
-EXPECTED_SHA256 = "020c6e878a4d528893f32ba8d8a8395d5a14933a1700c1d49707be1db80a0d25"
+EXPECTED_SHA256 = "7ef33e971c3b03f82d34ac8a3da5bf2b590678e8de1263595328edd4f2717ead"
 
 LOCK_PATHS = (
     "docs/protocol/preregistration.md",
@@ -157,6 +157,10 @@ EXPECTED_PREREG = {'frozen_on': '2026-11-25',
                                                                     'primary_and_replication_seed_roles'],
                 'training_hyperparameter_values_populated': False,
                 'training_estimand_note': 'smaller_prefixes_repeat_admitted_examples_more_often_within_fixed_token_and_update_budgets',
+                'sequence_length_tokens': 8192,
+                'target_truncation': 'keep_leading_target_tokens_drop_tail',
+                'packing_policy': 'split_capped_target_tokens_into_exact_batch_updates_no_target_padding',
+                'equal_compute_numeric_rule': 'effective_batch_tokens_equals_sequence_length_optimizer_updates_cover_one_capped_pass_of_prefix_14000',
                 'corpus_audit_raw_candidates': 53676,
                 'labeled_units_current_count': 16211,
                 'labeled_units_routed_to_review': 34247,
@@ -178,11 +182,11 @@ EXPECTED_PREREG = {'frozen_on': '2026-11-25',
                                                 'independent_holdout_authoring_and_validation'],
                 'maximum_prefix_reduced_if_clean_admitted_below_14000': True,
                 'sampled_secondary_validation': {'implemented': True,
-                                                   'samples_jsonl_seeds_1_through_5_per_task_prefix_and_training_seed_when_present': True,
-                                                   'samples_jsonl_seal_bound': True,
-                                                   'pass_at_1_k_1_bootstrap_ci': True,
-                                                   'pass_at_5_k_5_bootstrap_ci': True,
-                                                   'never_changes_primary_decision': True},
+                                                 'samples_jsonl_seeds_1_through_5_per_task_prefix_and_training_seed_when_present': True,
+                                                 'samples_jsonl_seal_bound': True,
+                                                 'pass_at_1_k_1_bootstrap_ci': True,
+                                                 'pass_at_5_k_5_bootstrap_ci': True,
+                                                 'never_changes_primary_decision': True},
                 'preregistration_blockers': ['real_oracle_evidence_admission',
                                              'clean_unit_feasibility_recount',
                                              'exact_integer_area_holdout_counts_and_source_counts',

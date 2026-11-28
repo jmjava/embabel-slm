@@ -11,6 +11,7 @@ from analysis.dedup import dedup_exit_code, run_dedup
 from analysis.power import power_table
 from analysis.seal import seal_cli
 from analysis.study_results import dumps_deterministic_json, study_results_cli
+from analysis.equal_compute import plan_equal_compute_cli
 from analysis.training_examples import build_prefixes_cli
 
 
@@ -24,7 +25,8 @@ def main(argv: list[str]) -> int:
             "  python3 -m analysis admit LABELED.jsonl EVIDENCE.jsonl [--holdout HOLDOUT.jsonl]\n"
             "  python3 -m analysis build-prefixes ADMITTED.jsonl OUTDIR --admission-receipt R "
             "--labeled L --evidence E [--force]\n"
-            "  python3 -m analysis seal-study LABELED EVIDENCE HOLDOUT OUTDIR [--force] [--exhaustive]",
+            "  python3 -m analysis seal-study LABELED EVIDENCE HOLDOUT OUTDIR [--force] [--exhaustive]\n"
+            "  python3 -m analysis plan-equal-compute SEAL_DIR [--sequence-length N]",
             file=sys.stderr,
         )
         return 2
@@ -66,6 +68,8 @@ def main(argv: list[str]) -> int:
         return build_prefixes_cli(argv[1:])
     if argv[0] == "seal-study":
         return seal_cli(argv[1:])
+    if argv[0] == "plan-equal-compute":
+        return plan_equal_compute_cli(argv[1:])
     print(
         "usage:\n  python3 -m analysis power\n"
         "  python3 -m analysis study-results SCORES.jsonl --sealed-manifest PATH "
@@ -74,7 +78,8 @@ def main(argv: list[str]) -> int:
         "  python3 -m analysis admit LABELED.jsonl EVIDENCE.jsonl [--holdout HOLDOUT.jsonl]\n"
         "  python3 -m analysis build-prefixes ADMITTED.jsonl OUTDIR --admission-receipt R "
         "--labeled L --evidence E [--force]\n"
-        "  python3 -m analysis seal-study LABELED EVIDENCE HOLDOUT OUTDIR [--force] [--exhaustive]",
+        "  python3 -m analysis seal-study LABELED EVIDENCE HOLDOUT OUTDIR [--force] [--exhaustive]\n"
+        "  python3 -m analysis plan-equal-compute SEAL_DIR [--sequence-length N]",
         file=sys.stderr,
     )
     return 2
