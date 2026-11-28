@@ -56,10 +56,12 @@ def _chat_once(
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": prompt},
         ],
+        "keep_alive": "30m",
         "options": {
             "temperature": temperature,
             "seed": seed,
             "num_ctx": num_ctx,
+            "num_predict": 2048,
             "top_p": top_p,
         },
     }

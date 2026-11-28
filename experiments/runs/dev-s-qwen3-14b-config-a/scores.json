@@ -1,0 +1,654 @@
+{
+  "embabel_pin": "embabel/embabel-agent@3b9b74f494cb",
+  "tasks": [
+    {
+      "task_id": "E01",
+      "layers": {
+        "extract": {
+          "status": "pass",
+          "detail": "2 files"
+        },
+        "compile": {
+          "status": "fail",
+          "detail": "mvn exit 1"
+        },
+        "test": {
+          "status": "skip",
+          "detail": "no tests requested"
+        },
+        "structure": {
+          "status": "pass",
+          "detail": "structure ok"
+        },
+        "reachability": {
+          "status": "skip",
+          "detail": "reachability not required"
+        },
+        "prose": {
+          "status": "skip",
+          "detail": "no prose checks"
+        }
+      },
+      "pass": false,
+      "first_failure": "compile",
+      "hallucinated_api": true
+    },
+    {
+      "task_id": "E02",
+      "layers": {
+        "extract": {
+          "status": "pass",
+          "detail": "4 files"
+        },
+        "compile": {
+          "status": "fail",
+          "detail": "mvn exit 1"
+        },
+        "test": {
+          "status": "skip",
+          "detail": "no tests requested"
+        },
+        "structure": {
+          "status": "skip",
+          "detail": "no structure rules"
+        },
+        "reachability": {
+          "status": "skip",
+          "detail": "reachability not required"
+        },
+        "prose": {
+          "status": "skip",
+          "detail": "no prose checks"
+        }
+      },
+      "pass": false,
+      "first_failure": "compile",
+      "hallucinated_api": true
+    },
+    {
+      "task_id": "E03",
+      "layers": {
+        "extract": {
+          "status": "pass",
+          "detail": "2 files"
+        },
+        "compile": {
+          "status": "fail",
+          "detail": "mvn exit 1"
+        },
+        "test": {
+          "status": "skip",
+          "detail": "no tests requested"
+        },
+        "structure": {
+          "status": "skip",
+          "detail": "no structure rules"
+        },
+        "reachability": {
+          "status": "skip",
+          "detail": "reachability not required"
+        },
+        "prose": {
+          "status": "skip",
+          "detail": "no prose checks"
+        }
+      },
+      "pass": false,
+      "first_failure": "compile",
+      "hallucinated_api": true
+    },
+    {
+      "task_id": "E04",
+      "layers": {
+        "extract": {
+          "status": "pass",
+          "detail": "1 files"
+        },
+        "compile": {
+          "status": "fail",
+          "detail": "mvn exit 1"
+        },
+        "test": {
+          "status": "skip",
+          "detail": "no tests requested"
+        },
+        "structure": {
+          "status": "skip",
+          "detail": "no structure rules"
+        },
+        "reachability": {
+          "status": "skip",
+          "detail": "reachability not required"
+        },
+        "prose": {
+          "status": "skip",
+          "detail": "no prose checks"
+        }
+      },
+      "pass": false,
+      "first_failure": "compile",
+      "hallucinated_api": true
+    },
+    {
+      "task_id": "E05",
+      "layers": {
+        "extract": {
+          "status": "pass",
+          "detail": "3 files"
+        },
+        "compile": {
+          "status": "fail",
+          "detail": "mvn exit 1"
+        },
+        "test": {
+          "status": "skip",
+          "detail": "no tests requested"
+        },
+        "structure": {
+          "status": "skip",
+          "detail": "no structure rules"
+        },
+        "reachability": {
+          "status": "fail",
+          "detail": "missing types: CreditAssessment"
+        },
+        "prose": {
+          "status": "skip",
+          "detail": "no prose checks"
+        }
+      },
+      "pass": false,
+      "first_failure": "compile",
+      "hallucinated_api": true
+    },
+    {
+      "task_id": "E06",
+      "layers": {
+        "extract": {
+          "status": "pass",
+          "detail": "input project"
+        },
+        "compile": {
+          "status": "skip",
+          "detail": "compile not required"
+        },
+        "test": {
+          "status": "skip",
+          "detail": "tests not required"
+        },
+        "structure": {
+          "status": "skip",
+          "detail": "no structure rules"
+        },
+        "reachability": {
+          "status": "skip",
+          "detail": "reachability not required"
+        },
+        "prose": {
+          "status": "pass",
+          "detail": "prose ok"
+        }
+      },
+      "pass": true,
+      "first_failure": null,
+      "hallucinated_api": false
+    },
+    {
+      "task_id": "E07",
+      "layers": {
+        "extract": {
+          "status": "pass",
+          "detail": "1 files"
+        },
+        "compile": {
+          "status": "fail",
+          "detail": "mvn exit 1"
+        },
+        "test": {
+          "status": "skip",
+          "detail": "no tests requested"
+        },
+        "structure": {
+          "status": "skip",
+          "detail": "no structure rules"
+        },
+        "reachability": {
+          "status": "fail",
+          "detail": "missing types: Customer"
+        },
+        "prose": {
+          "status": "skip",
+          "detail": "no prose checks"
+        }
+      },
+      "pass": false,
+      "first_failure": "compile",
+      "hallucinated_api": true
+    },
+    {
+      "task_id": "E08",
+      "layers": {
+        "extract": {
+          "status": "pass",
+          "detail": "1 files"
+        },
+        "compile": {
+          "status": "fail",
+          "detail": "mvn exit 1"
+        },
+        "test": {
+          "status": "skip",
+          "detail": "no tests requested"
+        },
+        "structure": {
+          "status": "skip",
+          "detail": "no structure rules"
+        },
+        "reachability": {
+          "status": "skip",
+          "detail": "reachability not required"
+        },
+        "prose": {
+          "status": "skip",
+          "detail": "no prose checks"
+        }
+      },
+      "pass": false,
+      "first_failure": "compile",
+      "hallucinated_api": true
+    },
+    {
+      "task_id": "E09",
+      "layers": {
+        "extract": {
+          "status": "pass",
+          "detail": "2 files"
+        },
+        "compile": {
+          "status": "fail",
+          "detail": "mvn exit 1"
+        },
+        "test": {
+          "status": "skip",
+          "detail": "no tests requested"
+        },
+        "structure": {
+          "status": "skip",
+          "detail": "no structure rules"
+        },
+        "reachability": {
+          "status": "skip",
+          "detail": "reachability not required"
+        },
+        "prose": {
+          "status": "skip",
+          "detail": "no prose checks"
+        }
+      },
+      "pass": false,
+      "first_failure": "compile",
+      "hallucinated_api": false
+    },
+    {
+      "task_id": "E10",
+      "layers": {
+        "extract": {
+          "status": "pass",
+          "detail": "1 files"
+        },
+        "compile": {
+          "status": "pass",
+          "detail": "compiled"
+        },
+        "test": {
+          "status": "skip",
+          "detail": "no tests requested"
+        },
+        "structure": {
+          "status": "skip",
+          "detail": "no structure rules"
+        },
+        "reachability": {
+          "status": "skip",
+          "detail": "reachability not required"
+        },
+        "prose": {
+          "status": "skip",
+          "detail": "no prose checks"
+        }
+      },
+      "pass": true,
+      "first_failure": null,
+      "hallucinated_api": false
+    },
+    {
+      "task_id": "E11",
+      "layers": {
+        "extract": {
+          "status": "pass",
+          "detail": "1 files"
+        },
+        "compile": {
+          "status": "fail",
+          "detail": "mvn exit 1"
+        },
+        "test": {
+          "status": "skip",
+          "detail": "no tests requested"
+        },
+        "structure": {
+          "status": "skip",
+          "detail": "no structure rules"
+        },
+        "reachability": {
+          "status": "skip",
+          "detail": "reachability not required"
+        },
+        "prose": {
+          "status": "skip",
+          "detail": "no prose checks"
+        }
+      },
+      "pass": false,
+      "first_failure": "compile",
+      "hallucinated_api": true
+    },
+    {
+      "task_id": "E12",
+      "layers": {
+        "extract": {
+          "status": "pass",
+          "detail": "3 files"
+        },
+        "compile": {
+          "status": "fail",
+          "detail": "mvn exit 1"
+        },
+        "test": {
+          "status": "skip",
+          "detail": "no tests requested"
+        },
+        "structure": {
+          "status": "skip",
+          "detail": "no structure rules"
+        },
+        "reachability": {
+          "status": "skip",
+          "detail": "reachability not required"
+        },
+        "prose": {
+          "status": "skip",
+          "detail": "no prose checks"
+        }
+      },
+      "pass": false,
+      "first_failure": "compile",
+      "hallucinated_api": true
+    },
+    {
+      "task_id": "E13",
+      "layers": {
+        "extract": {
+          "status": "pass",
+          "detail": "1 files"
+        },
+        "compile": {
+          "status": "fail",
+          "detail": "mvn exit 1"
+        },
+        "test": {
+          "status": "skip",
+          "detail": "no tests requested"
+        },
+        "structure": {
+          "status": "skip",
+          "detail": "no structure rules"
+        },
+        "reachability": {
+          "status": "skip",
+          "detail": "reachability not required"
+        },
+        "prose": {
+          "status": "skip",
+          "detail": "no prose checks"
+        }
+      },
+      "pass": false,
+      "first_failure": "compile",
+      "hallucinated_api": true
+    },
+    {
+      "task_id": "E14",
+      "layers": {
+        "extract": {
+          "status": "fail",
+          "detail": "no fenced files"
+        },
+        "compile": {
+          "status": "skip",
+          "detail": "compile not required"
+        },
+        "test": {
+          "status": "skip",
+          "detail": "tests not required"
+        },
+        "structure": {
+          "status": "skip",
+          "detail": "no structure rules"
+        },
+        "reachability": {
+          "status": "skip",
+          "detail": "reachability not required"
+        },
+        "prose": {
+          "status": "fail",
+          "detail": "name blocker"
+        }
+      },
+      "pass": false,
+      "first_failure": "extract",
+      "hallucinated_api": false
+    },
+    {
+      "task_id": "E15",
+      "layers": {
+        "extract": {
+          "status": "pass",
+          "detail": "1 files"
+        },
+        "compile": {
+          "status": "fail",
+          "detail": "mvn exit 1"
+        },
+        "test": {
+          "status": "skip",
+          "detail": "no tests requested"
+        },
+        "structure": {
+          "status": "skip",
+          "detail": "no structure rules"
+        },
+        "reachability": {
+          "status": "skip",
+          "detail": "reachability not required"
+        },
+        "prose": {
+          "status": "skip",
+          "detail": "no prose checks"
+        }
+      },
+      "pass": false,
+      "first_failure": "compile",
+      "hallucinated_api": true
+    },
+    {
+      "task_id": "E16",
+      "layers": {
+        "extract": {
+          "status": "pass",
+          "detail": "3 files"
+        },
+        "compile": {
+          "status": "fail",
+          "detail": "mvn exit 1"
+        },
+        "test": {
+          "status": "skip",
+          "detail": "no tests requested"
+        },
+        "structure": {
+          "status": "skip",
+          "detail": "no structure rules"
+        },
+        "reachability": {
+          "status": "skip",
+          "detail": "reachability not required"
+        },
+        "prose": {
+          "status": "skip",
+          "detail": "no prose checks"
+        }
+      },
+      "pass": false,
+      "first_failure": "compile",
+      "hallucinated_api": true
+    },
+    {
+      "task_id": "E17",
+      "layers": {
+        "extract": {
+          "status": "pass",
+          "detail": "2 files"
+        },
+        "compile": {
+          "status": "pass",
+          "detail": "compiled"
+        },
+        "test": {
+          "status": "skip",
+          "detail": "no tests requested"
+        },
+        "structure": {
+          "status": "skip",
+          "detail": "no structure rules"
+        },
+        "reachability": {
+          "status": "skip",
+          "detail": "reachability not required"
+        },
+        "prose": {
+          "status": "skip",
+          "detail": "no prose checks"
+        }
+      },
+      "pass": true,
+      "first_failure": null,
+      "hallucinated_api": false
+    },
+    {
+      "task_id": "E18",
+      "layers": {
+        "extract": {
+          "status": "pass",
+          "detail": "1 files"
+        },
+        "compile": {
+          "status": "fail",
+          "detail": "mvn exit 1"
+        },
+        "test": {
+          "status": "skip",
+          "detail": "no tests requested"
+        },
+        "structure": {
+          "status": "skip",
+          "detail": "no structure rules"
+        },
+        "reachability": {
+          "status": "skip",
+          "detail": "reachability not required"
+        },
+        "prose": {
+          "status": "skip",
+          "detail": "no prose checks"
+        }
+      },
+      "pass": false,
+      "first_failure": "compile",
+      "hallucinated_api": true
+    },
+    {
+      "task_id": "E19",
+      "layers": {
+        "extract": {
+          "status": "fail",
+          "detail": "no fenced files"
+        },
+        "compile": {
+          "status": "skip",
+          "detail": "compile not required"
+        },
+        "test": {
+          "status": "skip",
+          "detail": "tests not required"
+        },
+        "structure": {
+          "status": "skip",
+          "detail": "no structure rules"
+        },
+        "reachability": {
+          "status": "skip",
+          "detail": "reachability not required"
+        },
+        "prose": {
+          "status": "fail",
+          "detail": "mention steps"
+        }
+      },
+      "pass": false,
+      "first_failure": "extract",
+      "hallucinated_api": false
+    },
+    {
+      "task_id": "E20",
+      "layers": {
+        "extract": {
+          "status": "pass",
+          "detail": "4 files"
+        },
+        "compile": {
+          "status": "pass",
+          "detail": "compiled"
+        },
+        "test": {
+          "status": "skip",
+          "detail": "no tests requested"
+        },
+        "structure": {
+          "status": "skip",
+          "detail": "no structure rules"
+        },
+        "reachability": {
+          "status": "skip",
+          "detail": "reachability not required"
+        },
+        "prose": {
+          "status": "skip",
+          "detail": "no prose checks"
+        }
+      },
+      "pass": true,
+      "first_failure": null,
+      "hallucinated_api": false
+    }
+  ],
+  "summary": {
+    "compile_rate": 0.17647058823529413,
+    "full_task_success": 0.2,
+    "hallucinated_api_rate": 0.7647058823529411,
+    "planner_success": 0.0,
+    "repair_iterations": 0,
+    "repair_iterations_note": "single-shot generate only; repair loop not scored in M2",
+    "hallucinated_api_heuristic": "mvn compile/test stderr matches cannot-find-symbol or missing com.embabel package"
+  }
+}
